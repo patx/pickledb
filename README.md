@@ -9,23 +9,23 @@ BSD three-caluse licensed.
 Commands
 ========
 
-`SET key value` Set the string value of a key
+* `SET key value` Set the string value of a key
 
-`GET key` Get the value of a key
+* `GET key` Get the value of a key
 
-`REM key` Delete a key
+* `REM key` Delete a key
 
-`LCREATE name` Create a list
+* `LCREATE name` Create a list
 
-`LADD name value` Add a value to a list
+* `LADD name value` Add a value to a list
 
-`LGETALL name` Return all values in a list
+* `LGETALL name` Return all values in a list
 
-`LGET name pos` Return one value in a list
+* `LGET name pos` Return one value in a list
 
-`LREM name` Remove a list and all of its values
+* `LREM name` Remove a list and all of its values
 
-`LPOP name pos` Remove one value in a list
+* `LPOP name pos` Remove one value in a list
 
 
 Example
