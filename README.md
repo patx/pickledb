@@ -2,7 +2,8 @@ pickleDB
 ========
 
 pickleDB is a small, lightweight, and fast key-value store. It was inspired by 
-[redis][1] and [MongoDB][2]. pickleDB is built upon Python's [pickle][3] module. 
+[redis][1] and [MongoDB][2]. pickleDB is built upon Python's [pickle][3] module.
+BSD three-caluse licensed. 
 
 
 Commands

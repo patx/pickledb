@@ -7,5 +7,6 @@ setup(name = "pickleDB",
       description="A small, fast, and simple database using pickle.",
       author="Harrison Erd",
       author_email="patx44@gmail.com",
+      license="three-clause BSD"
       url="http://github.com/patx/pickledb",
       py_modules=['pickledb'])
