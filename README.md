@@ -91,9 +91,9 @@ Meta
 ====
 
 * Code: `git clone git://github.com/patx/pickledb.git`
-* Home: <http://packages.python.org/pickledb>
+* Home: <http://packages.python.org/pickleDB>
 * Bugs: <http://github.com/patx/pickledb/issues>
-* PyPi: <http://pypi.python.org/pypi/pickledb>
+* PyPi: <http://pypi.python.org/pypi/pickleDB>
 
 [1]: http://redis.io/
 [2]: http://www.mongodb.org/
