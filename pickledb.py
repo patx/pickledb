@@ -27,6 +27,8 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 
 import pickle
+# for json comment out the above line and uncomment the following line.
+# import json as pickle
 
 def load(location):
     global db
@@ -74,5 +76,20 @@ def lrem(name):
 
 def lpop(name, pos):
     del db[name][pos]
+    pickle.dump(db, open(loco, 'wb'))
+    return True
+
+def llen(name):
+    return len(db[name])
+
+def append(key, more):
+    tmp = db[key]
+    db[key] = ('%s%s' % (tmp, more))
+    pickle.dump(db, open(loco, 'wb'))
+    return True
+
+def lappend(name, pos, more):
+    tmp = db[name][pos]
+    db[name][pos] = ('%s%s' % (tmp, more))
     pickle.dump(db, open(loco, 'wb'))
     return True
