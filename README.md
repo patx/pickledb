@@ -27,11 +27,15 @@ Commands
 
 * `LPOP name pos` Remove one value in a list
 
+* `APPEND key more` Add more to a key's value
+
+* `LAPPEND name pos more` Add more to a value in a list
+
 
 Example
 =======
 
-This is a quick example running through all of the current commands.
+This is a quick example running through the most basic commands.
 
     >>> import pickledb as db
     >>> db.load('test.db')
