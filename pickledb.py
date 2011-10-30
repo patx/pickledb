@@ -26,9 +26,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
 # THE POSSIBILITY OF SUCH DAMAGE.
 
-import pickle
-# for json comment out the above line and uncomment the following line.
-# import json as pickle
+import json as pickle # ;)
 
 def load(location):
     global db

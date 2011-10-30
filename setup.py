@@ -7,8 +7,8 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name = "pickleDB",
-      version="0.1.3",
-      description="A small, fast, and simple database using pickle.",
+      version="0.2",
+      description="A lightweight, fast, and simple database using json.",
       author="Harrison Erd",
       author_email="patx44@gmail.com",
       license="three-clause BSD",

@@ -2,12 +2,13 @@ pickleDB
 ========
 
 pickleDB is a small, lightweight, and fast key-value store. It was inspired by 
-[redis][1] and [MongoDB][2]. pickleDB is built upon Python's [pickle][3] module.
-BSD three-caluse licensed. 
+[redis][1] and [MongoDB][2]. pickleDB is built upon Python's [json][3] module (
+however, originally it was based on pickle, hence the name). BSD three-caluse licensed. 
+
 
 
 Commands
-========
+--------
 
 * `SET key value` Set the string value of a key
 
@@ -33,9 +34,9 @@ Commands
 
 
 Example
-=======
+-------
 
-This is a quick example running through the most basic commands.
+This is a quick example running through of the most basic commands.
 
     >>> import pickledb as db
     >>> db.load('test.db')
@@ -71,13 +72,13 @@ This is a quick example running through the most basic commands.
 
 
 Installation
-============
+------------
 
     $ pip install pickledb
 
 
 Contributing
-============
+------------
 
 Once you've made your great commits:
 
@@ -92,7 +93,7 @@ You can also send [me (patx)][6] and email with any suggestions and/or questions
 
 
 Meta
-====
+----
 
 * Code: `git clone git://github.com/patx/pickledb.git`
 * Home: <http://packages.python.org/pickleDB>
@@ -101,7 +102,7 @@ Meta
 
 [1]: http://redis.io/
 [2]: http://www.mongodb.org/
-[3]: http://docs.python.org/library/pickle.html
+[3]: http://docs.python.org/library/json.html
 [4]: http://help.github.com/forking/
 [5]: http://github.com/patx/pickledb/issues
 [6]: mailto:patx44@gmail.com
