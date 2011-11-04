@@ -91,3 +91,7 @@ def lappend(name, pos, more):
     db[name][pos] = ('%s%s' % (tmp, more))
     pickle.dump(db, open(loco, 'wb'))
     return True
+
+def flushdb():
+    pickle.dump({}, open(loco, 'wb'))
+    return True

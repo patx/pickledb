@@ -8,21 +8,9 @@
 <style type="text/css">
 .logo { padding: 7px 450px; }
 .body { font-family: "helvetica";  padding: 7px 600px; }
-@page { margin: 0.79in }
-P { margin-bottom: 0.08in }
-PRE.cjk { font-family: "DejaVu Sans", monospace }
-pre.c12 {background: transparent; border: none; padding: 0in; font-style: normal; font-weight: normal; widows: 2; orphans: 2}
-span.c11 {color: #000000; font-family: Bitstream Vera Sans Mono, monospace; font-size: 9pt; font-weight: normal}
-span.c10 {color: #0000CF}
-span.c9 {color: #4E9A06}
-span.c8 {color: #CE5C00}
-span.c7 {color: #000000; font-family: Bitstream Vera Sans Mono, monospace; font-size: 9pt}
-span.c6 {color: #204A87}
-p.c5 {margin-bottom: 0in}
-pre.c4 {background: transparent; border: none; color: #000000; font-style: normal; font-weight: normal; orphans: 2; padding: 0in; widows: 2}
-span.c3 {font-family: Bitstream Vera Sans Mono, monospace; font-size: 9pt}
-span.c2 {color: #8F5902}
-img.c1 {position: absolute; top: 0; right: 0; border: 0;}
+img.c1 { position: absolute; top: 0; right: 0; border: 0; }
+span.c2 { color: #8F5902 }
+span.c9 { color: #4E9A06 }
 a { color: #008000; border-bottom: 1px dotted #008000; text-decoration: none; }
 a:hover { color: #008000; border-bottom: 1px solid #008000; }
 </style>
@@ -31,70 +19,32 @@ a:hover { color: #008000; border-bottom: 1px solid #008000; }
 <a href="http://github.com/patx/pickledb"><img class="c1" src="https://a248.e.akamai.net/assets.github.com/img/abad93f42020b733148435e2cd92ce15c542d320/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
 <div class="logo"><img src="logo.png" alt="pickleDB logo"></div>
 <div class="body">
-<h1>About</h1>
-<strong>pickleDB is a lightweight, simple, and fast key-value store.</strong> It is built upon Python's <a href="http://docs.python.org/library/json.html">json</a> module and was inspired by <a href="http://redis.io/">redis</a>. It is licensed with the BSD three-caluse license.
-<h1>Installation</h1>
-The easiest way to download and install pickleDB on your system is to use <a href="http://www.pip-installer.org/">pip</a>:
-<pre class="western c4">
-<span class="c3"><span class="c2">$</span> sudo pip install pickledb</span>
-</pre>
-<p class="c5"></p>
-<h1>Examples</h1>
-The following is a run through of the <em>most basic</em> of pickleDB's commands.
-<pre class="western c12">
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span><span class="c6"><strong>import</strong></span> pickledb <span class="c6"><strong>as</strong></span> db</span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>load<strong>(</strong><span class="c9">'test.db'</span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>set<strong>(</strong><span class="c9">'key'</span><strong>,</strong> <span class="c9">'value'</span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>get<strong>(</strong><span class="c9">'key'</span><strong>)</strong></span>
-<span class="c7"><em>'value'</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>rem<strong>(</strong><span class="c9">'key'</span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>get<strong>(</strong><span class="c9">'key'</span><strong>)</strong></span>
-<span class="c7"><em>KeyError: 'key'</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>lcreate<strong>(</strong><span class="c9">'a list'</span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>ladd<strong>(</strong><span class="c9">'a list'</span><strong>,</strong> <span class="c9">'something'</span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>ladd<strong>(</strong><span class="c9">'a list'</span><strong>,</strong> <span class="c9">'now something else'</span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>getall<strong>(</strong><span class="c9">'a list'</span><strong>)</strong></span>
-<span class="c7"><em>['something', 'now something else']</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>lget<strong>(</strong><span class="c9">'a list'</span><strong>,</strong> <span class="c10"><strong>0</strong></span><strong>)</strong></span>
-<span class="c7"><em>'something'</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>lget<strong>(</strong><span class="c9">'a list'</span><strong>,</strong> <span class="c10"><strong>1</strong></span><strong>)</strong></span>
-<span class="c7"><em>'now something else'</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>lpop<strong>(</strong><span class="c9">'a list'</span><strong>,</strong> <span class="c10"><strong>0</strong></span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>lgetall<strong>(</strong><span class="c9">'a list'</span><strong>)</strong></span>
-<span class="c7"><em>['now something else']</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>lrem<strong>(</strong><span class="c9">'a list'</span><strong>)</strong></span>
-<span class="c7"><em>True</em></span>
-
-<span class="c7"><span class="c2">&gt;&gt;&gt; </span>db<span class="c8"><strong>.</strong></span>lgetall<strong>(</strong><span class="c9">'a list'</span><strong>)</strong></span>
-<em><span class="c11">KeyError: 'a list'</span></em>
-</pre>
-<h1>Other Information</h1>
+<h1>Welcome</h1>
+<strong>pickleDB is a lightweight and simple key-value store.</strong> It is built upon Python's <a href="http://docs.python.org/library/json.html">json</a> module and was inspired by <a href="http://redis.io/">redis</a>. It is licensed with the BSD three-caluse license.
+<h1>pickleDB is Fun</h1>
+<code>
+<span class="c2">&gt;&gt;&gt;</span> <span class="c9">import</span> pickledb <span class="c9">as</span> db
+<br /><br />
+<span class="c2">&gt;&gt;&gt;</span> db.load(<span class="c9">'example.db'</span>)
+<br /><br />
+<span class="c2">&gt;&gt;&gt;</span> db.set(<span class="c9">'key', 'value'</span>)
+<br />
+True
+<br /><br />
+<span class="c2">&gt;&gt;&gt;</span> db.get(<span class="c9">'key'</span>)
+<br />
+'value'
+</code>
+<h1>And Easy to Install</h1>
+<code>
+<span class="c2">$</span> pip install <span class="c9">pickledb</span>
+</code>
+<h1>More Information</h1>
 You can view all of pickleDB's commands and what they do <a href="commands.html">here</a>.<br>
 <br>
 pickleDB was written by Harrison Erd. If you have any questions or suggestions you can email him at <a href="mailto:patx44@gmail.com">patx44@gmail.com</a>.<br>
 <br>
-pickleDB got its name from Python's "pickle" module. However, now pickleDB uses the "json" module. It is faster and cleaner. But the name stuck!<br>
+pickleDB got its name from Python's "pickle" module, which it used to use. However, now pickleDB uses the "json" module. It is faster and cleaner. But the name stuck!<br>
 <br>
 <br></div>
 </body>
