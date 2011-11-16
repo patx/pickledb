@@ -92,6 +92,32 @@ def lappend(name, pos, more):
     pickle.dump(db, open(loco, 'wb'))
     return True
 
+def dcreate(name):
+    db[name] = {}
+    pickle.dump(db, open(loco, 'wb'))
+    return True
+
+def dadd(name, pair):
+    db[name][pair[0]] = pair[1]
+    pickle.dump(db, open(loco, 'wb'))
+    return True
+
+def dget(name, key):
+    return db[name][key]
+
+def dgetall(name):
+    return db[name]
+
+def drem(name):
+    del db[name]
+    pickle.dump(db, open(loco, 'wb'))
+    return True
+
+def dpop(name, key):
+    del db[name][key]
+    pickle.dump(db, open(loco, 'wb'))
+    return True
+
 def flushdb():
     pickle.dump({}, open(loco, 'wb'))
     return True
