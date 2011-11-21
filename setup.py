@@ -40,8 +40,8 @@ Links
 from distutils.core import setup
 
 setup(name = "pickleDB",
-    version="0.2.1",
-    description="A lightweight, fast, and simple database using json.",
+    version="0.2.2",
+    description="A lightweight and simple database using json.",
     author="Harrison Erd",
     author_email="patx44@gmail.com",
     license="three-clause BSD",
