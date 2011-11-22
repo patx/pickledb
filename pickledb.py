@@ -46,7 +46,10 @@ class pickledb(object):
         return True
 
     def get(self, key):
-        return self.db[key]
+        try:
+            return self.db[key]
+        except KeyError:
+            return None
 
     def rem(self, key):
         del self.db[key]
@@ -121,6 +124,7 @@ class pickledb(object):
         return True
 
     def flushdb(self):
+        self.db={}
         json.dump({}, open(self.loco, 'wb'))
         return True
 
