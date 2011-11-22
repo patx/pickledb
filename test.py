@@ -13,3 +13,5 @@ print db.get('name')
 db.flushdb()
 
 print db.get('name')
+
+db.dump(location='backup.db')

@@ -43,7 +43,12 @@ class pickledb(object):
         except IOError:
             self.db = {}
         return True
-
+    
+    def dump(self, location=None):
+        '''Force dump memory db to file. a new location may be set at dump time'''
+        self._dumpdb(forced=True, location=location)
+        return True
+    
     def set(self, key, value):
         '''Set the string value of a key'''
         # FIXME does not confirm value type
@@ -169,9 +174,14 @@ class pickledb(object):
         '''Load or reload the json info from the file'''
         self.db = json.load(open(self.loco, 'rb'))
     
-    def _dumpdb(self):
+    def _dumpdb(self, forced=False, location=None):
         '''Dump (write, save) the json dump into the file'''
-        json.dump(self.db, open(self.loco, 'wb'))
+        # FIXME only forced dumps happen
+        # should allow users to set automatic dumps
+        if not location:
+            location = self.loco
+        if forced:
+            json.dump(self.db, open(location, 'wb'))
     
 
 def load(location):
