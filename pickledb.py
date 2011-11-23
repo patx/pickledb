@@ -28,96 +28,90 @@
 
 import json as pickle # ;)
 
-def load(location):
-    global db
-    try:
-        db = pickle.load(open(location, 'rb'))
-    except IOError:
-        db = {}
-    global loco
-    loco = location
-    return True
+class pickledb(object):
 
-def set(key, value):
-    db[key] = value
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def __init__(self, location):
+        self.load(location)
 
-def get(key):
-    return db[key]
+    def load(self, location):
+        self.file = open(location, 'wb')
+        if os.path.exists(location):
+            self.db = json.load(self.file)
+        else:
+            self.db = {}
 
-def rem(key):
-    del db[key]
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def set(self, key, value):
+        self.db[key] = value
+        return True
 
-def lcreate(name):
-    db[name] = []
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def get(self, key):
+        return self.db[key]
 
-def ladd(name, value):
-    db[name].append(value)
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def rem(self, key):
+        del self.db[key]
+        return True
 
-def lgetall(name):
-    return db[name]
+    def lcreate(self, name):
+        self.db[name] = []
+        return True
 
-def lget(name, pos):
-    return db[name][pos]
+    def ladd(self, name, value):
+        self.db[name].append(value)
+        return True
 
-def lrem(name):
-    del db[name]
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def lgetall(self, name):
+        return self.db[name]
 
-def lpop(name, pos):
-    del db[name][pos]
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def lget(self, name, pos):
+        return self.db[name][pos]
 
-def llen(name):
-    return len(db[name])
+    def lrem(self, name):
+        del self.db[name]
+        return True
 
-def append(key, more):
-    tmp = db[key]
-    db[key] = ('%s%s' % (tmp, more))
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def lpop(self, name, pos):
+        del self.db[name][pos]
+        return True
 
-def lappend(name, pos, more):
-    tmp = db[name][pos]
-    db[name][pos] = ('%s%s' % (tmp, more))
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def llen(self, name):
+        return len(self.db[name])
 
-def dcreate(name):
-    db[name] = {}
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def append(self, key, more):
+        tmp = self.db[key]
+        self.db[key] = ('%s%s' % (tmp, more))
+        return True
 
-def dadd(name, pair):
-    db[name][pair[0]] = pair[1]
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def lappend(self, name, pos, more):
+        tmp = self.db[name][pos]
+        self.db[name][pos] = ('%s%s' % (tmp, more))
+        return True
 
-def dget(name, key):
-    return db[name][key]
+    def dcreate(self, name):
+        self.db[name] = {}
+        return True
 
-def dgetall(name):
-    return db[name]
+    def dadd(self, name, pair):
+        self.db[name][pair[0]] = pair[1]
+        return True
 
-def drem(name):
-    del db[name]
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def dget(self, name, key):
+        return self.db[name][key]
 
-def dpop(name, key):
-    del db[name][key]
-    pickle.dump(db, open(loco, 'wb'))
-    return True
+    def dgetall(self, name):
+        return self.db[name]
 
-def flushdb():
-    pickle.dump({}, open(loco, 'wb'))
-    return True
+    def drem(self, name):
+        del self.db[name]
+        return True
+
+    def dpop(self, name, key):
+        del self.db[name][key]
+        return True
+
+    def deldb(self):
+        self.db = {}
+        return True
+
+    def save(self):
+        json.dump(self.file)
+        return True
