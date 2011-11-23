@@ -8,14 +8,17 @@ json module. And it's BSD licensed!
 pickleDB is Fun
 ```````````````
 
-    >>> import pickledb as db
+    >>> import pickledb
 
-    >>> db.load('test.db')
+    >>> db = pickledb.load('test.db', False)
 
     >>> db.set('key', 'value')
 
     >>> db.get('key')
     'value'
+
+    >>> db.dump()
+    True
 
 
 And Easy to Install

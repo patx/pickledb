@@ -28,25 +28,33 @@
 
 import json
 
+    
+
+def load(location, option):
+    '''Return a pickledb object. location is the path to the json file.'''
+    return pickledb(location, option)
+
 class pickledb(object):
-    def __init__(self, location):
+
+    def __init__(self, location, option):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.'''
-        self.load(location)
+        self.load(location, option)
     
-    def load(self, location):
+    def load(self, location, option):
         '''Loads, reloads or changes the path to the db file.
         Do not use this method has it may be deprecated in the future.'''
         self.loco = location
+        self.fsave = option
         try:
             self._loaddb()
         except IOError:
             self.db = {}
         return True
     
-    def dump(self, location=None):
+    def dump(self):
         '''Force dump memory db to file. a new location may be set at dump time'''
-        self._dumpdb(forced=True, location=location)
+        self._dumpdb(True)
         return True
     
     def set(self, key, value):
@@ -54,7 +62,7 @@ class pickledb(object):
         # FIXME does not confirm value type
         # http://redis.io/commands/set
         self.db[key] = value
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def get(self, key):
@@ -69,19 +77,19 @@ class pickledb(object):
     def rem(self, key):
         '''Delete a key'''
         del self.db[key]
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def lcreate(self, name):
         '''Create a list'''
         self.db[name] = []
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def ladd(self, name, value):
         '''Add a value to a list'''
         self.db[name].append(value)
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def lgetall(self, name):
@@ -97,7 +105,7 @@ class pickledb(object):
         # FIXME should return the number of removed keys
         # http://redis.io/commands/lrem
         del self.db[name]
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def lpop(self, name, pos):
@@ -105,7 +113,7 @@ class pickledb(object):
         # FIXME should return the deleted value
         # http://redis.io/commands/lpop
         del self.db[name][pos]
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def llen(self, name):
@@ -120,7 +128,7 @@ class pickledb(object):
         # http://redis.io/commands/append
         tmp = self.db[key]
         self.db[key] = ('%s%s' % (tmp, more))
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def lappend(self, name, pos, more):
@@ -128,19 +136,19 @@ class pickledb(object):
         # FIXME return the length akin to append()
         tmp = self.db[name][pos]
         self.db[name][pos] = ('%s%s' % (tmp, more))
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def dcreate(self, name):
         '''Create a dict'''
         self.db[name] = {}
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def dadd(self, name, pair):
         '''Add a key-value pair to a dict, "pair" is a tuple'''
         self.db[name][pair[0]] = pair[1]
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def dget(self, name, key):
@@ -154,36 +162,29 @@ class pickledb(object):
     def drem(self, name):
         '''Remove a dict and all of its pairs'''
         del self.db[name]
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
     def dpop(self, name, key):
         '''Remove one key-value in a dict'''
         # FIXME return deleted value
         del self.db[name][key]
-        self._dumpdb()
+        self._dumpdb(self.fsave)
         return True
     
-    def flushdb(self):
+    def deldb(self):
         '''Delete everything from the database'''
-        self.db={}
-        self._dumpdb()
+        self.db= {}
+        self._dumpdb(self.fsave)
         return True
     
     def _loaddb(self):
         '''Load or reload the json info from the file'''
         self.db = json.load(open(self.loco, 'rb'))
     
-    def _dumpdb(self, forced=False, location=None):
+    def _dumpdb(self, forced):
         '''Dump (write, save) the json dump into the file'''
         # FIXME only forced dumps happen
         # should allow users to set automatic dumps
-        if not location:
-            location = self.loco
         if forced:
-            json.dump(self.db, open(location, 'wb'))
-    
-
-def load(location):
-    '''Return a pickledb object. location is the path to the json file.'''
-    return pickledb(location)
+            json.dump(self.db, open(self.loco, 'wb'))
