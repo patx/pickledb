@@ -42,7 +42,7 @@ class pickledb(object):
     
     def load(self, location, option):
         '''Loads, reloads or changes the path to the db file.
-        Do not use this method has it may be deprecated in the future.'''
+        DO NOT USE this method has it may be deprecated in the future.'''
         self.loco = location
         self.fsave = option
         if os.path.exists(location):
@@ -51,8 +51,8 @@ class pickledb(object):
             self.db = {}
         return True
     
-    def dump(self):
-        '''Force dump memory db to file. a new location may be set at dump time'''
+    def dump(self:
+        '''Force dump memory db to file.'''
         self._dumpdb(True)
         return True
     
@@ -66,8 +66,6 @@ class pickledb(object):
     
     def get(self, key):
         '''Get the value of a key'''
-        # FIXME Redis docs say this should be a string
-        # http://redis.io/commands/get
         try:
             return self.db[key]
         except KeyError:
@@ -101,24 +99,20 @@ class pickledb(object):
     
     def lrem(self, name):
         '''Remove a list and all of its values'''
-        # FIXME should return the number of removed keys
-        # http://redis.io/commands/lrem
+        number = len(self.db[name])
         del self.db[name]
         self._dumpdb(self.fsave)
-        return True
+        return number
     
     def lpop(self, name, pos):
         '''Remove one value in a list'''
-        # FIXME should return the deleted value
-        # http://redis.io/commands/lpop
+        value = self.db[name][pos]
         del self.db[name][pos]
         self._dumpdb(self.fsave)
-        return True
+        return value
     
     def llen(self, name):
         '''Returns the length of the list'''
-        # FIXME should return 0 if there is no list
-        # http://redis.io/commands/llen
         return len(self.db[name])
     
     def append(self, key, more):
