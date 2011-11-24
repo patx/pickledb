@@ -10,14 +10,17 @@ pickleDB is Fun
 
 ::
 
-    >>> import pickledb as db
+    >>> import pickledb
 
-    >>> db.load('test.db')
+    >>> db = pickledb.load('test.db', False)
 
     >>> db.set('key', 'value')
 
     >>> db.get('key')
     'value'
+
+    >>> db.dump()
+    True
 
 
 And Easy to Install
@@ -40,7 +43,7 @@ Links
 from distutils.core import setup
 
 setup(name = "pickleDB",
-    version="0.2.2",
+    version="0.3",
     description="A lightweight and simple database using json.",
     author="Harrison Erd",
     author_email="patx44@gmail.com",

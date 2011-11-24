@@ -26,9 +26,8 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
 # THE POSSIBILITY OF SUCH DAMAGE.
 
+import os
 import json
-
-    
 
 def load(location, option):
     '''Return a pickledb object. location is the path to the json file.'''
@@ -46,9 +45,9 @@ class pickledb(object):
         Do not use this method has it may be deprecated in the future.'''
         self.loco = location
         self.fsave = option
-        try:
+        if os.path.exists(location):
             self._loaddb()
-        except IOError:
+        else:
             self.db = {}
         return True
     
