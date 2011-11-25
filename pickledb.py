@@ -51,7 +51,7 @@ class pickledb(object):
             self.db = {}
         return True
     
-    def dump(self:
+    def dump(self):
         '''Force dump memory db to file.'''
         self._dumpdb(True)
         return True
