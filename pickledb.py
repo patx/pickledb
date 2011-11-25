@@ -177,7 +177,5 @@ class pickledb(object):
     
     def _dumpdb(self, forced):
         '''Dump (write, save) the json dump into the file'''
-        # FIXME only forced dumps happen
-        # should allow users to set automatic dumps
         if forced:
             json.dump(self.db, open(self.loco, 'wb'))
