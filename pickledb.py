@@ -57,9 +57,7 @@ class pickledb(object):
         return True
     
     def set(self, key, value):
-        '''Set the string value of a key'''
-        # FIXME does not confirm value type
-        # http://redis.io/commands/set
+        '''Set the (string,int,whatever) value of a key'''
         self.db[key] = value
         self._dumpdb(self.fsave)
         return True
@@ -117,8 +115,6 @@ class pickledb(object):
     
     def append(self, key, more):
         '''Add more to a key's value'''
-        # FIXME should return the length of the string
-        # http://redis.io/commands/append
         tmp = self.db[key]
         self.db[key] = ('%s%s' % (tmp, more))
         self._dumpdb(self.fsave)
@@ -126,7 +122,6 @@ class pickledb(object):
     
     def lappend(self, name, pos, more):
         '''Add more to a value in a list'''
-        # FIXME return the length akin to append()
         tmp = self.db[name][pos]
         self.db[name][pos] = ('%s%s' % (tmp, more))
         self._dumpdb(self.fsave)
@@ -160,10 +155,10 @@ class pickledb(object):
     
     def dpop(self, name, key):
         '''Remove one key-value in a dict'''
-        # FIXME return deleted value
+        value = self.db[name][key]
         del self.db[name][key]
         self._dumpdb(self.fsave)
-        return True
+        return value
     
     def deldb(self):
         '''Delete everything from the database'''
