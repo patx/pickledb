@@ -159,7 +159,22 @@ class pickledb(object):
         del self.db[name][key]
         self._dumpdb(self.fsave)
         return value
-    
+
+    def dkeys(self, name):
+        '''Return all the keys for a dict'''
+        return self.db[name].keys()
+
+    def dvals(self, name):
+        '''Return all the values for a dict'''
+        return self.db[name].values()
+
+    def dexists(self, name, key):
+        '''Determine if a key exists or not'''
+        if self.db[name][key] is not None:
+            return 1
+        else:
+            return 0
+
     def deldb(self):
         '''Delete everything from the database'''
         self.db= {}
