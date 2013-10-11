@@ -43,6 +43,7 @@ class pickledb(object):
     def load(self, location, option):
         '''Loads, reloads or changes the path to the db file.
         DO NOT USE this method has it may be deprecated in the future.'''
+        location = os,apth.expanduser(location)
         self.loco = location
         self.fsave = option
         if os.path.exists(location):
@@ -185,7 +186,7 @@ class pickledb(object):
         self._dumpdb(self.fsave)
         return True
     
-    def _loaddb(self):
+    def _loaddb(self) :
         '''Load or reload the json info from the file'''
         self.db = json.load(open(self.loco, 'rb'))
     
