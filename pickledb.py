@@ -43,7 +43,7 @@ class pickledb(object):
     def load(self, location, option):
         '''Loads, reloads or changes the path to the db file.
         DO NOT USE this method has it may be deprecated in the future.'''
-        location = os,apth.expanduser(location)
+        location = os.path.expanduser(location)
         self.loco = location
         self.fsave = option
         if os.path.exists(location):
