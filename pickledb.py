@@ -69,6 +69,10 @@ class pickledb(object):
         except KeyError:
             return None
     
+    def getall(self):
+        '''return a list of all the keys'''
+        return self.db.keys()
+
     def rem(self, key):
         '''Delete a key'''
         del self.db[key]
