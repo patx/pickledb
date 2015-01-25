@@ -74,7 +74,11 @@ class pickledb(object):
         del self.db[key]
         self._dumpdb(self.fsave)
         return True
-    
+
+    def has(self, key):
+        '''Returns True if key exists; False otherwise'''
+        return self.db.has_key(key)
+
     def lcreate(self, name):
         '''Create a list'''
         self.db[name] = []

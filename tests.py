@@ -42,6 +42,12 @@ class TestBasicFunctionality(unittest.TestCase):
         c = self.db.get('var')
         self.assertTrue(a == b and b != c and c == None)
 
+    def testHas(self):
+        a = self.teststring
+        self.db.set('var', a)
+        self.assertTrue(self.db.has('var'))
+        self.db.rem('var')
+        self.assertFalse(self.db.has('var'))
 
 if __name__ == '__main__':
     unittest.main()
