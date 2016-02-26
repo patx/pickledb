@@ -198,4 +198,4 @@ class pickledb(object):
     def _dumpdb(self, forced):
         '''Write/save the json dump into the file'''
         if forced:
-           simplejson.dump(self.db, open(self.loco, 'wb'))
+           simplejson.dump(self.db, open(self.loco, 'wt'))
