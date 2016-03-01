@@ -1,3 +1,7 @@
+#!/opt/bin/python2.7
+# -*- coding: utf-8 -*-
+#
+#
 #!/usr/bin/env python
 
 # Copyright (c) 2015, Harrison Erd
@@ -25,6 +29,7 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 # THE POSSIBILITY OF SUCH DAMAGE.
+#
 
 import os
 import simplejson
@@ -54,6 +59,11 @@ class pickledb(object):
     def dump(self):
         '''Force dump memory db to file.'''
         self._dumpdb(True)
+        return True
+
+    def bakdump(self,bakfile):
+        '''Force dump memory db to file.'''
+        self._bakdumpdb(True,bakfile)
         return True
 
     def set(self, key, value):
@@ -199,3 +209,8 @@ class pickledb(object):
         '''Write/save the json dump into the file'''
         if forced:
            simplejson.dump(self.db, open(self.loco, 'wb'))
+
+    def _bakdumpdb(self, forced, bakfile):
+        '''Write/save the json dump into the file'''
+        if forced:
+           simplejson.dump(self.db, open(bakfile, 'wb'))
