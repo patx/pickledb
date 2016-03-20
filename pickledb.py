@@ -62,6 +62,13 @@ class PickleDB(object):
         self._dumpdb(self.fsave)
         return True
 
+    def append(self, key, more):
+        '''Add more to a key's value'''
+        tmp = self.db[key]
+        self.db[key] = ('%s%s' % (tmp, more))
+        self._dumpdb(self.fsave)
+        return True
+
     def get(self, key):
         '''Get the value of a key'''
         try:
@@ -122,13 +129,6 @@ class PickleDB(object):
     def llen(self, name):
         '''Returns the length of the list'''
         return len(self.db[name])
-
-    def append(self, key, more):
-        '''Add more to a key's value'''
-        tmp = self.db[key]
-        self.db[key] = ('%s%s' % (tmp, more))
-        self._dumpdb(self.fsave)
-        return True
 
     def lappend(self, name, pos, more):
         '''Add more to a value in a list'''
