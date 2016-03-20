@@ -31,9 +31,9 @@ import simplejson
 
 def load(location, option):
     '''Return a pickledb object. location is the path to the json file.'''
-    return pickledb(location, option)
+    return PickleDB(location, option)
 
-class pickledb(object):
+class PickleDB(object):
 
     def __init__(self, location, option):
         '''Creates a database object and loads the data from the location path.
