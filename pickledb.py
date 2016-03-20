@@ -154,6 +154,15 @@ class PickleDB(object):
         except StopIteration:
             return -1
 
+    def ldfind(self, name, key, value):
+        '''In a list of dictionaries, find and return the first dict
+        that has dict[key] == value, otherwise return None.
+        Example: ldfind(name="famous_quotes", key="id", value=100)'''
+        try:        
+            return next( d for d in self.lgetall(lname) if d[key] == value )
+        except StopIteration:
+            return None
+
     def dcreate(self, name):
         '''Create a dict'''
         self.db[name] = {}
