@@ -137,6 +137,23 @@ class PickleDB(object):
         self._dumpdb(self.fsave)
         return True
 
+    def lupdate(self, name, seq):
+        '''Remove the list, create a new list with the same name
+        and populate it with the sequence'''
+       self.lrem(name)
+       self.lcreate(name)
+       self.lextend(name, seq)
+       self._dumpdb(self.fsave)
+       return True
+
+    def lfind(self, name, value):
+        '''Returns the lowest index in a list where value is found,
+        returns -1 if it wasn't found. Works just like str.find()'''
+        try:
+            return next( i for i,el in enumerate(self.db[name]) if el == value )
+        except StopIteration:
+            return -1
+
     def dcreate(self, name):
         '''Create a dict'''
         self.db[name] = {}
