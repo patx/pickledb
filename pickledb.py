@@ -28,6 +28,8 @@
 
 import os
 import json
+import signal
+import threading
 
 def load(location, option):
     '''Return a pickledb object. location is the path to the json file.'''
@@ -39,7 +41,18 @@ class pickledb(object):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.'''
         self.load(location, option)
-    
+        self.dthread = None
+        self.set_sigterm_handler()
+
+    def set_sigterm_handler(self):
+        '''Assigns sigterm_handler to guarantee graceful shutdown during dump
+        execution'''
+        def sigterm_handler():
+            if self.dthread is not None:
+                self.dthread.join()
+            sys.exit(0)
+        signal.signal(signal.SIGTERM, sigterm_handler)
+
     def load(self, location, option):
         '''Loads, reloads or changes the path to the db file.
         DO NOT USE this method has it may be deprecated in the future.'''
@@ -186,6 +199,14 @@ class pickledb(object):
         self.db = json.load(open(self.loco, 'rb'))
     
     def _dumpdb(self, forced):
-        '''Dump (write, save) the json dump into the file'''
+        '''Dump (write, save) the json dump into the file. Dump execution
+        happens in distinct thread to guarantee gracefull shutdown via
+        sigterm_handler'''
         if forced:
-            json.dump(self.db, open(self.loco, 'wb'))
+            self.dthread = threading.Thread(
+                target=json.dump,
+                args=(self.db, open(self.loco, 'wb'))
+            )
+            self.dthread.start()
+            self.dthread.join()
+
