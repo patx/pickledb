@@ -159,7 +159,7 @@ class PickleDB(object):
         that has dict[key] == value, otherwise return None.
         Example: ldfind(name="famous_quotes", key="id", value=100)'''
         try:        
-            return next( d for d in self.lgetall(lname) if d[key] == value )
+            return next( d for d in self.lgetall(name) if d[key] == value )
         except StopIteration:
             return None
 
