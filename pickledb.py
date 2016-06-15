@@ -153,6 +153,12 @@ class PickleDB(object):
             return next( i for i,el in enumerate(self.db[name]) if el == value )
         except StopIteration:
             return -1
+            
+    def lfind_all(self, name, value):
+        '''Returns a list of all indexes where `value` is found in a list,
+        returns `None` if `value` wasn't found.'''
+        indexes = [ i for i,el in enumerate(self.db[name]) if el == value ]
+        return indexes if len(indexes)>0 else None
 
     def ldfind(self, name, key, value):
         '''In a list of dictionaries, find and return the first dict
