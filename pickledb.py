@@ -62,12 +62,12 @@ class pickledb(object):
         self._dumpdb(self.fsave)
         return True
 
-    def get(self, key):
+    def get(self, key, default_value=None):
         '''Get the value of a key'''
         try:
             return self.db[key]
         except KeyError:
-            return None
+            return default_value
 
     def getall(self):
         '''Return a list of all keys in db'''
