@@ -29,7 +29,6 @@ Easy to Install
 Links
 `````
 
-* `website <http://packages.python.org/pickleDB/>`_
-* `documentation <http://packages.python.org/pickleDB/commands.html>`_
-* `pypi
-  <http://pypi.python.org/pypi/pickleDB>`_
+* `website <http://pythonhosted.org/pickleDB/>`_
+* `documentation <http://pythonhosted.org/pickleDB/commands.html>`_
+* `pypi <http://pypi.python.org/pypi/pickleDB>`_
