@@ -195,7 +195,7 @@ class pickledb(object):
        '''Load or reload the json info from the file'''
        fh = open(self.loco, 'rb')
        try:
-			 self.db = json.load(fh)
+			 self.db = simplejson.load(fh)
        except Exception, reason:
           self.db={}
 			 #This assures that the file is not locked if json.load
