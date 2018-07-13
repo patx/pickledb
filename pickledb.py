@@ -28,6 +28,7 @@
 
 import os
 import pickle
+
 import simplejson
 
 
@@ -53,8 +54,7 @@ class pickledb(object):
         location = os.path.expanduser(location)
         if os.path.exists(location):
             self._loaddb()
-        else:
-            pass
+
         return True
 
     def dump(self):
