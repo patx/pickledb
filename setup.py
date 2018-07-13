@@ -43,7 +43,7 @@ from distutils.core import setup
 
 setup(name = "pickleDB",
     version="0.6.2",
-    description="A lightweight and simple database using simplejson.",
+    description="A lightweight and simple database with pickle or simplejson backend.",
     author="Harrison Erd",
     author_email="patx44@gmail.com",
     license="three-clause BSD",
@@ -55,4 +55,4 @@ setup(name = "pickleDB",
         "Intended Audience :: Developers",
         "Topic :: Database" ],
     py_modules=['pickledb'],
-    install_requires=['simplejson'])
+    install_requires=['simplejson', 'pickle'])

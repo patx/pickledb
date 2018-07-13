@@ -1,7 +1,7 @@
 pickleDB
 --------
 
-pickleDB is lightweight, fast, and simple database based on the `simplejson <https://pypi.python.org/pypi/simplejson/>`_ module. And it's BSD licensed!
+pickleDB is lightweight, fast, and simple database with `simplejson <https://pypi.python.org/pypi/simplejson/>`_ or `pickle <https://docs.python.org/3/library/pickle.html/>`_ backend. And it's BSD licensed!
 
 
 pickleDB is Fun
