@@ -35,19 +35,19 @@ Links
 
 * `website <http://packages.python.org/pickleDB/>`_
 * `documentation <http://packages.python.org/pickleDB/commands.html>`_
-* `bitbucket repo <https://bitbucket.org/patx/pickledb>`_
+* `github repo <https://github.com/patx/pickledb>`_
 
 """
 
 from distutils.core import setup
 
 setup(name = "pickleDB",
-    version="0.6.2",
+    version="0.7.1",
     description="A lightweight and simple database using simplejson.",
     author="Harrison Erd",
-    author_email="patx44@gmail.com",
+    author_email="erdh@mail.broward.edu",
     license="three-clause BSD",
-    url="http://bitbucket.org/patx/pickledb",
+    url="http://github.com/patx/pickledb",
     long_description=__doc__,
     classifiers = [
         "Programming Language :: Python",

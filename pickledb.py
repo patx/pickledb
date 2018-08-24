@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2015, Harrison Erd
+# Copyright (c) 2018, Harrison Erd
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without modification,

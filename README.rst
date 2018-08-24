@@ -31,5 +31,5 @@ Links
 
 * `website <http://packages.python.org/pickleDB/>`_
 * `documentation <http://packages.python.org/pickleDB/commands.html>`_
-* `pypi
-  <http://pypi.python.org/pypi/pickleDB>`_
+* `pypi <http://pypi.python.org/pypi/pickleDB>`_
+* `github repo <https://github.com/patx/pickledb>`_
