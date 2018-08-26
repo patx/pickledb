@@ -3,8 +3,8 @@
 # Copyright (c) 2018, Harrison Erd
 # All rights reserved.
 #
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
 #
 # Redistributions of source code must retain the above copyright notice, this
 # list of conditions and the following disclaimer.
@@ -73,6 +73,13 @@ class pickledb(object):
         '''Return a list of all keys in db'''
         return self.db.keys()
 
+    def has(self, key):
+        '''Return True if key exists in db, return False if not'''
+        if key in self.db:
+            return True
+        else:
+            return False
+
     def rem(self, key):
         '''Delete a key'''
         del self.db[key]
@@ -126,14 +133,14 @@ class pickledb(object):
     def append(self, key, more):
         '''Add more to a key's value'''
         tmp = self.db[key]
-        self.db[key] = ('%s%s' % (tmp, more))
+        self.db[key] = tmp + more
         self._dumpdb(self.fsave)
         return True
 
     def lappend(self, name, pos, more):
         '''Add more to a value in a list'''
         tmp = self.db[name][pos]
-        self.db[name][pos] = ('%s%s' % (tmp, more))
+        self.db[name][pos] = tmp + more
         self._dumpdb(self.fsave)
         return True
 
@@ -187,7 +194,7 @@ class pickledb(object):
 
     def deldb(self):
         '''Delete everything from the database'''
-        self.db= {}
+        self.db = {}
         self._dumpdb(self.fsave)
         return True
 
@@ -198,4 +205,4 @@ class pickledb(object):
     def _dumpdb(self, forced):
         '''Write/save the json dump into the file'''
         if forced:
-           simplejson.dump(self.db, open(self.loco, 'wt'))
+            simplejson.dump(self.db, open(self.loco, 'wt'))
