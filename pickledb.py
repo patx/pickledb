@@ -187,10 +187,17 @@ class pickledb(object):
 
     def dexists(self, name, key):
         '''Determine if a key exists or not'''
-        if self.db[name][key] is not None:
-            return 1
+        if self.db[name][key] in self.db[name]:
+            return True
         else:
-            return 0
+            return False
+
+    def lexists(self, name, value):
+        '''Determine if a value is in a list'''
+        if value in self.db[name]:
+            return True
+        else:
+            return False
 
     def deldb(self):
         '''Delete everything from the database'''
