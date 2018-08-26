@@ -31,9 +31,9 @@ import simplejson
 
 def load(location, option):
     '''Return a pickledb object. location is the path to the json file.'''
-    return pickledb(location, option)
+    return PickleDB(location, option)
 
-class pickledb(object):
+class PickleDB(object):
 
     def __init__(self, location, option):
         '''Creates a database object and loads the data from the location path.
@@ -59,6 +59,13 @@ class pickledb(object):
     def set(self, key, value):
         '''Set the (string,int,whatever) value of a key'''
         self.db[key] = value
+        self._dumpdb(self.fsave)
+        return True
+
+    def append(self, key, more):
+        '''Add more to a key's value'''
+        tmp = self.db[key]
+        self.db[key] = ('%s%s' % (tmp, more))
         self._dumpdb(self.fsave)
         return True
 
@@ -123,19 +130,44 @@ class pickledb(object):
         '''Returns the length of the list'''
         return len(self.db[name])
 
-    def append(self, key, more):
-        '''Add more to a key's value'''
-        tmp = self.db[key]
-        self.db[key] = ('%s%s' % (tmp, more))
-        self._dumpdb(self.fsave)
-        return True
-
     def lappend(self, name, pos, more):
         '''Add more to a value in a list'''
         tmp = self.db[name][pos]
         self.db[name][pos] = ('%s%s' % (tmp, more))
         self._dumpdb(self.fsave)
         return True
+
+    def lupdate(self, name, seq):
+        '''Remove the list, create a new list with the same name
+        and populate it with the sequence'''
+       self.lrem(name)
+       self.lcreate(name)
+       self.lextend(name, seq)
+       self._dumpdb(self.fsave)
+       return True
+
+    def lfind(self, name, value):
+        '''Returns the lowest index in a list where value is found,
+        returns -1 if it wasn't found. Works just like str.find()'''
+        try:
+            return next( i for i,el in enumerate(self.db[name]) if el == value )
+        except StopIteration:
+            return -1
+            
+    def lfind_all(self, name, value):
+        '''Returns a list of all indexes where `value` is found in a list,
+        returns `None` if `value` wasn't found.'''
+        indexes = [ i for i,el in enumerate(self.db[name]) if el == value ]
+        return indexes if len(indexes)>0 else None
+
+    def ldfind(self, name, key, value):
+        '''In a list of dictionaries, find and return the first dict
+        that has dict[key] == value, otherwise return None.
+        Example: ldfind(name="famous_quotes", key="id", value=100)'''
+        try:        
+            return next( d for d in self.lgetall(name) if d[key] == value )
+        except StopIteration:
+            return None
 
     def dcreate(self, name):
         '''Create a dict'''
