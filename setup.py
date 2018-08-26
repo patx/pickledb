@@ -33,8 +33,9 @@ And Easy to Install
 Links
 `````
 
-* `website <http://packages.python.org/pickleDB/>`_
-* `documentation <http://packages.python.org/pickleDB/commands.html>`_
+* `website <https://patx.github.io/pickledb>`_
+* `documentation <http://patx.github.io/commands.html>`_
+* `pypi <http://pypi.python.org/pypi/pickleDB>`_
 * `github repo <https://github.com/patx/pickledb>`_
 
 """
@@ -42,7 +43,7 @@ Links
 from distutils.core import setup
 
 setup(name = "pickleDB",
-    version="0.7.1",
+    version="0.7.2",
     description="A lightweight and simple database using simplejson.",
     author="Harrison Erd",
     author_email="erdh@mail.broward.edu",
