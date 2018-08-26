@@ -73,7 +73,7 @@ class pickledb(object):
         '''Return a list of all keys in db'''
         return self.db.keys()
 
-    def has(self, key):
+    def exists(self, key):
         '''Return True if key exists in db, return False if not'''
         if key in self.db:
             return True

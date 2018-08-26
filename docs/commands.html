@@ -26,7 +26,7 @@ a:hover { color: #008000; border-bottom: 1px solid #008000; }
 <p><code><span class="c2">GETALL</span></code> &rarr; Return a list of all keys in database <small><em>(available since 0.4)</em></small></p>
 <p><code><span class="c2">REM</span> <span class="c9">key</span></code> &rarr; Delete a key <small><em>(available since 0.1)</em></small></p>
 <p><code><span class="c2">APPEND</span> <span class="c9">key</span> <span class="c9">more</span></code> &rarr; Add more to a key's value <small><em>(available since 0.1.3)</em></small></p>
-<p><code><span class="c2">HAS</span> <span class="c9">key</span></code> &rarr; Determine if a key exists <small><em>(available since 0.7.2)</em></small></p>
+<p><code><span class="c2">EXISTS</span> <span class="c9">key</span></code> &rarr; Determine if a key exists <small><em>(available since 0.7.2)</em></small></p>
 <p><code><span class="c2">LCREATE</span> <span class="c9">name</span></code> &rarr; Create a list <small><em>(available since 0.1)</em></small></p>
 <p><code><span class="c2">LADD</span> <span class="c9">name</span> <span class="c9">value</span></code> &rarr; Add a value to a list <small><em>(available since 0.1)</em></small></p>
 <p><code><span class="c2">LGETALL</span> <span class="c9">name</span></code> &rarr; Return all values in a list <small><em>(available since 0.1)</em></small></p>
@@ -36,6 +36,7 @@ a:hover { color: #008000; border-bottom: 1px solid #008000; }
 <p><code><span class="c2">LPOP</span> <span class="c9">name</span> <span class="c9">pos</span></code> &rarr; Remove one value in a list <small><em>(available since 0.1)</em></small></p>
 <p><code><span class="c2">LLEN</span> <span class="c9">name</span></code> &rarr; Return the length of a list <small><em>(available since 0.6)</em></small></p>
 <p><code><span class="c2">LAPPEND</span> <span class="c9">name</span> <span class="c9">pos</span> <span class="c9">more</span></code> &rarr; Add more to a value in a list <small><em>(available since 0.1.3)</em></small></p>
+<p><code><span class="c2">LEXISTS</span> <span class="c9">name</span> <span class="c9">value</span> &rarr; Determine if a value is in a certain list <small><em>(available since 0.7.2)</em></small></p>
 <p><code><span class="c2">DCREATE</span> <span class="c9">name</span></code> &rarr; Create a dict <small><em>(available since 0.2.2)</em></small></p>
 <p><code><span class="c2">DADD</span> <span class="c9">name</span> <span class="c9">pair</span></code> &rarr; Add a key-value pair to a dict, "pair" is a tuple <small><em>(available since 0.2.2)</em></small></p>
 <p><code><span class="c2">DGETALL</span> <span class="c9">name</span></code> &rarr; Return all key-value pairs from a dict <small><em>(available since 0.2.2)</em></small></p>
@@ -48,7 +49,7 @@ a:hover { color: #008000; border-bottom: 1px solid #008000; }
 <p><code><span class="c2">DELDB</span></code> &rarr; Delete everything from the database <small><em>(available since 0.2.1)</em></small></p>
 <p><code><span class="c2">DUMP</span></code> &rarr; Save the database from memory to a file specified in <code>LOAD</code> <small><em>(available since 0.3)</em></small></p>
 <h1>Suggestions</h1>
-<p>If you would like to suggest a command, you can create an <a href="http://github.com/patx/pickledb/issues">issue</a> on GitHub.</p>
+<p>If you would like to suggest a command, you can create an <a href="http://github.com/patx/pickledb/issues">issue on GitHub</a>.</p>
 </div>
 </body>
 </html>
