@@ -32,6 +32,6 @@ Links
 `````
 
 * `website <https://patx.github.io/pickledb>`_
-* `documentation <http://patx.github.io/commands.html>`_
+* `documentation <http://patx.github.io/pickledb/commands.html>`_
 * `pypi <http://pypi.python.org/pypi/pickleDB>`_
 * `github repo <https://github.com/patx/pickledb>`_
