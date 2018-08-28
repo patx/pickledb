@@ -53,7 +53,7 @@ class pickledb(object):
         signal.signal(signal.SIGTERM, sigterm_handler)
 
     def load(self, location, option):
-        '''Loads, reloads or changes the path to the db file.'''
+        '''Loads, reloads or changes the path to the db file'''
         location = os.path.expanduser(location)
         self.loco = location
         self.fsave = option
@@ -64,7 +64,7 @@ class pickledb(object):
         return True
 
     def dump(self):
-        '''Force dump memory db to file.'''
+        '''Force dump memory db to file'''
         self._dumpdb(True)
         return True
 
@@ -210,6 +210,15 @@ class pickledb(object):
             return True
         else:
             return False
+
+    def dmerge(self, name1, name2, name3):
+        '''Create a new dict by merging 2 old dicst together'''
+        first = self.db[name1]
+        second = self.db[name2]
+        new = {**first, **second}
+        self.db[name3] = new
+        self._dumpdb(self.fsave)
+        return True
 
     def deldb(self):
         '''Delete everything from the database'''
