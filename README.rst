@@ -18,6 +18,9 @@ pickleDB is Fun
     >>> db.get('key')
     'value'
 
+    >>> db.get('keyx','default_value')
+    'default_value'
+
     >>> db.dump()
     True
 
