@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright (c) 2018, Harrison Erd
 # All rights reserved.
@@ -211,12 +211,11 @@ class pickledb(object):
         else:
             return False
 
-    def dmerge(self, name1, name2, name3):
-        '''Create a new dict by merging 2 old dicst together'''
+    def dmerge(self, name1, name2):
+        '''Merge two dicts together into name1'''
         first = self.db[name1]
         second = self.db[name2]
-        new = {**first, **second}
-        self.db[name3] = new
+        first.update(second)
         self._dumpdb(self.fsave)
         return True
 
