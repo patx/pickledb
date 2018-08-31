@@ -4,10 +4,6 @@ class TestClass(object):
 
     db = pickledb.load('tests.db', False)
 
-    def test_set(self):
-        x = self.db.set('key', 'value')
-        assert self.db.get('key') == 'value'
-
     def test_get(self):
         self.db.set('key', 'value')
         x = self.db.get('key')
