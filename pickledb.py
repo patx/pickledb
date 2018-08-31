@@ -98,6 +98,15 @@ class pickledb(object):
         self._dumpdb(self.fsave)
         return True
 
+    def totalkeys(self, name=None):
+        '''Get a total number of keys, lists, and dicts inside the db'''
+        if name == None:
+            total = len(self.db)
+            return total
+        else:
+            total = len(self.db[name])
+            return total
+
     def lcreate(self, name):
         '''Create a list'''
         self.db[name] = []
@@ -235,7 +244,6 @@ class pickledb(object):
             simplejson.dump(self.db, open(self.loco, 'wt'))
             self.dthread = threading.Thread(
                 target = simplejson.dump,
-                args = (self.db, open(self.loco, 'wt'))
-            )
+                args = (self.db, open(self.loco, 'wt')))
             self.dthread.start()
             self.dthread.join()
