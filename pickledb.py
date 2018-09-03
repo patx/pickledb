@@ -28,8 +28,8 @@
 
 import os
 import signal
-import threading
 import simplejson
+from threading import Thread
 
 def load(location, option):
     '''Return a pickledb object. location is the path to the json file.'''
@@ -242,7 +242,7 @@ class pickledb(object):
         '''Write/save the json dump into the file'''
         if forced:
             simplejson.dump(self.db, open(self.loco, 'wt'))
-            self.dthread = threading.Thread(
+            self.dthread = Thread(
                 target = simplejson.dump,
                 args = (self.db, open(self.loco, 'wt')))
             self.dthread.start()
