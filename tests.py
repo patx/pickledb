@@ -1,5 +1,6 @@
 import pickledb
 
+
 class TestClass(object):
 
     db = pickledb.load('tests.db', False)
@@ -13,7 +14,7 @@ class TestClass(object):
         self.db.set('key', 'value')
         self.db.rem('key')
         x = self.db.get('key')
-        assert x == None
+        assert x is None
 
     def test_append(self):
         self.db.set('key', 'value')
@@ -24,4 +25,4 @@ class TestClass(object):
     def test_exists(self):
         self.db.set('key', 'value')
         x = self.db.exists('key')
-        assert x == True
+        assert x is True
