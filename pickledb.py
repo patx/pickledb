@@ -81,7 +81,7 @@ class pickledb(object):
         try:
             return self.db[key]
         except KeyError:
-            return None
+            return False
 
     def getall(self):
         '''Return a list of all keys in db'''
