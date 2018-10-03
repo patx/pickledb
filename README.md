@@ -1,4 +1,4 @@
-.. Image:: http://pepy.tech/badge/pickledb
+![Download badge](http://pepy.tech/badge/pickledb)
 
 # pickleDB
 pickleDB is lightweight, fast, and simple database based on the `simplejson <https://pypi.python.org/pypi/simplejson/>`_ module. And it's BSD licensed!
@@ -20,7 +20,7 @@ True
 ```
 
 ## Easy to Install
-```python
+```bash
 $ pip install pickledb
 ```
 
