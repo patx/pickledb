@@ -39,6 +39,8 @@ def load(location, option):
 
 class pickledb(object):
 
+    key_string_error = TypeError('Key/name must be a string!')
+
     def __init__(self, location, option):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.'''
@@ -71,10 +73,13 @@ class pickledb(object):
         return True
 
     def set(self, key, value):
-        '''Set the (string,int,whatever) value of a key'''
-        self.db[key] = value
-        self._dumpdb(self.fsave)
-        return True
+        '''Set the str value of a key'''
+        if isinstance(key, str):
+            self.db[key] = value
+            self._dumpdb(self.fsave)
+            return True
+        else:
+            return self.key_string_error
 
     def get(self, key):
         '''Get the value of a key'''
@@ -110,10 +115,13 @@ class pickledb(object):
             return total
 
     def lcreate(self, name):
-        '''Create a list'''
-        self.db[name] = []
-        self._dumpdb(self.fsave)
-        return True
+        '''Create a list, name must be str'''
+        if isinstance(name, str):
+            self.db[name] = []
+            self._dumpdb(self.fsave)
+            return True
+        else:
+            return self.key_string_error
 
     def ladd(self, name, value):
         '''Add a value to a list'''
@@ -168,10 +176,13 @@ class pickledb(object):
         return True
 
     def dcreate(self, name):
-        '''Create a dict'''
-        self.db[name] = {}
-        self._dumpdb(self.fsave)
-        return True
+        '''Create a dict, name must be str'''
+        if isinstance(name, str):
+            self.db[name] = {}
+            self._dumpdb(self.fsave)
+            return True
+        else:
+            return self.key_string_error
 
     def dadd(self, name, pair):
         '''Add a key-value pair to a dict, "pair" is a tuple'''

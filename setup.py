@@ -43,7 +43,7 @@ Links
 from distutils.core import setup
 
 setup(name = "pickleDB",
-    version="0.7.3",
+    version="0.7.4",
     description="A lightweight and simple database using simplejson.",
     author="Harrison Erd",
     author_email="erdh@mail.broward.edu",
