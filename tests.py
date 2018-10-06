@@ -10,6 +10,20 @@ class TestClass(object):
         x = pickledb.load('x.db', False)
         assert x is not None
 
+    def test_sugar_get(self):
+        self.db.db["foo"] = "bar"
+        x = self.db["foo"]
+        assert x == "bar"
+
+    def test_sugar_set(self):
+        self.db["foo"] = "bar"
+        assert "bar" == self.db.db["foo"]
+
+    def test_sugar_rem(self):
+        self.db.db["foo"] = "bar"
+        del self.db["foo"]
+        assert "foo" not in self.db.db
+
     def test_set(self):
         self.db.set('key', 'value')
         x = self.db.get('key')
