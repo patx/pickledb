@@ -49,15 +49,15 @@ class pickledb(object):
         self.set_sigterm_handler()
 
     def __getitem__(self, item):
-        """ Syntax sugar for 'get' """
+        '''Syntax sugar for get()'''
         return self.get(item)
 
     def __setitem__(self, key, value):
-        """ Sytax sugar for 'set' """
+        '''Sytax sugar for set()'''
         return self.set(key, value)
 
     def __delitem__(self, key):
-        """ Sytax sugar for 'rem' """
+        '''Sytax sugar for rem()'''
         return self.rem(key)
 
     def set_sigterm_handler(self):
@@ -133,7 +133,7 @@ class pickledb(object):
             self._dumpdb(self.fsave)
             return True
         else:
-            return self.key_string_error
+            raise self.key_string_error
 
     def ladd(self, name, value):
         '''Add a value to a list'''
@@ -194,7 +194,7 @@ class pickledb(object):
             self._dumpdb(self.fsave)
             return True
         else:
-            return self.key_string_error
+            raise self.key_string_error
 
     def dadd(self, name, pair):
         '''Add a key-value pair to a dict, "pair" is a tuple'''
