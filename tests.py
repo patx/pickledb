@@ -2,6 +2,7 @@ import pickledb
 
 # a work in progress
 
+
 class TestClass(object):
 
     db = pickledb.load('tests.db', False)
@@ -36,8 +37,7 @@ class TestClass(object):
         self.db.dcreate('dict1')
         self.db.lcreate('list1')
         x = self.db.getall()
-        z = list(x)
-        y = ['key2', 'key1', 'dict1', 'list1']
+        y = dict.fromkeys(['key2', 'key1', 'dict1', 'list1']).keys()
         assert x == y
 
     def test_get(self):
@@ -61,3 +61,38 @@ class TestClass(object):
         self.db.set('key', 'value')
         x = self.db.exists('key')
         assert x is True
+        self.db.rem('key')
+
+    def test_not_exists(self):
+        self.db.set('key', 'value')
+        x = self.db.exists('not_key')
+        assert x is False
+        self.db.rem('key')
+
+    def test_lexists(self):
+        self.db.lcreate('list')
+        self.db.ladd('list', 'value')
+        x = self.db.lexists('list', 'value')
+        assert x is True
+        self.db.lrem('list')
+
+    def test_not_lexists(self):
+        self.db.lcreate('list')
+        self.db.ladd('list', 'value')
+        x = self.db.lexists('list', 'not_value')
+        assert x is False
+        self.db.lrem('list')
+
+    def test_dexists(self):
+        self.db.dcreate('dict')
+        self.db.dadd('dict', ('key', 'value'))
+        x = self.db.dexists('dict', 'key')
+        assert x is True
+        self.db.drem('dict')
+
+    def test_not_dexists(self):
+        self.db.dcreate('dict')
+        self.db.dadd('dict', ('key', 'value'))
+        x = self.db.dexists('dict', 'not_key')
+        assert x is False
+        self.db.drem('dict')
