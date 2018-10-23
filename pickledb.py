@@ -106,10 +106,7 @@ class pickledb(object):
 
     def exists(self, key):
         '''Return True if key exists in db, return False if not'''
-        if key in self.db:
-            return True
-        else:
-            return False
+        return key in self.db
 
     def rem(self, key):
         '''Delete a key'''
@@ -232,18 +229,12 @@ class pickledb(object):
         return self.db[name].values()
 
     def dexists(self, name, key):
-        '''Determine if a key exists or not'''
-        if self.db[name][key] in self.db[name]:
-            return True
-        else:
-            return False
+        '''Determine if a key exists or not in a dict'''
+        return key in self.db[name]
 
     def lexists(self, name, value):
-        '''Determine if a value is in a list'''
-        if value in self.db[name]:
-            return True
-        else:
-            return False
+        '''Determine if a value  exists in a list'''
+        return value in self.db[name]
 
     def dmerge(self, name1, name2):
         '''Merge two dicts together into name1'''
