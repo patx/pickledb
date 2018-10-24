@@ -265,3 +265,4 @@ class pickledb(object):
                 args=(self.db, open(self.loco, 'wt')))
             self.dthread.start()
             self.dthread.join()
+
