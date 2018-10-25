@@ -31,11 +31,3 @@ $ pip install pickledb
 * [documentation](https://patx.github.io/pickledb/commands.html)
 * [pypi](http://pypi.python.org/pypi/pickleDB)
 * [github repo](https://github.com/patx/pickledb)
-
-
-## Latest Release Notes (version: 0.8.0)
-* All *keys* must now be strings
-* All *names* for lists must now be strings
-* All *names* for dicts must now be strings
-* The get(key, value) function now returns *False* instead of None if there is no key
-
