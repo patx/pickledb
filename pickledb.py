@@ -253,8 +253,19 @@ class pickledb(object):
         return True
 
     def _loaddb(self):
-        '''Load or reload the json info from the file'''
-        self.db = simplejson.load(open(self.loco, 'rb'))
+       '''Load or reload the json info from the file'''
+       fh = open(self.loco, 'rb')
+       try:
+			 self.db = simplejson.load(fh)
+       except Exception, reason:
+          self.db={}
+			 #This assures that the file is not locked if json.load
+			 #fails e.g. due to corrupt file..
+			 #Clients of pickledb can then restore or delete the file.
+          fh.close()
+          raise Exception, reason
+		 #no reason to keep the file handle open.
+       fh.close()
 
     def _dumpdb(self, forced):
         '''Write/save the json dump into the file'''
