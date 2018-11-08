@@ -37,5 +37,5 @@ $ pip install pickledb
 * All *keys* must now be strings
 * All *names* for lists must now be strings
 * All *names* for dicts must now be strings
-* The get(key, value) function now returns *False* instead of None if there is no key
+* The get(key) function now returns *False* instead of None if there is no key
 
