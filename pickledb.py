@@ -34,19 +34,19 @@ import simplejson
 from threading import Thread
 
 
-def load(location, option):
+def load(location, auto_dump):
     '''Return a pickledb object. location is the path to the json file.'''
-    return pickledb(location, option)
+    return pickledb(location, auto_dump)
 
 
 class pickledb(object):
 
     key_string_error = TypeError('Key/name must be a string!')
 
-    def __init__(self, location, option):
+    def __init__(self, location, auto_dump):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.'''
-        self.load(location, option)
+        self.load(location, auto_dump)
         self.dthread = None
         self.set_sigterm_handler()
 
@@ -70,11 +70,11 @@ class pickledb(object):
             sys.exit(0)
         signal.signal(signal.SIGTERM, sigterm_handler)
 
-    def load(self, location, option):
+    def load(self, location, auto_dump):
         '''Loads, reloads or changes the path to the db file'''
         location = os.path.expanduser(location)
         self.loco = location
-        self.fsave = option
+        self.auto_dump = auto_dump
         if os.path.exists(location):
             self._loaddb()
         else:
@@ -83,14 +83,19 @@ class pickledb(object):
 
     def dump(self):
         '''Force dump memory db to file'''
-        self._dumpdb(True)
+        simplejson.dump(self.db, open(self.loco, 'wt'))
+        self.dthread = Thread(
+            target=simplejson.dump,
+            args=(self.db, open(self.loco, 'wt')))
+        self.dthread.start()
+        self.dthread.join()
         return True
 
     def set(self, key, value):
         '''Set the str value of a key'''
         if isinstance(key, str):
             self.db[key] = value
-            self._dumpdb(self.fsave)
+            self._autodumpdb()
             return True
         else:
             raise self.key_string_error
@@ -113,7 +118,7 @@ class pickledb(object):
     def rem(self, key):
         '''Delete a key'''
         del self.db[key]
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def totalkeys(self, name=None):
@@ -129,7 +134,7 @@ class pickledb(object):
         '''Create a list, name must be str'''
         if isinstance(name, str):
             self.db[name] = []
-            self._dumpdb(self.fsave)
+            self._autodumpdb()
             return True
         else:
             raise self.key_string_error
@@ -137,13 +142,13 @@ class pickledb(object):
     def ladd(self, name, value):
         '''Add a value to a list'''
         self.db[name].append(value)
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def lextend(self, name, seq):
         '''Extend a list with a sequence'''
         self.db[name].extend(seq)
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def lgetall(self, name):
@@ -158,14 +163,14 @@ class pickledb(object):
         '''Remove a list and all of its values'''
         number = len(self.db[name])
         del self.db[name]
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return number
 
     def lpop(self, name, pos):
         '''Remove one value in a list'''
         value = self.db[name][pos]
         del self.db[name][pos]
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return value
 
     def llen(self, name):
@@ -176,21 +181,21 @@ class pickledb(object):
         '''Add more to a key's value'''
         tmp = self.db[key]
         self.db[key] = tmp + more
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def lappend(self, name, pos, more):
         '''Add more to a value in a list'''
         tmp = self.db[name][pos]
         self.db[name][pos] = tmp + more
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def dcreate(self, name):
         '''Create a dict, name must be str'''
         if isinstance(name, str):
             self.db[name] = {}
-            self._dumpdb(self.fsave)
+            self._autodumpdb()
             return True
         else:
             raise self.key_string_error
@@ -198,7 +203,7 @@ class pickledb(object):
     def dadd(self, name, pair):
         '''Add a key-value pair to a dict, "pair" is a tuple'''
         self.db[name][pair[0]] = pair[1]
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def dget(self, name, key):
@@ -212,14 +217,14 @@ class pickledb(object):
     def drem(self, name):
         '''Remove a dict and all of its pairs'''
         del self.db[name]
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def dpop(self, name, key):
         '''Remove one key-value pair in a dict'''
         value = self.db[name][key]
         del self.db[name][key]
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return value
 
     def dkeys(self, name):
@@ -243,26 +248,20 @@ class pickledb(object):
         first = self.db[name1]
         second = self.db[name2]
         first.update(second)
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def deldb(self):
         '''Delete everything from the database'''
         self.db = {}
-        self._dumpdb(self.fsave)
+        self._autodumpdb()
         return True
 
     def _loaddb(self):
         '''Load or reload the json info from the file'''
         self.db = simplejson.load(open(self.loco, 'rb'))
 
-    def _dumpdb(self, forced):
-        '''Write/save the json dump into the file'''
-        if forced:
-            simplejson.dump(self.db, open(self.loco, 'wt'))
-            self.dthread = Thread(
-                target=simplejson.dump,
-                args=(self.db, open(self.loco, 'wt')))
-            self.dthread.start()
-            self.dthread.join()
-
+    def _autodumpdb(self):
+        '''Write/save the json dump into the file if auto_dump is enabled'''
+        if self.auto_dump:
+            self.dump()
