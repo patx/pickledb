@@ -30,7 +30,7 @@
 import sys
 import os
 import signal
-import simplejson
+import json
 from threading import Thread
 
 
@@ -83,13 +83,22 @@ class pickledb(object):
 
     def dump(self):
         '''Force dump memory db to file'''
-        simplejson.dump(self.db, open(self.loco, 'wt'))
+        json.dump(self.db, open(self.loco, 'wt'))
         self.dthread = Thread(
-            target=simplejson.dump,
+            target=json.dump,
             args=(self.db, open(self.loco, 'wt')))
         self.dthread.start()
         self.dthread.join()
         return True
+        
+    def _loaddb(self):
+        '''Load or reload the json info from the file'''
+        self.db = json.load(open(self.loco, 'rb'))
+
+    def _autodumpdb(self):
+        '''Write/save the json dump into the file if auto_dump is enabled'''
+        if self.auto_dump:
+            self.dump()
 
     def set(self, key, value):
         '''Set the str value of a key'''
@@ -129,6 +138,13 @@ class pickledb(object):
         else:
             total = len(self.db[name])
             return total
+
+    def append(self, key, more):
+        '''Add more to a key's value'''
+        tmp = self.db[key]
+        self.db[key] = tmp + more
+        self._autodumpdb()
+        return True
 
     def lcreate(self, name):
         '''Create a list, name must be str'''
@@ -177,19 +193,16 @@ class pickledb(object):
         '''Returns the length of the list'''
         return len(self.db[name])
 
-    def append(self, key, more):
-        '''Add more to a key's value'''
-        tmp = self.db[key]
-        self.db[key] = tmp + more
-        self._autodumpdb()
-        return True
-
     def lappend(self, name, pos, more):
         '''Add more to a value in a list'''
         tmp = self.db[name][pos]
         self.db[name][pos] = tmp + more
         self._autodumpdb()
         return True
+
+    def lexists(self, name, value):
+        '''Determine if a value  exists in a list'''
+        return value in self.db[name]
 
     def dcreate(self, name):
         '''Create a dict, name must be str'''
@@ -239,10 +252,6 @@ class pickledb(object):
         '''Determine if a key exists or not in a dict'''
         return key in self.db[name]
 
-    def lexists(self, name, value):
-        '''Determine if a value  exists in a list'''
-        return value in self.db[name]
-
     def dmerge(self, name1, name2):
         '''Merge two dicts together into name1'''
         first = self.db[name1]
@@ -257,11 +266,3 @@ class pickledb(object):
         self._autodumpdb()
         return True
 
-    def _loaddb(self):
-        '''Load or reload the json info from the file'''
-        self.db = simplejson.load(open(self.loco, 'rb'))
-
-    def _autodumpdb(self):
-        '''Write/save the json dump into the file if auto_dump is enabled'''
-        if self.auto_dump:
-            self.dump()
