@@ -1,3 +1,4 @@
+from __future__ import print_function
 import pickledb
 
 # a work in progress
@@ -5,10 +6,10 @@ import pickledb
 
 class TestClass(object):
 
-    db = pickledb.load('tests.db', False)
+    db = pickledb.load('tests.db', auto_dump=False)
 
     def test_load(self):
-        x = pickledb.load('x.db', False)
+        x = pickledb.load('x.db', auto_dump=False)
         assert x is not None
 
     def test_sugar_get(self):
@@ -96,3 +97,11 @@ class TestClass(object):
         x = self.db.dexists('dict', 'not_key')
         assert x is False
         self.db.drem('dict')
+
+
+if __name__ == "__main__":
+    tests = TestClass()
+    test_methods = [method for method in dir(tests) if callable(getattr(tests, method)) if method.startswith('test_')]
+    for method in test_methods:
+            getattr(tests, method)()  # run method
+            print(".", end="")
