@@ -21,7 +21,7 @@ a:hover { color: #008000; border-bottom: 1px solid #008000; }
 <div class="body">
 <h1>Welcome</h1>
 <strong>pickleDB is a lightweight and simple key-value store.</strong>
-It is built upon Python's <a href="https://docs.python.org/3/library/json.html">json</a>
+It is built upon Python's <a href="https://pypi.python.org/pypi/simplejson/">simplejson</a>
 module and was inspired by <a href="http://redis.io/">redis</a>. It is licensed
 with the BSD three-clause license.
 <h1>pickleDB is Fun</h1>
@@ -55,7 +55,7 @@ check out the <a href="http://github.com/patx/pickledb">Github project page</a>.
 You can also take a look at pickleDB <a href="https://pypi.python.org/pypi/pickleDB">on PyPI</a>.<br />
 <br />
 pickleDB got its name from Python's "pickle" module, which it previously used.
-However, now pickleDB uses the "json" module. It is faster and cleaner.
+However, now pickleDB uses the "simplejson" module. It is faster and cleaner.
 But the name stuck!<br />
 <br />
 <br>
