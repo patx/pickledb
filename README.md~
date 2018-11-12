@@ -33,10 +33,9 @@ $ pip install pickledb
 * [github repo](https://github.com/patx/pickledb)
 
 
-## Latest Release Notes (version: 0.8)
-* All *keys* must now be strings (0.8)
-* All *names* for lists must now be strings (0.8)
-* All *names* for dicts must now be strings (0.8)
-* The get(key) function now returns *False* instead of None if there is no key (0.8)
-* Switched to Python's built in json module from simplejson (0.8.1)
+## Latest Release Notes (version: 0.8.0)
+* All *keys* must now be strings
+* All *names* for lists must now be strings
+* All *names* for dicts must now be strings
+* The get(key) function now returns *False* instead of None if there is no key
 
