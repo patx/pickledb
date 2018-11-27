@@ -179,12 +179,17 @@ class pickledb(object):
         '''Return one value in a list'''
         return self.db[name][pos]
 
-    def lrem(self, name):
+    def lremlist(self, name):
         '''Remove a list and all of its values'''
         number = len(self.db[name])
         del self.db[name]
         self._autodumpdb()
         return number
+
+    def lremvalue(self, name, value):
+        '''Remove a value from a certain list'''
+        self.db[name].remove(value)
+        return True
 
     def lpop(self, name, pos):
         '''Remove one value in a list'''
