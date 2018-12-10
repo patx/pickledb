@@ -40,10 +40,10 @@ from threading import Thread
 
 def load(location, auto_dump, sig=True):
     '''Return a pickledb object. location is the path to the json file.'''
-    return PickleDB(location, auto_dump, sig)
+    return pickledb(location, auto_dump, sig)
 
 
-class PickleDB(object):
+class pickledb(object):
 
     key_string_error = TypeError('Key/name must be a string!')
 
