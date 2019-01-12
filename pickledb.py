@@ -99,7 +99,7 @@ class PickleDB(object):
         
     def _loaddb(self):
         '''Load or reload the json info from the file'''
-        self.db = json.load(open(self.loco, 'rb'))
+        self.db = json.load(open(self.loco, 'rt'))
 
     def _autodumpdb(self):
         '''Write/save the json dump into the file if auto_dump is enabled'''
