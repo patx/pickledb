@@ -33,7 +33,9 @@ $ pip install pickledb
 * [github repo](https://github.com/patx/pickledb)
 
 
-## Latest Release Notes (version: 0.8)
+## Latest Release Notes (version: 0.9)
+* Change lrem(name) to *lremlist(name)* (0.9)
+* Add *lremvalue(name, value)* (0.9)
 * All *keys* must now be strings (0.8)
 * All *names* for lists must now be strings (0.8)
 * All *names* for dicts must now be strings (0.8)
