@@ -2,26 +2,38 @@
 """
 pickleDB
 --------
+
 pickleDB is lightweight, fast, and simple database based on Python's own
 json module. And it's BSD licensed!
 
 pickleDB is Fun
 ```````````````
+
 ::
+
     >>> import pickledb
+
     >>> db = pickledb.load('test.db', False)
+
     >>> db.set('key', 'value')
+
     >>> db.get('key')
     'value'
+
     >>> db.dump()
     True
+
+
 And Easy to Install
 ```````````````````
+
 ::
+
     $ pip install pickledb
 
 Links
 `````
+
 * `website <https://patx.github.io/pickledb>`_
 * `documentation <http://patx.github.io/pickledb/commands.html>`_
 * `pypi <http://pypi.python.org/pypi/pickleDB>`_
@@ -29,6 +41,8 @@ Links
 
 Latest Release Notes (version: 0.9)
 ```````````````````````````````````
+
+* Now load() uses *'rt'* mode instead of 'rb' (0.9.2)
 * Change lrem(name) to *lremlist(name)* (0.9)
 * Add *lremvalue(name, value)* (0.9)
 * Add load() option to use sigterm handler or not (0.9)
@@ -43,7 +57,7 @@ Latest Release Notes (version: 0.9)
 from distutils.core import setup
 
 setup(name="pickleDB",
-    version="0.9.1",
+    version="0.9.2",
     description="A lightweight and simple database using json.",
     long_description=__doc__,
     author="Harrison Erd",
