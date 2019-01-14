@@ -36,6 +36,7 @@ $ pip install pickledb
 ## Latest Release Notes (version: 0.9)
 * Change lrem(name) to *lremlist(name)* (0.9)
 * Add *lremvalue(name, value)* (0.9)
+* Add load() option to use sigterm handler or not (0.9)
 * All *keys* must now be strings (0.8)
 * All *names* for lists must now be strings (0.8)
 * All *names* for dicts must now be strings (0.8)
