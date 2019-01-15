@@ -132,6 +132,8 @@ class PickleDB(object):
 
     def rem(self, key):
         '''Delete a key'''
+        if not key in self.db: # return False instead of an exception
+            return False
         del self.db[key]
         self._autodumpdb()
         return True
