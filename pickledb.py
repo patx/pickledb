@@ -193,6 +193,7 @@ class PickleDB(object):
     def lremvalue(self, name, value):
         '''Remove a value from a certain list'''
         self.db[name].remove(value)
+        self._autodumpdb()
         return True
 
     def lpop(self, name, pos):
