@@ -9,8 +9,10 @@ class TestClass(object):
     db = pickledb.load('tests.db', auto_dump=False)
 
     def test_load(self):
-        x = pickledb.load('x.db', auto_dump=False)
-        assert x is not None
+        jsondb = pickledb.load('x.json', auto_dump=False, serializer='json')
+        yamldb = pickledb.load('x.yaml', auto_dump=False, serializer='yaml')
+        assert jsondb is not None
+        assert yamldb is not None
 
     def test_sugar_get(self):
         self.db.db["foo"] = "bar"
@@ -75,14 +77,14 @@ class TestClass(object):
         self.db.ladd('list', 'value')
         x = self.db.lexists('list', 'value')
         assert x is True
-        self.db.lrem('list')
+        self.db.lremlist('list')
 
     def test_not_lexists(self):
         self.db.lcreate('list')
         self.db.ladd('list', 'value')
         x = self.db.lexists('list', 'not_value')
         assert x is False
-        self.db.lrem('list')
+        self.db.lremlist('list')
 
     def test_dexists(self):
         self.db.dcreate('dict')

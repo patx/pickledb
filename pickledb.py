@@ -4,53 +4,64 @@
 
 # Copyright 2018 Harrison Erd
 #
-# Redistribution and use in source and binary forms, with or without 
+# Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
 #
-# 1. Redistributions of source code must retain the above copyright notice, 
+# 1. Redistributions of source code must retain the above copyright notice,
 # this list of conditions and the following disclaimer.
 #
-# 2. Redistributions in binary form must reproduce the above copyright notice, 
-# this list of conditions and the following disclaimer in the documentation 
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
 # and/or other materials provided with the distribution.
 #
-# 3. Neither the name of the copyright holder nor the names of its 
-# contributors may be used to endorse or promote products derived from this 
+# 3. Neither the name of the copyright holder nor the names of its
+# contributors may be used to endorse or promote products derived from this
 # software without specific prior written permission.
 #
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS 
-# IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
-# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR 
-# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR 
-# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
-# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
-# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+# IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 import sys
 import os
 import signal
-import json
+from functools import partial
 from threading import Thread
 
 
-def load(location, auto_dump, sig=True):
+def load(location, auto_dump, sig=True, serializer="auto"):
     '''Return a pickledb object. location is the path to the json file.'''
-    return PickleDB(location, auto_dump, sig)
+    return PickleDB(location, auto_dump, sig, serializer)
 
 
 class PickleDB(object):
 
     key_string_error = TypeError('Key/name must be a string!')
 
-    def __init__(self, location, auto_dump, sig):
+    def __init__(self, location, auto_dump, sig, serializer):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.
         '''
+        if serializer == 'auto':
+            serializer = location.split('.')[-1]
+
+        if serializer == 'json':
+            import json
+            self.serializer = json
+        elif serializer == 'yaml' or serializer == 'yml':
+            import yaml
+            self.serializer = yaml
+            self.serializer.load = partial(yaml.load, Loader=yaml.SafeLoader)
+
         self.load(location, auto_dump)
         self.dthread = None
         if sig:
@@ -89,20 +100,20 @@ class PickleDB(object):
 
     def dump(self):
         '''Force dump memory db to file'''
-        json.dump(self.db, open(self.loco, 'wt'))
+        self.serializer.dump(self.db, open(self.loco, 'wt'))
         self.dthread = Thread(
-            target=json.dump,
+            target=self.serializer.dump,
             args=(self.db, open(self.loco, 'wt')))
         self.dthread.start()
         self.dthread.join()
         return True
-        
+
     def _loaddb(self):
-        '''Load or reload the json info from the file'''
-        self.db = json.load(open(self.loco, 'rt'))
+        '''Load or reload the info from the file'''
+        self.db = self.serializer.load(open(self.loco, 'rt'))
 
     def _autodumpdb(self):
-        '''Write/save the json dump into the file if auto_dump is enabled'''
+        '''Write/save the dump into the file if auto_dump is enabled'''
         if self.auto_dump:
             self.dump()
 
@@ -132,7 +143,7 @@ class PickleDB(object):
 
     def rem(self, key):
         '''Delete a key'''
-        if not key in self.db: # return False instead of an exception
+        if key not in self.db:  # return False instead of an exception
             return False
         del self.db[key]
         self._autodumpdb()
@@ -279,4 +290,3 @@ class PickleDB(object):
         self.db = {}
         self._autodumpdb()
         return True
-
