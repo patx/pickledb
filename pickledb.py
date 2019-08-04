@@ -96,13 +96,13 @@ class PickleDB(object):
         self.dthread.start()
         self.dthread.join()
         return True
-        
+
     def _loaddb(self):
         '''Load or reload the json info from the file'''
         try: 
             self.db = json.load(open(self.loco, 'rt'))
         except ValueError:
-            if os.stat(self.loco).st_size == 0  # Error raised because file is empty
+            if os.stat(self.loco).st_size == 0:  # Error raised because file is empty
                 self.db = {}
             else:
                 raise  # File is not empty, avoid overwriting it
