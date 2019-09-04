@@ -57,7 +57,7 @@ Latest Release Notes (version: 0.9)
 from distutils.core import setup
 
 setup(name="pickleDB",
-    version="0.9.2",
+    version="0.9.3",
     description="A lightweight and simple database using json.",
     long_description=__doc__,
     author="Harrison Erd",

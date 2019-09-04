@@ -96,10 +96,16 @@ class PickleDB(object):
         self.dthread.start()
         self.dthread.join()
         return True
-        
+
     def _loaddb(self):
         '''Load or reload the json info from the file'''
-        self.db = json.load(open(self.loco, 'rt'))
+        try: 
+            self.db = json.load(open(self.loco, 'rt'))
+        except ValueError:
+            if os.stat(self.loco).st_size == 0:  # Error raised because file is empty
+                self.db = {}
+            else:
+                raise  # File is not empty, avoid overwriting it
 
     def _autodumpdb(self):
         '''Write/save the json dump into the file if auto_dump is enabled'''
