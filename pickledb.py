@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-# Copyright 2018 Harrison Erd
+# Copyright 2019 Harrison Erd
 #
 # Redistribution and use in source and binary forms, with or without 
 # modification, are permitted provided that the following conditions are met:
