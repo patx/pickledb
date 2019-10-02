@@ -189,6 +189,10 @@ class PickleDB(object):
         '''Return one value in a list'''
         return self.db[name][pos]
 
+    def lrange(self, name, start=None, end=None):
+        '''Return range of values in a list '''
+        return self.db[name][start:end]
+
     def lremlist(self, name):
         '''Remove a list and all of its values'''
         number = len(self.db[name])

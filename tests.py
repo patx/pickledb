@@ -84,6 +84,16 @@ class TestClass(object):
         assert x is False
         self.db.lrem('list')
 
+    def test_lrange(self):
+        self.db.lcreate('list')
+        self.db.ladd('list','one')
+        self.db.ladd('list','two')
+        self.db.ladd('list','three')
+        self.db.ladd('list','four')
+        x = self.db.lrange('list', 1, 3)
+        assert x == ['two', 'three']
+        self.db.lremlist('list')
+
     def test_dexists(self):
         self.db.dcreate('dict')
         self.db.dadd('dict', ('key', 'value'))
