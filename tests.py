@@ -75,14 +75,14 @@ class TestClass(object):
         self.db.ladd('list', 'value')
         x = self.db.lexists('list', 'value')
         assert x is True
-        self.db.lrem('list')
+        self.db.lremlist('list')
 
     def test_not_lexists(self):
         self.db.lcreate('list')
         self.db.ladd('list', 'value')
         x = self.db.lexists('list', 'not_value')
         assert x is False
-        self.db.lrem('list')
+        self.db.lremlist('list')
 
     def test_lrange(self):
         self.db.lcreate('list')
