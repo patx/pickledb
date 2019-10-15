@@ -75,14 +75,24 @@ class TestClass(object):
         self.db.ladd('list', 'value')
         x = self.db.lexists('list', 'value')
         assert x is True
-        self.db.lrem('list')
+        self.db.lremlist('list')
 
     def test_not_lexists(self):
         self.db.lcreate('list')
         self.db.ladd('list', 'value')
         x = self.db.lexists('list', 'not_value')
         assert x is False
-        self.db.lrem('list')
+        self.db.lremlist('list')
+
+    def test_lrange(self):
+        self.db.lcreate('list')
+        self.db.ladd('list','one')
+        self.db.ladd('list','two')
+        self.db.ladd('list','three')
+        self.db.ladd('list','four')
+        x = self.db.lrange('list', 1, 3)
+        assert x == ['two', 'three']
+        self.db.lremlist('list')
 
     def test_dexists(self):
         self.db.dcreate('dict')
