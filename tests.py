@@ -26,6 +26,10 @@ class TestClass(object):
         del self.db["foo"]
         assert "foo" not in self.db.db
 
+    def test_sugar_exists(self):
+        self.db["foo"] = "bar"
+        assert "foo" in self.db
+
     def test_set(self):
         self.db.set('key', 'value')
         x = self.db.get('key')
