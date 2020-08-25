@@ -29,8 +29,7 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
+import atexit
 import sys
 import os
 import signal
@@ -56,6 +55,8 @@ class PickleDB(object):
         if sig:
             self.set_sigterm_handler()
 
+        atexit.register(self._autodumpdb)
+
     def __getitem__(self, item):
         '''Syntax sugar for get()'''
         return self.get(item)
@@ -67,6 +68,10 @@ class PickleDB(object):
     def __delitem__(self, key):
         '''Sytax sugar for rem()'''
         return self.rem(key)
+
+    def __contains__(self, key):
+        '''Sytax sugar for exists()'''
+        return self.exists(key)
 
     def set_sigterm_handler(self):
         '''Assigns sigterm_handler for graceful shutdown during dump()'''
@@ -89,10 +94,12 @@ class PickleDB(object):
 
     def dump(self):
         '''Force dump memory db to file'''
-        json.dump(self.db, open(self.loco, 'wt'))
+        json.dump(self.db, open(self.loco, 'wt'), ensure_ascii=False, indent=4)
         self.dthread = Thread(
             target=json.dump,
-            args=(self.db, open(self.loco, 'wt')))
+            args=(self.db, open(self.loco, 'wt')),
+            kwargs=dict(ensure_ascii=False, indent=4)
+        )
         self.dthread.start()
         self.dthread.join()
         return True
