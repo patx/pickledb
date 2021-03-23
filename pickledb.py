@@ -290,3 +290,5 @@ class PickleDB(object):
         self._autodumpdb()
         return True
 
+    def getkmatch(self, match):
+        return dict(filter(lambda item: match in item[0], self.db.items()))
