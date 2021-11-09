@@ -38,19 +38,20 @@ import json
 from threading import Thread
 
 
-def load(location, auto_dump, sig=True):
+def load(location, auto_dump, sig=True, indent=4):
     '''Return a pickledb object. location is the path to the json file.'''
-    return PickleDB(location, auto_dump, sig)
+    return PickleDB(location, auto_dump, sig, indent)
 
 
 class PickleDB(object):
 
     key_string_error = TypeError('Key/name must be a string!')
 
-    def __init__(self, location, auto_dump, sig):
+    def __init__(self, location, auto_dump, sig=True, indent=4):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.
         '''
+        self.indent_level = indent
         self.load(location, auto_dump)
         self.dthread = None
         if sig:
@@ -92,6 +93,7 @@ class PickleDB(object):
         json.dump(self.db, open(self.loco, 'wt'))
         self.dthread = Thread(
             target=json.dump,
+            kwargs={"indent":self.indent_level},
             args=(self.db, open(self.loco, 'wt')))
         self.dthread.start()
         self.dthread.join()
@@ -289,4 +291,3 @@ class PickleDB(object):
         self.db = {}
         self._autodumpdb()
         return True
-
