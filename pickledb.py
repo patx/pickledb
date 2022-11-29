@@ -70,7 +70,7 @@ class PickleDB(object):
 
     def set_sigterm_handler(self):
         '''Assigns sigterm_handler for graceful shutdown during dump()'''
-        def sigterm_handler():
+        def sigterm_handler(*args, **kwargs):
             if self.dthread is not None:
                 self.dthread.join()
             sys.exit(0)
