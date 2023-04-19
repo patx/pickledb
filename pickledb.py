@@ -34,7 +34,9 @@
 import sys
 import os
 import signal
+import shutil
 import json
+from tempfile import NamedTemporaryFile
 from threading import Thread
 
 
@@ -87,12 +89,16 @@ class PickleDB(object):
             self.db = {}
         return True
 
+    def _dump(self):
+        '''Dump to a temporary file, and then move to the actual location'''
+        with NamedTemporaryFile(mode='wt', delete=False) as f:
+            json.dump(self.db, f)
+        if os.stat(f.name).st_size != 0:
+            shutil.move(f.name, self.loco)
+
     def dump(self):
         '''Force dump memory db to file'''
-        json.dump(self.db, open(self.loco, 'wt'))
-        self.dthread = Thread(
-            target=json.dump,
-            args=(self.db, open(self.loco, 'wt')))
+        self.dthread = Thread(target=self._dump)
         self.dthread.start()
         self.dthread.join()
         return True
