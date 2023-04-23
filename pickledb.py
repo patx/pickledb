@@ -106,7 +106,7 @@ class PickleDB(object):
     def _loaddb(self):
         '''Load or reload the json info from the file'''
         try: 
-            self.db = json.load(open(self.loco, 'rt'))
+            self.db = json.load(open(self.loco, 'rt', encoding='utf-8'))
         except ValueError:
             if os.stat(self.loco).st_size == 0:  # Error raised because file is empty
                 self.db = {}
