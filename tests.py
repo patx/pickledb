@@ -108,6 +108,14 @@ class TestClass(object):
         assert x is False
         self.db.drem('dict')
 
+    def test_key_match(self):
+        self.db.set('key1', 'value')
+        self.db.set('key2', 'value2')
+        self.db.set('something', 'value')
+        x = self.db.getkmatch('key')
+        y = {'key1': 'value', 'key2': 'value2'}
+        assert x == y
+
 
 if __name__ == "__main__":
     tests = TestClass()
