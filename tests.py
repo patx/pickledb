@@ -108,6 +108,14 @@ class TestClass(object):
         assert x is False
         self.db.drem('dict')
 
+    def test_location(self):
+        assert self.db.__location__ == 'tests.db'
+        self.db.dump()
+        self.db.deldb()
+        from pickledb import os
+        assert os.path.exists(self.db.__location__)
+        self.db.deldb(True)
+        assert not os.path.exists(self.db.__location__)
 
 if __name__ == "__main__":
     tests = TestClass()

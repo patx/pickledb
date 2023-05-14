@@ -47,13 +47,13 @@ def load(location, auto_dump, sig=True):
 
 class PickleDB(object):
 
-    key_string_error = TypeError('Key/name must be a string!')
-
+    key_string_error = TypeError('Key/name must be a string!') 
     def __init__(self, location, auto_dump, sig):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.
         '''
         self.load(location, auto_dump)
+        self.__location__ = location
         self.dthread = None
         if sig:
             self.set_sigterm_handler()
@@ -63,11 +63,11 @@ class PickleDB(object):
         return self.get(item)
 
     def __setitem__(self, key, value):
-        '''Sytax sugar for set()'''
+        '''Syntax sugar for set()'''
         return self.set(key, value)
 
     def __delitem__(self, key):
-        '''Sytax sugar for rem()'''
+        '''Syntax sugar for rem()'''
         return self.rem(key)
 
     def set_sigterm_handler(self):
@@ -290,9 +290,11 @@ class PickleDB(object):
         self._autodumpdb()
         return True
 
-    def deldb(self):
-        '''Delete everything from the database'''
+    def deldb(self, andfile = False):
+        '''Delete everything from the database, optionally delete the database file'''
         self.db = {}
         self._autodumpdb()
+        if andfile:
+            os.remove(self.__location__)
         return True
 
