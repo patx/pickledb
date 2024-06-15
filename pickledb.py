@@ -129,10 +129,7 @@ class PickleDB(object):
 
     def get(self, key):
         '''Get the value of a key'''
-        try:
-            return self.db[key]
-        except KeyError:
-            return False
+        return self.db.get(key, False)
 
     def getall(self):
         '''Return a list of all keys in db'''
