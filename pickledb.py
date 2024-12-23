@@ -40,19 +40,22 @@ from tempfile import NamedTemporaryFile
 from threading import Thread
 
 
-def load(location, auto_dump, sig=True):
+def load(location, auto_dump, sig=True, dump_opts=None, load_opts=None):
     '''Return a pickledb object. location is the path to the json file.'''
-    return PickleDB(location, auto_dump, sig)
+    return PickleDB(location, auto_dump, sig, dump_opts or {}, load_opts or {})
 
 
 class PickleDB(object):
 
     key_string_error = TypeError('Key/name must be a string!')
 
-    def __init__(self, location, auto_dump, sig):
+    def __init__(self, location, auto_dump, sig, dump_opts, load_opts):
         '''Creates a database object and loads the data from the location path.
         If the file does not exist it will be created on the first update.
         '''
+        self.dump_opts = dump_opts
+        self.load_opts = load_opts
+
         self.load(location, auto_dump)
         self.dthread = None
         if sig:
@@ -92,7 +95,7 @@ class PickleDB(object):
     def _dump(self):
         '''Dump to a temporary file, and then move to the actual location'''
         with NamedTemporaryFile(mode='wt', delete=False) as f:
-            json.dump(self.db, f)
+            json.dump(self.db, f, **self.dump_opts)
         if os.stat(f.name).st_size != 0:
             shutil.move(f.name, self.loco)
 
@@ -106,7 +109,7 @@ class PickleDB(object):
     def _loaddb(self):
         '''Load or reload the json info from the file'''
         try: 
-            self.db = json.load(open(self.loco, 'rt'))
+            self.db = json.load(open(self.loco, 'rt'), **self.load_opts)
         except ValueError:
             if os.stat(self.loco).st_size == 0:  # Error raised because file is empty
                 self.db = {}
