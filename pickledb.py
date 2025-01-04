@@ -100,7 +100,8 @@ class PickleDB(object):
         '''Force dump memory db to file'''
         self.dthread = Thread(target=self._dump)
         self.dthread.start()
-        self.dthread.join()
+        if self.dthread.is_alive():
+            self.dthread.join()
         return True
 
     def _loaddb(self):
