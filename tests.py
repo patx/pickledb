@@ -1,117 +1,112 @@
-from __future__ import print_function
-import pickledb
+import unittest
+import os
+import time
+from pickledb import load
 
-# a work in progress
+class TestPickleDB(unittest.TestCase):
 
+    def setUp(self):
+        self.db_file = "test_db.json"
+        self.db = load(self.db_file, auto_dump=True, enable_ttl=True)
 
-class TestClass(object):
+    def tearDown(self):
+        if os.path.exists(self.db_file):
+            os.remove(self.db_file)
+        if os.path.exists(f"{self.db_file}.gz"):
+            os.remove(f"{self.db_file}.gz")
 
-    db = pickledb.load('tests.db', auto_dump=False)
-
-    def test_load(self):
-        x = pickledb.load('x.db', auto_dump=False)
-        assert x is not None
-
-    def test_sugar_get(self):
-        self.db.db["foo"] = "bar"
-        x = self.db["foo"]
-        assert x == "bar"
-
-    def test_sugar_set(self):
-        self.db["foo"] = "bar"
-        assert "bar" == self.db.db["foo"]
-
-    def test_sugar_rem(self):
-        self.db.db["foo"] = "bar"
-        del self.db["foo"]
-        assert "foo" not in self.db.db
-
-    def test_set(self):
-        self.db.set('key', 'value')
-        x = self.db.get('key')
-        assert x == 'value'
-
-    def test_getall(self):
-        self.db.deldb()
-        self.db.set('key1', 'value1')
-        self.db.set('key2', 'value2')
-        self.db.dcreate('dict1')
-        self.db.lcreate('list1')
-        x = self.db.getall()
-        y = dict.fromkeys(['key2', 'key1', 'dict1', 'list1']).keys()
-        assert x == y
-
-    def test_get(self):
-        self.db.set('key', 'value')
-        x = self.db.get('key')
-        assert x == 'value'
-
-    def test_rem(self):
-        self.db.set('key', 'value')
-        self.db.rem('key')
-        x = self.db.get('key')
-        assert x is False
-
-    def test_append(self):
-        self.db.set('key', 'value')
-        self.db.append('key', 'value')
-        x = self.db.get('key')
-        assert x == 'valuevalue'
+    # Basic Key-Value Operations
+    def test_set_and_get(self):
+        self.db.set("key1", "value1")
+        self.assertEqual(self.db.get("key1"), "value1")
 
     def test_exists(self):
-        self.db.set('key', 'value')
-        x = self.db.exists('key')
-        assert x is True
-        self.db.rem('key')
+        self.db.set("key2", "value2")
+        self.assertTrue(self.db.exists("key2"))
+        self.assertFalse(self.db.exists("key3"))
 
-    def test_not_exists(self):
-        self.db.set('key', 'value')
-        x = self.db.exists('not_key')
-        assert x is False
-        self.db.rem('key')
+    def test_rem(self):
+        self.db.set("key3", "value3")
+        self.assertTrue(self.db.rem("key3"))
+        self.assertFalse(self.db.exists("key3"))
 
-    def test_lexists(self):
-        self.db.lcreate('list')
-        self.db.ladd('list', 'value')
-        x = self.db.lexists('list', 'value')
-        assert x is True
-        self.db.lremlist('list')
+    def test_getall(self):
+        self.db.set("key1", "value1")
+        self.db.set("key2", "value2")
+        self.assertCountEqual(self.db.getall(), ["key1", "key2"])
 
-    def test_not_lexists(self):
-        self.db.lcreate('list')
-        self.db.ladd('list', 'value')
-        x = self.db.lexists('list', 'not_value')
-        assert x is False
-        self.db.lremlist('list')
+    def test_clear(self):
+        self.db.set("key1", "value1")
+        self.db.set("key2", "value2")
+        self.db.clear()
+        self.assertEqual(len(self.db.getall()), 0)
 
-    def test_lrange(self):
-        self.db.lcreate('list')
-        self.db.ladd('list','one')
-        self.db.ladd('list','two')
-        self.db.ladd('list','three')
-        self.db.ladd('list','four')
-        x = self.db.lrange('list', 1, 3)
-        assert x == ['two', 'three']
-        self.db.lremlist('list')
+    def test_deldb(self):
+        self.db.set("key1", "value1")
+        self.db.deldb()
+        self.assertFalse(os.path.exists(self.db_file))
 
-    def test_dexists(self):
-        self.db.dcreate('dict')
-        self.db.dadd('dict', ('key', 'value'))
-        x = self.db.dexists('dict', 'key')
-        assert x is True
-        self.db.drem('dict')
+    # TTL Functionality
+    def test_ttl_expiry(self):
+        self.db.set("key1", "value1", ttl=1)
+        time.sleep(2)
+        self.assertIsNone(self.db.get("key1"))
 
-    def test_not_dexists(self):
-        self.db.dcreate('dict')
-        self.db.dadd('dict', ('key', 'value'))
-        x = self.db.dexists('dict', 'not_key')
-        assert x is False
-        self.db.drem('dict')
+    # List Operations
+    def test_lcreate_and_ladd(self):
+        self.db.lcreate("mylist")
+        self.db.ladd("mylist", "item1")
+        self.db.ladd("mylist", "item2")
+        self.assertEqual(self.db.lgetall("mylist"), ["item1", "item2"])
 
+    def test_ladd_to_non_list(self):
+        self.db.set("key1", "value1")
+        with self.assertRaises(TypeError):
+            self.db.ladd("key1", "item1")
+
+    # Dictionary Operations
+    def test_dcreate_and_dadd(self):
+        self.db.dcreate("mydict")
+        self.db.dadd("mydict", "key1", "value1")
+        self.db.dadd("mydict", "key2", "value2")
+        self.assertEqual(self.db.dget("mydict", "key1"), "value1")
+
+    def test_dadd_to_non_dict(self):
+        self.db.set("key1", "value1")
+        with self.assertRaises(TypeError):
+            self.db.dadd("key1", "key2", "value2")
+
+    def test_dgetall(self):
+        self.db.dcreate("mydict")
+        self.db.dadd("mydict", "key1", "value1")
+        self.db.dadd("mydict", "key2", "value2")
+        self.assertEqual(self.db.dgetall("mydict"), {"key1": "value1", "key2": "value2"})
+
+    # File Compression
+    def test_compress(self):
+        self.db.set("key1", "value1")
+        self.assertTrue(self.db.compress())
+        self.assertTrue(os.path.exists(f"{self.db_file}.gz"))
+
+    # Error Handling
+    def test_set_invalid_key(self):
+        with self.assertRaises(TypeError):
+            self.db.set(123, "value1")
+
+    def test_get_nonexistent_key(self):
+        self.assertIsNone(self.db.get("nonexistent"))
+
+    def test_rem_nonexistent_key(self):
+        self.assertFalse(self.db.rem("nonexistent"))
+
+    def test_ladd_to_nonexistent_list(self):
+        with self.assertRaises(TypeError):
+            self.db.ladd("nonexistent_list", "value")
+
+    def test_dadd_to_nonexistent_dict(self):
+        with self.assertRaises(TypeError):
+            self.db.dadd("nonexistent_dict", "key", "value")
 
 if __name__ == "__main__":
-    tests = TestClass()
-    test_methods = [method for method in dir(tests) if callable(getattr(tests, method)) if method.startswith('test_')]
-    for method in test_methods:
-            getattr(tests, method)()  # run method
-            print(".", end="")
+    unittest.main()
+
