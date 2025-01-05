@@ -21,216 +21,172 @@ And it's BSD licensed!
 True
 ```
 
-## Easy to Install
-```python
-$ pip install pickledb
-```
-
-## Links
-* [website](https://patx.github.io/pickledb)
-* [documentation](https://patx.github.io/pickledb/commands.html)
-* [pypi](http://pypi.python.org/pypi/pickleDB)
-* [github repo](https://github.com/patx/pickledb)
-
-
 # PickleDB Documentation
 
-PickleDB is a lightweight, file-based key-value store written in Python. It offers support for basic operations, lists, dictionaries, and optional TTL (time-to-live) functionality, with built-in thread safety.
+## Introduction
+PickleDB is a lightweight, file-based key-value store with optional support for time-to-live (TTL). It provides a simple and intuitive API for storing and managing data persistently.
 
 ---
 
-## Features
-
-- **Key-Value Store**: Simple `set` and `get` operations.
-- **Lists and Dictionaries**: Native support for list and dictionary data types.
-- **Thread Safety**: Uses `RLock` to ensure safe multi-threaded operations.
-- **TTL Support**: Optional time-to-live functionality for expiring keys.
-- **Auto Dump**: Automatically saves changes to the database file.
-- **File Compression**: Compresses the database file using gzip.
-- **Human-Readable Storage**: Stores data in a JSON file for easy inspection and modification.
+## Table of Contents
+1. **Basic Usage**
+2. **Key-Value Methods**
+3. **List Methods**
+4. **Dictionary Methods**
+5. **Enhanced Features**
 
 ---
 
-## Installation
-
-PickleDB is a Python script. To use it, clone the repository and import the `PickleDB` class or use the `load` function in your project.
-
-```bash
-# Clone the repository
-git clone https://github.com/your-repo/pickledb.git
-
-# Use in your Python code
-from pickledb import load
-```
-
----
-
-## Initialization
-
-To create or load a database:
-
+## 1. Basic Usage
 ```python
-from pickledb import load
+from pickledb_enhanced import load
 
-db = load("example.db", auto_dump=True, enable_ttl=True)
+db = load('mydb.json', auto_dump=True, enable_ttl=True)
 ```
-
-- `location`: Path to the JSON file where the database will be stored.
-- `auto_dump`: If `True`, changes to the database are automatically saved.
-- `enable_ttl`: If `True`, keys can be assigned a time-to-live.
+- `auto_dump`: Automatically save changes to the file.
+- `enable_ttl`: Enable TTL support for expiring keys.
 
 ---
 
-## API Reference
+## 2. Key-Value Methods
 
-### Key-Value Operations
-
-#### `set(key, value, ttl=None)`
+### `set(key, value, ttl=None)`
 Set a key-value pair in the database.
 
-- **key** (str): The key.
-- **value**: The value to associate with the key.
-- **ttl** (int, optional): Time-to-live in seconds. Defaults to `None`.
+### `get(key)`
+Retrieve the value associated with a key.
 
-#### `get(key)`
-Get the value associated with a key.
+### `exists(key)`
+Check if a key exists.
 
-- **Returns**: The value, or `None` if the key does not exist or has expired.
-
-#### `exists(key)`
-Check if a key exists in the database.
-
-- **Returns**: `True` if the key exists, `False` otherwise.
-
-#### `rem(key)`
+### `rem(key)`
 Remove a key from the database.
 
-- **Returns**: `True` if the key was removed, `False` otherwise.
+### `getall()`
+Get all keys in the database.
 
-#### `getall()`
-Retrieve all keys in the database.
+### `clear()`
+Clear all keys.
 
-- **Returns**: A list of all keys.
-
-#### `clear()`
-Remove all keys from the database.
-
-#### `deldb()`
-Delete the entire database file.
+### `deldb()`
+Delete the database file.
 
 ---
 
-### TTL Support
+## 3. List Methods
 
-Keys can have an optional TTL (time-to-live), causing them to expire after a set duration.
-
-#### Example:
-
-```python
-# Set a key with a 10-second TTL
-db.set("temp_key", "temp_value", ttl=10)
-
-# Wait for expiration
-time.sleep(11)
-print(db.get("temp_key"))  # Output: None
-```
-
----
-
-### List Operations
-
-#### `lcreate(name)`
+### `lcreate(name)`
 Create a new list in the database.
 
-#### `ladd(name, value)`
+### `ladd(name, value)`
 Add a value to an existing list.
 
-#### `lgetall(name)`
+### `lgetall(name)`
 Retrieve all values from a list.
 
+### `lsort(name, reverse=False)`
+Sort a list in ascending or descending order.
+- `reverse`: Sort in descending order if `True`.
+
+### `lremove(name, value)`
+Remove a value from a list.
+
+### `lgetrange(name, start, end)`
+Retrieve a range of values from a list.
+- `start`: Start index.
+- `end`: End index.
+
+### `llen(name)`
+Get the length of a list.
+
 ---
 
-### Dictionary Operations
+## 4. Dictionary Methods
 
-#### `dcreate(name)`
+### `dcreate(name)`
 Create a new dictionary in the database.
 
-#### `dadd(name, key, value)`
+### `dadd(name, key, value)`
 Add a key-value pair to a dictionary.
 
-#### `dget(name, key)`
+### `dget(name, key)`
 Retrieve a value from a dictionary.
 
-#### `dgetall(name)`
+### `dgetall(name)`
 Retrieve all key-value pairs from a dictionary.
 
----
+### `dremove(name, key)`
+Remove a key from a dictionary.
 
-### File Compression
+### `dmerge(name, other_dict)`
+Merge another dictionary into an existing dictionary.
 
-#### `compress()`
-Compress the database file using gzip.
+### `dkeys(name)`
+Get all keys from a dictionary.
 
-#### Example:
-
-```python
-# Compress the database file
-db.compress()
-```
+### `dvalues(name)`
+Get all values from a dictionary.
 
 ---
 
-## Thread Safety
+## 5. Enhanced Features
 
-PickleDB uses `RLock` to ensure safe multi-threaded operations. This allows recursive locking within the same thread, ensuring consistent access to the database.
+### **TTL Support**
+- Expire keys automatically after a given time.
+
+### **File Compression**
+- Compress the database file to save space.
+
+### **Automatic Persistence**
+- Save changes automatically using `auto_dump`.
 
 ---
 
 ## Example Usage
 
+### **Working with Lists**
 ```python
-from pickledb import load
-import time
+# Create a list and add values
+db.lcreate('mylist')
+db.ladd('mylist', 'item1')
+db.ladd('mylist', 'item2')
 
-# Initialize database
-db = load("mydb.json", auto_dump=True, enable_ttl=True)
+# Sort the list
+db.lsort('mylist')  # ['item1', 'item2']
 
-# Key-Value Operations
-db.set("key1", "value1")
-print(db.get("key1"))
+# Get a range of values
+db.lgetrange('mylist', 0, 1)  # ['item1']
 
-# List Operations
-db.lcreate("mylist")
-db.ladd("mylist", "item1")
-print(db.lgetall("mylist"))
+# Remove an item
+db.lremove('mylist', 'item1')
+```
 
-# Dictionary Operations
-db.dcreate("mydict")
-db.dadd("mydict", "key1", "value1")
-print(db.dgetall("mydict"))
+### **Working with Dictionaries**
+```python
+# Create a dictionary and add values
+db.dcreate('mydict')
+db.dadd('mydict', 'key1', 'value1')
+db.dadd('mydict', 'key2', 'value2')
 
-# TTL Example
-db.set("temp_key", "temp_value", ttl=5)
-time.sleep(6)
-print(db.get("temp_key"))  # Output: None
+# Merge another dictionary
+db.dmerge('mydict', {'key3': 'value3'})
 
-# Compress the database file
-db.compress()
+# Get all keys and values
+db.dkeys('mydict')  # ['key1', 'key2', 'key3']
+db.dvalues('mydict')  # ['value1', 'value2', 'value3']
+
+# Remove a key
+db.dremove('mydict', 'key1')
 ```
 
 ---
 
-## Testing
-
-Unit tests for PickleDB are included in `test_pickledb.py`. Run the tests using:
-
-```bash
-python -m unittest test_pickledb.py
-```
+## Notes
+- Always ensure proper file permissions for the database file.
+- Use thread-safe practices when accessing the database concurrently.
 
 ---
 
-## License
-
-PickleDB is licensed under the BSD License. See the `LICENSE` file for more details.
+## Changelog
+- **Enhanced Features**: Added methods for list sorting, removal, range fetching, and dictionary merging.
 
