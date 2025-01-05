@@ -3,15 +3,10 @@ import sys
 import signal
 import shutil
 import json
-<<<<<<< HEAD
 import gzip
 from tempfile import NamedTemporaryFile
-from threading import RLock
+from threading import Lock
 from time import time
-=======
-from tempfile import NamedTemporaryFile
-from threading import Thread
->>>>>>> 9f50ab580fd8126324d72bbabec753b93da86da3
 
 
 def load(location, auto_dump=True, enable_ttl=False):
@@ -38,51 +33,15 @@ class PickleDB:
         """
         Initialize the PickleDB object.
 
-<<<<<<< HEAD
         Args:
             location (str): Path to the JSON file.
             auto_dump (bool): Automatically save changes to the file.
             enable_ttl (bool): Enable TTL support for keys.
         """
         self.location = os.path.expanduser(location)
-=======
-    def __init__(self, location, auto_dump, sig):
-        '''Creates a database object and loads the data from the location path.
-        If the file does not exist it will be created on the first update.
-        '''
-        self.load(location, auto_dump)
-        self.dthread = None
-        if sig:
-            self.set_sigterm_handler()
-
-    def __getitem__(self, item):
-        '''Syntax sugar for get()'''
-        return self.get(item)
-
-    def __setitem__(self, key, value):
-        '''Sytax sugar for set()'''
-        return self.set(key, value)
-
-    def __delitem__(self, key):
-        '''Sytax sugar for rem()'''
-        return self.rem(key)
-
-    def set_sigterm_handler(self):
-        '''Assigns sigterm_handler for graceful shutdown during dump()'''
-        def sigterm_handler(*args, **kwargs):
-            if self.dthread is not None:
-                self.dthread.join()
-            sys.exit(0)
-        signal.signal(signal.SIGTERM, sigterm_handler)
-
-    def load(self, location, auto_dump):
-        '''Loads, reloads or changes the path to the db file'''
-        location = os.path.expanduser(location)
-        self.loco = location
->>>>>>> 9f50ab580fd8126324d72bbabec753b93da86da3
         self.auto_dump = auto_dump
         self.enable_ttl = enable_ttl
-        self._lock = RLock()
+        self._lock = Lock()
         self.db = {}
         self.ttl = {}
         self._load()
@@ -114,26 +73,10 @@ class PickleDB:
             json.dump(self.db, temp_file)
         shutil.move(temp_file.name, self.location)
 
-    def _dump(self):
-        '''Dump to a temporary file, and then move to the actual location'''
-        with NamedTemporaryFile(mode='wt', delete=False) as f:
-            json.dump(self.db, f)
-        if os.stat(f.name).st_size != 0:
-            shutil.move(f.name, self.loco)
-
     def dump(self):
-<<<<<<< HEAD
         """Force save the database to the file."""
         with self._lock:
             self._dump()
-=======
-        '''Force dump memory db to file'''
-        self.dthread = Thread(target=self._dump)
-        self.dthread.start()
-        if self.dthread.is_alive():
-            self.dthread.join()
-        return True
->>>>>>> 9f50ab580fd8126324d72bbabec753b93da86da3
 
     def _autodump(self):
         """Automatically dump the database if auto_dump is enabled."""
@@ -169,8 +112,7 @@ class PickleDB:
             key (str): The key to retrieve.
 
         Returns:
-            any: The value associated with the key, or None if the key does not
-            exist or has expired.
+            any: The value associated with the key, or None if the key does not exist or has expired.
         """
         with self._lock:
             if self.enable_ttl and key in self.ttl:
@@ -365,8 +307,7 @@ class PickleDB:
             raise TypeError("Key must be a string.")
         with self._lock:
             if name not in self.db or not isinstance(self.db[name], dict):
-                raise TypeError(
-                    "Dictionary does not exist or is not a valid dictionary.")
+                raise TypeError("Dictionary does not exist or is not a valid dictionary.")
             self.db[name][key] = value
             self._autodump()
         return True
@@ -384,8 +325,7 @@ class PickleDB:
         """
         with self._lock:
             if name not in self.db or not isinstance(self.db[name], dict):
-                raise TypeError(
-                    "Dictionary does not exist or is not a valid dictionary.")
+                raise TypeError("Dictionary does not exist or is not a valid dictionary.")
             return self.db[name].get(key)
 
     def dgetall(self, name):
@@ -400,7 +340,6 @@ class PickleDB:
         """
         with self._lock:
             if name not in self.db or not isinstance(self.db[name], dict):
-                raise TypeError(
-                    "Dictionary does not exist or is not a valid dictionary.")
+                raise TypeError("Dictionary does not exist or is not a valid dictionary.")
             return self.db[name]
 

@@ -234,4 +234,3 @@ python -m unittest test_pickledb.py
 
 PickleDB is licensed under the BSD License. See the `LICENSE` file for more details.
 
-
