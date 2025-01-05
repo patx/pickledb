@@ -1,4 +1,3 @@
-
 import unittest
 import os
 import time
@@ -75,41 +74,6 @@ class TestPickleDBEnhanced(unittest.TestCase):
         self.db.dadd("test_dict", "key2", "value2")
         self.assertEqual(set(self.db.dvalues("test_dict")), {"value1", "value2"})
 
-    # Additional Tests
-    def test_persistence(self):
-        self.db.set("key1", "value1")
-        del self.db
-        db = load(self.db_file, auto_dump=True)
-        self.assertEqual(db.get("key1"), "value1")
-
-    def test_invalid_ladd(self):
-        with self.assertRaises(TypeError):
-            self.db.ladd("nonexistent_list", "item")
-
-    def test_invalid_dadd(self):
-        with self.assertRaises(TypeError):
-            self.db.dadd("nonexistent_dict", "key", "value")
-
-    def test_compress(self):
-        self.db.set("key1", "value1")
-        self.assertTrue(self.db.compress())
-        self.assertTrue(os.path.exists(f"{self.db_file}.gz"))
-
-    def test_ttl_expiry(self):
-        self.db.set("key1", "value1", ttl=1)
-        time.sleep(2)
-        self.assertIsNone(self.db.get("key1"))
-
-    def test_clear(self):
-        self.db.set("key1", "value1")
-        self.db.set("key2", "value2")
-        self.db.clear()
-        self.assertEqual(len(self.db.getall()), 0)
-
-    def test_deldb(self):
-        self.db.set("key1", "value1")
-        self.db.deldb()
-        self.assertFalse(os.path.exists(self.db_file))
-
 if __name__ == "__main__":
     unittest.main()
+

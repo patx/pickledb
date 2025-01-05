@@ -1,4 +1,3 @@
-
 import os
 import sys
 import signal
@@ -8,6 +7,7 @@ import gzip
 from tempfile import NamedTemporaryFile
 from threading import RLock
 from time import time
+
 
 def load(location, auto_dump=True, enable_ttl=False):
     """
@@ -272,77 +272,6 @@ class PickleDB:
                 raise TypeError("List does not exist or is not a valid list.")
             return self.db[name]
 
-    def lsort(self, name, reverse=False):
-        """
-        Sort a list in the database.
-
-        Args:
-            name (str): The name of the list.
-            reverse (bool): Sort in descending order if True.
-
-        Returns:
-            list: The sorted list.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], list):
-                raise TypeError("List does not exist or is not a valid list.")
-            self.db[name].sort(reverse=reverse)
-            self._autodump()
-            return self.db[name]
-
-    def lremove(self, name, value):
-        """
-        Remove a value from a list.
-
-        Args:
-            name (str): The name of the list.
-            value (any): The value to remove.
-
-        Returns:
-            bool: True if the value was removed, False otherwise.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], list):
-                raise TypeError("List does not exist or is not a valid list.")
-            try:
-                self.db[name].remove(value)
-                self._autodump()
-                return True
-            except ValueError:
-                return False
-
-    def lgetrange(self, name, start, end):
-        """
-        Get a range of values from a list.
-
-        Args:
-            name (str): The name of the list.
-            start (int): The starting index.
-            end (int): The ending index.
-
-        Returns:
-            list: The sublist from start to end.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], list):
-                raise TypeError("List does not exist or is not a valid list.")
-            return self.db[name][start:end]
-
-    def llen(self, name):
-        """
-        Get the length of a list.
-
-        Args:
-            name (str): The name of the list.
-
-        Returns:
-            int: The length of the list.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], list):
-                raise TypeError("List does not exist or is not a valid list.")
-            return len(self.db[name])
-
     def dcreate(self, name):
         """
         Create a new dictionary in the database.
@@ -414,72 +343,3 @@ class PickleDB:
                 raise TypeError("Dictionary does not exist or is not a valid dictionary.")
             return self.db[name]
 
-    def dremove(self, name, key):
-        """
-        Remove a key from a dictionary.
-
-        Args:
-            name (str): The name of the dictionary.
-            key (str): The key to remove.
-
-        Returns:
-            bool: True if the key was removed, False otherwise.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], dict):
-                raise TypeError("Dictionary does not exist or is not a valid dictionary.")
-            if key in self.db[name]:
-                del self.db[name][key]
-                self._autodump()
-                return True
-            return False
-
-    def dmerge(self, name, other_dict):
-        """
-        Merge another dictionary into an existing dictionary.
-
-        Args:
-            name (str): The name of the dictionary.
-            other_dict (dict): The dictionary to merge.
-
-        Returns:
-            dict: The updated dictionary.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], dict):
-                raise TypeError("Dictionary does not exist or is not a valid dictionary.")
-            if not isinstance(other_dict, dict):
-                raise TypeError("Argument must be a dictionary.")
-            self.db[name].update(other_dict)
-            self._autodump()
-            return self.db[name]
-
-    def dkeys(self, name):
-        """
-        Get all keys from a dictionary.
-
-        Args:
-            name (str): The name of the dictionary.
-
-        Returns:
-            list: A list of keys in the dictionary.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], dict):
-                raise TypeError("Dictionary does not exist or is not a valid dictionary.")
-            return list(self.db[name].keys())
-
-    def dvalues(self, name):
-        """
-        Get all values from a dictionary.
-
-        Args:
-            name (str): The name of the dictionary.
-
-        Returns:
-            list: A list of values in the dictionary.
-        """
-        with self._lock:
-            if name not in self.db or not isinstance(self.db[name], dict):
-                raise TypeError("Dictionary does not exist or is not a valid dictionary.")
-            return list(self.db[name].values())
