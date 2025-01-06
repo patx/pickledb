@@ -47,6 +47,18 @@ class PickleDB:
         self._load()
         self._set_signal_handler()
 
+    def __getitem__(self, item):
+        '''Syntax sugar for get()'''
+        return self.get(item)
+
+    def __setitem__(self, key, value):
+        '''Sytax sugar for set()'''
+        return self.set(key, value)
+
+    def __delitem__(self, key):
+        '''Sytax sugar for rem()'''
+        return self.rem(key)
+
     def _set_signal_handler(self):
         """Set up signal handler for graceful shutdown."""
         signal.signal(signal.SIGTERM, self._graceful_exit)
