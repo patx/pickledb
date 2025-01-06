@@ -50,6 +50,7 @@ These results demonstrate `pkldb`'s capability to scale efficiently while mainta
 ---
 
 ## **Installation**
+Download or clone this repository and include `pkldb.py` in your project. Then install `orjson`:
 
 ```bash
 pip install orjson
@@ -58,7 +59,6 @@ pip install orjson
 ### Why `orjson`?
 `orjson` is a fast and efficient JSON parser and serializer for Python. It is significantly faster than the built-in `json` module, enabling `pkldb` to achieve its high performance, especially when handling large datasets.
 
-Download or clone this repository and include `pkldb.py` in your project.
 
 ---
 
@@ -77,15 +77,15 @@ mydb.set("key3", [1, 2, 3])  # Using a list as a value
 mydb.set("key4", {"nested": "value"})  # Using a dictionary as a value
 
 # Retrieve a value
-print(mydb.get("key1"))  # Output: value1
-print(mydb.get("key4"))  # Output: {'nested': 'value'}
+mydb.get("key1")  # Output: value1
+mydb.get("key4")  # Output: {'nested': 'value'}
 
 # List all keys
-print(mydb.all())  # Output: ["key1", "key2", "key3", "key4"]
+mydb.all()  # Output: ["key1", "key2", "key3", "key4"]
 
 # Remove a key
 mydb.remove("key1")
-print(mydb.all())  # Output: ["key2", "key3", "key4"]
+mydb.all()  # Output: ["key2", "key3", "key4"]
 
 # Save the database to disk
 mydb.dump()
@@ -93,24 +93,42 @@ print("Database saved to disk.")
 
 # Clear the database
 mydb.purge()
-print(mydb.all())  # Output: []
+mydb.all()  # Output: []
 ```
 
 ---
 
 ## **Comparison with Other Databases**
 
-| Feature              | pkldb       | Redis        | SQLite       | TinyDB      | MongoDB     | KenobiDB    |
-|----------------------|-------------|--------------|--------------|-------------|-------------|-------------|
-| **Storage Type**     | JSON File   | In-Memory    | File-Based   | JSON File   | Document DB | SQLite      |
-| **Data Model**       | Key-Value   | Key-Value    | Relational   | Key-Value   | Document    | Document    |
-| **Persistence**      | Yes         | Optional     | Yes          | Yes         | Yes         | Yes         |
-| **Scalability**      | Medium      | High         | Medium       | Low         | High        | Medium      |
-| **Setup**            | None        | Server-Based | None         | None        | Server-Based| None        |
-| **Performance**      | High        | Very High    | Medium       | Low         | High        | Medium      |
-| **Dependencies**     | Minimal     | Moderate     | Minimal      | Minimal     | High        | Minimal     |
-| **Concurrency**      | Single-Threaded | Multi-Threaded | Single-Threaded | Single-Threaded | Multi-Threaded | Multi-Threaded |
-| **Use Case**         | Lightweight and portable key-value store | High-performance caching | Local relational database | Lightweight JSON-based store | Scalable NoSQL solutions | Lightweight document database |
+| Feature              | pkldb       | Redis        | SQLite       | TinyDB      | MongoDB     |
+|----------------------|-------------|--------------|--------------|-------------|-------------|
+| **Storage Type**     | JSON File   | In-Memory    | File-Based   | JSON File   | Document DB |
+| **Data Model**       | Key-Value   | Key-Value    | Relational   | Key-Value   | Document    |
+| **Persistence**      | Yes         | Optional     | Yes          | Yes         | Yes         |
+| **Scalability**      | Medium      | High         | Medium       | Low         | High        |
+| **Setup**            | None        | Server-Based | None         | None        | Server-Based|
+| **Performance**      | High        | Very High    | Medium       | Low         | High        |
+| **Dependencies**     | Minimal     | Moderate     | Minimal      | Minimal     | High        |
+| **Concurrency**      | Single-Threaded | Multi-Threaded | Single-Threaded | Single-Threaded | Multi-Threaded |
+| **Use Case**         | Lightweight and portable key-value store | High-performance caching | Local relational database | Lightweight JSON-based store | Scalable NoSQL solutions |
+
+
+| Feature                | pkldb                           | pickledb                                                              | KenobiDB                           |
+|------------------------|---------------------------------|----------------------------------------------------------------------|------------------------------------|
+| Database Type          | Key-Value Store               | Key-Value Store                                                     | Document-based Database           |
+| Persistence            | Persistent                    | Persistent                                                          | Persistent                        |
+| Thread Safety          | No explicit thread safety     | Thread-safe with RLock                                              | Thread-safe with RLock            |
+| Data Storage Format    | JSON using orjson             | JSON using built-in json library                                    | SQLite                            |
+| Key Features           | Atomic dump, auto_dump option | Optional TTL, auto_dump, compression                                | Async operations, document search |
+| Supported Operations   | set, get, dump, remove, purge, all | set, get, exists, remove, getall, clear, compress, append, lcreate, ladd, lgetall, lsort, lremove, lgetrange, llen, dcreate, dadd, dget, dgetall, dremove, dmerge, dkeys, dvalues | insert, remove, update, purge, search, find_any, find_all |
+| TTL Support            | No                            | Yes                                                                 | No                                |
+| Compression            | No                            | Yes (gzip)                                                          | No                                |
+| Dependencies           | os, orjson                  | os, json, gzip, shutil, time                                      | os, json, sqlite3, concurrent.futures |
+| Performance Notes      | Efficient up to ~20M entries. Scales linearly: ~30s load for 20M, ~1.7s dump for 10M. | Handles up to ~1M entries; performance drops sharply beyond this limit. | Handles up to ~10M entries; performance and SQLite overhead limit larger scales. |
+| Scalability            | Limited to local file system  | Limited to local file system                                        | Moderate scalability with SQLite  |
+| Backup/Restore         | No built-in                   | No built-in                                                         | No built-in                       |
+| License                | BSD-3-Clause License          | BSD-3-Clause License                                                | BSD-3-Clause License              |
+
 
 ### **Strengths**
 
