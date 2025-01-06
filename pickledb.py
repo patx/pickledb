@@ -282,7 +282,7 @@ class PickleDB:
         with self._lock:
             if name not in self.db or not isinstance(self.db[name], list):
                 raise TypeError("List does not exist or is not a valid list.")
-            return self.db[name]
+            return list(self.db[name])
 
     def lsort(self, name, reverse=False):
         """
