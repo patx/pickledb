@@ -37,6 +37,9 @@ class TestPkldbLargeDataset(unittest.TestCase):
             start_time = time.time()
             for i in range(num_docs):
                 self.db.set(f"key{i}", {"key": f"value{i}"})
+            mem_time = time.time()
+            mem_dur = mem_time - start_time
+            print(f"All key-values in memory in {mem_dur:.2f} seconds")
             self.db.dump()  # Final dump
             end_time = time.time()
             insertion_duration = end_time - start_time

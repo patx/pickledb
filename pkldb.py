@@ -1,12 +1,11 @@
 import os
-import json
+import orjson
 import multiprocessing
 
 class pkldb:
     """
-    A simplified version of PickleDB with essential methods: set, get, dump, delete, purge, and all.
+    A orjson-based key-value store with essential methods: set, get, dump, delete, purge, and all.
     """
-
     def __init__(self, location, auto_dump=False):
         """
         Initialize the pkldb object.
@@ -17,20 +16,20 @@ class pkldb:
         """
         self.location = os.path.expanduser(location)
         self.auto_dump = auto_dump
-        self.db = {}
         self._load()
-
 
     def _load(self):
         """
         Load data from the JSON file if it exists, or initialize an empty database.
         """
-        if os.path.exists(self.location):
+        if os.path.exists(self.location) and os.path.getsize(self.location) > 0:
             try:
-                with open(self.location, 'rt') as f:
-                    self.db = json.load(f)
-            except (ValueError, json.JSONDecodeError):
+                with open(self.location, 'rb') as f:
+                    self.db = orjson.loads(f.read())
+            except (ValueError, IOError):
                 self.db = {}
+        else:
+            self.db = {}
 
     def _dump_process(self, data, location):
         """
@@ -38,8 +37,8 @@ class pkldb:
         """
         temp_location = f"{location}.tmp"
         try:
-            with open(temp_location, 'wt') as temp_file:
-                json.dump(data, temp_file)
+            with open(temp_location, 'wb') as temp_file:
+                temp_file.write(orjson.dumps(data))
             os.replace(temp_location, location)  # Atomic replacement
         except IOError as e:
             print(f"Failed to dump database: {e}")
@@ -80,9 +79,9 @@ class pkldb:
         """
         return self.db.get(str(key))
 
-    def delete(self, key):
+    def remove(self, key):
         """
-        Delete a key from the database.
+        Remove a key and its value from the database.
 
         Args:
             key (any): The key to delete.
@@ -117,3 +116,4 @@ class pkldb:
             list: A list of all keys.
         """
         return list(self.db.keys())
+

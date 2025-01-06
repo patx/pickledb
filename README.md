@@ -21,6 +21,10 @@ And it's BSD licensed!
 True
 ```
 
+## Installation
+- Just add the `pickledb.py` file to your working directory or use `pip install pickledb`.
+- pickleDB also includes a simplified and faster version using orjson called `pkldb.py`, to use this add it to your working directory and note the slight difference in setup `from pkldb.py import pkldb` then `db = pkldb('example.json')`
+
 # PickleDB Documentation
 
 ## Introduction
