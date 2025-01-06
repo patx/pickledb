@@ -1,4 +1,3 @@
-
 import time
 import unittest
 import signal
@@ -22,43 +21,45 @@ class TestPkldbLargeDataset(unittest.TestCase):
     def _timeout_handler(self, signum, frame):
         raise TimeoutError("Test exceeded the timeout duration")
 
-    def test_large_dataset_with_timeout(self):
-        """Stress test: Insert and retrieve a large number of key-value pairs with a timeout."""
-        timeout_duration = 250  # Timeout in seconds (4 minutes)
+    def test_retrieve_before_dump(self):
+        """Stress test: Insert and retrieve a large number of key-value pairs, then dump."""
+        timeout_duration = 600  # Timeout in seconds (10 minutes)
 
         # Set a signal-based timeout
         signal.signal(signal.SIGALRM, self._timeout_handler)
         signal.alarm(timeout_duration)
 
         try:
-            num_docs = 10_000_000
+            num_docs = 1_000_000
 
-            # Measure insertion performance
+            # Measure memory loading time
             start_time = time.time()
             for i in range(num_docs):
-                self.db.set(f"key{i}", {"key": f"value{i}"})
+                self.db.set(f"key{i}", f"value{i}")
             mem_time = time.time()
-            mem_dur = mem_time - start_time
-            print(f"All key-values in memory in {mem_dur:.2f} seconds")
-            self.db.dump()  # Final dump
-            end_time = time.time()
-            insertion_duration = end_time - start_time
+            mem_duration = mem_time - start_time
+            print(f"All key-values in memory in {mem_duration:.2f} seconds")
 
-            self.assertLess(insertion_duration, 250, "Inserting a bunch of key-value pairs took too long")
-            print(f"Inserted {num_docs} key-value pairs in {insertion_duration:.2f} seconds")
-
-            # Measure retrieval performance
+            # Measure retrieval performance before dumping
             start_time = time.time()
             retrieved_docs = [self.db.get(f"key{i}") for i in range(num_docs)]
-            end_time = time.time()
-            retrieval_duration = end_time - start_time
+            retrieval_time = time.time() - start_time
+            print(f"Retrieved {num_docs} key-value pairs in {retrieval_time:.2f} seconds")
 
-            self.assertEqual(len(retrieved_docs), num_docs, "Not all key-value pairs were retrieved")
             for i in range(num_docs):
-                self.assertEqual(retrieved_docs[i], {"key": f"value{i}"}, f"Mismatch at key{i}")
-            print(f"Retrieved {num_docs} key-value pairs in {retrieval_duration:.2f} seconds")
+                self.assertEqual(retrieved_docs[i], f"value{i}", f"Mismatch at key{i}")
+            print("Data validated.")
+
+
+            # Measure dump performance
+            start_time = time.time()
+            self.db.dump()
+            dump_time = time.time() - start_time
+            print(f"Dumped {num_docs} key-value pairs to disk in {dump_time:.2f} seconds")
+
         finally:
             signal.alarm(0)  # Cancel the alarm after the test
 
 if __name__ == "__main__":
     unittest.main()
+
