@@ -83,7 +83,7 @@ class PickleDB:
         """Dump the database to a temporary file and replace the original."""
         with NamedTemporaryFile(mode='wt', delete=False) as temp_file:
             json.dump(self.db, temp_file)
-        shutil.move(temp_file.name, self.location)
+            os.replace(temp_file.name, self.location)  # Atomic replace
 
     def dump(self):
         """Force save the database to the file."""
