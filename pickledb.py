@@ -116,7 +116,7 @@ class PickleDB:
             self._autodump()
         return True
 
-    def get(self, key):
+    def get(self, key, default_value=None):
         """
         Get the value associated with a key.
 
@@ -127,11 +127,14 @@ class PickleDB:
             any: The value associated with the key, or None if the key does not exist or has expired.
         """
         with self._lock:
-            if self.enable_ttl and key in self.ttl:
-                if time() > self.ttl[key]:
-                    self.rem(key)
-                    return None
-            return self.db.get(key)
+            try:
+                if self.enable_ttl and key in self.ttl:
+                    if time() > self.ttl[key]:
+                        self.rem(key)
+                        return None
+                return self.db.get(key)
+            except KeyError:
+                return default_value
 
     def exists(self, key):
         """

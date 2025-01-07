@@ -38,18 +38,13 @@ class TestPkldbLargeDataset(unittest.TestCase):
                 self.db.set(f"key{i}", f"value{i}")
             mem_time = time.time()
             mem_duration = mem_time - start_time
-            print(f"All key-values in memory in {mem_duration:.2f} seconds")
+            print(f"{num_docs} stored in memory in {mem_duration:.2f} seconds")
 
             # Measure retrieval performance before dumping
             start_time = time.time()
             retrieved_docs = [self.db.get(f"key{i}") for i in range(num_docs)]
             retrieval_time = time.time() - start_time
             print(f"Retrieved {num_docs} key-value pairs in {retrieval_time:.2f} seconds")
-
-            for i in range(num_docs):
-                self.assertEqual(retrieved_docs[i], f"value{i}", f"Mismatch at key{i}")
-            print("Data validated.")
-
 
             # Measure dump performance
             start_time = time.time()

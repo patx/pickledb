@@ -54,16 +54,18 @@ class pkldb:
         Load data from the JSON file if it exists, or initialize an empty
         database.
         """
-        if os.path.exists(self.location) and os.path.getsize(self.location) > 0:
+        if (os.path.exists(self.location) and
+                os.path.getsize(self.location) > 0):
             try:
                 with open(self.location, 'rb') as f:
                     self.db = orjson.loads(f.read())
-                    print("Database loaded.")
+                    print("Database loaded")
             except Exception as e:
                 self.db = {}
-                print(f"{e}\nDatabase failed to load. Empty database created.")
+                print(f"{e}\nDatabase failed to load, empty database created")
         else:
             self.db = {}
+            print("Database created")
 
     def dump(self):
         """
@@ -73,14 +75,19 @@ class pkldb:
             - Writes to a temporary file and replaces the
               original file only after the write is successful,
               ensuring data integrity.
+
+        Returns:
+            bool: True if dump was successful, False if not.
         """
         temp_location = f"{self.location}.tmp"
         try:
             with open(temp_location, 'wb') as temp_file:
-                temp_file.write(orjson.dumps(self.db))  # Serialize and write in one step
+                temp_file.write(orjson.dumps(self.db))
             os.replace(temp_location, self.location)  # Atomic replace
+            return True
         except Exception as e:
             print(f"Failed to write database to disk: {e}")
+            return False
 
     def set(self, key, value):
         """
