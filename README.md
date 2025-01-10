@@ -1,196 +1,249 @@
-![Download badge](http://pepy.tech/badge/pickledb)
+# **pickleDB: Your Lightweight, High-Speed Key-Value Store**
 
-# pickleDB
-pickleDB is lightweight, fast, and simple database based on the
-[json](https://docs.python.org/3/library/json.html) module.
-And it's BSD licensed!
+## **Fast. Simple. Reliable.**
+Unlock the power of effortless data storage with **pickleDB**—the no-fuss, blazing-fast key-value store designed for Python developers. Whether you're building a small script or a performant microservice, pickleDB delivers simplicity and speed with the reliability you can count on.
 
+---
 
-## pickleDB is Fun
-```python
->>> import pickledb
+## **Why Choose pickleDB?**
 
->>> db = pickledb.load('test.db', False)
+### ✅ **Blazing Speed**
+Backed by the high-performance [orjson](https://pypi.org/project/orjson/) library, pickleDB handles millions of records with ease. Perfect for applications where every millisecond counts.
 
->>> db.set('key', 'value')
+### ✅ **Ridiculously Easy to Use**
+With its minimalist API, pickleDB makes adding, retrieving, and managing your data as simple as writing a Python list. No steep learning curves. No unnecessary complexity.
 
->>> db.get('key')
-'value'
+### ✅ **Rock-Solid Reliability**
+Your data deserves to be safe. Atomic saves ensure your database remains consistent—even if something goes wrong.
 
->>> db.dump()
-True
+### ✅ **Pythonic Flexibility**
+Store strings, lists, dictionaries, and more—all with native Python operations. No need to learn special commands. If you know Python, you already know pickleDB.
+
+---
+
+## **Getting Started**
+
+### **Install in Seconds**
+pickleDB is available on PyPI. Get started with just one command:
+```bash
+pip install pickledb
 ```
 
-## Installation
-- Just add the `pickledb.py` file to your working directory or use `pip install pickledb`.
-- pickleDB also includes a simplified and faster version using orjson called `pkldb.py`, to use this add it to your working directory and note the slight difference in setup `from pkldb.py import pkldb` then `db = pkldb('example.json')`
-
-# PickleDB Documentation
-
-## Introduction
-PickleDB is a lightweight, file-based key-value store with optional support for time-to-live (TTL). It provides a simple and intuitive API for storing and managing data persistently.
-
----
-
-## Table of Contents
-1. **Basic Usage**
-2. **Key-Value Methods**
-3. **List Methods**
-4. **Dictionary Methods**
-5. **Enhanced Features**
-
----
-
-## 1. Basic Usage
+### **Your First pickleDB**
 ```python
-from pickledb_enhanced import load
+from pickledb import PickleDB
 
-db = load('mydb.json', auto_dump=True, enable_ttl=True)
+# Initialize the database
+db = PickleDB('my_database.db')
+
+# Add a key-value pair
+db.set('greeting', 'Hello, world!')
+
+# Retrieve the value
+print(db.get('greeting'))  # Output: Hello, world!
+
+# Save the data to disk
+db.save()
 ```
-- `auto_dump`: Automatically save changes to the file.
-- `enable_ttl`: Enable TTL support for expiring keys.
+It’s that simple! In just a few lines, you have a fully functioning key-value store.
 
 ---
 
-## 2. Key-Value Methods
+## **More Examples to Get You Inspired**
 
-### `set(key, value, ttl=None)`
-Set a key-value pair in the database.
-
-### `get(key)`
-Retrieve the value associated with a key.
-
-### `exists(key)`
-Check if a key exists.
-
-### `rem(key)`
-Remove a key from the database.
-
-### `getall()`
-Get all keys in the database.
-
-### `clear()`
-Clear all keys.
-
-### `deldb()`
-Delete the database file.
-
----
-
-## 3. List Methods
-
-### `lcreate(name)`
-Create a new list in the database.
-
-### `ladd(name, value)`
-Add a value to an existing list.
-
-### `lgetall(name)`
-Retrieve all values from a list.
-
-### `lsort(name, reverse=False)`
-Sort a list in ascending or descending order.
-- `reverse`: Sort in descending order if `True`.
-
-### `lremove(name, value)`
-Remove a value from a list.
-
-### `lgetrange(name, start, end)`
-Retrieve a range of values from a list.
-- `start`: Start index.
-- `end`: End index.
-
-### `llen(name)`
-Get the length of a list.
-
----
-
-## 4. Dictionary Methods
-
-### `dcreate(name)`
-Create a new dictionary in the database.
-
-### `dadd(name, key, value)`
-Add a key-value pair to a dictionary.
-
-### `dget(name, key)`
-Retrieve a value from a dictionary.
-
-### `dgetall(name)`
-Retrieve all key-value pairs from a dictionary.
-
-### `dremove(name, key)`
-Remove a key from a dictionary.
-
-### `dmerge(name, other_dict)`
-Merge another dictionary into an existing dictionary.
-
-### `dkeys(name)`
-Get all keys from a dictionary.
-
-### `dvalues(name)`
-Get all values from a dictionary.
-
----
-
-## 5. Enhanced Features
-
-### **TTL Support**
-- Expire keys automatically after a given time.
-
-### **File Compression**
-- Compress the database file to save space.
-
-### **Automatic Persistence**
-- Save changes automatically using `auto_dump`.
-
----
-
-## Example Usage
-
-### **Working with Lists**
+### **Store and Retrieve Complex Data**
+PickleDB works seamlessly with Python data structures. Example:
 ```python
-# Create a list and add values
-db.lcreate('mylist')
-db.ladd('mylist', 'item1')
-db.ladd('mylist', 'item2')
+# Store a dictionary
+db.set('user', {'name': 'Alice', 'age': 30, 'city': 'Wonderland'})
 
-# Sort the list
-db.lsort('mylist')  # ['item1', 'item2']
+# Retrieve and update it
+user = db.get('user')
+user['age'] += 1
 
-# Get a range of values
-db.lgetrange('mylist', 0, 1)  # ['item1']
-
-# Remove an item
-db.lremove('mylist', 'item1')
+# Save the updated data
+db.set('user', user)
+print(db.get('user'))  # Output: {'name': 'Alice', 'age': 31, 'city': 'Wonderland'}
 ```
 
-### **Working with Dictionaries**
+### **Use Lists for Dynamic Data**
+Handle lists with ease:
 ```python
-# Create a dictionary and add values
-db.dcreate('mydict')
-db.dadd('mydict', 'key1', 'value1')
-db.dadd('mydict', 'key2', 'value2')
+# Add a list of items
+db.set('tasks', ['Write code', 'Test app', 'Deploy'])
 
-# Merge another dictionary
-db.dmerge('mydict', {'key3': 'value3'})
+# Retrieve and modify
+tasks = db.get('tasks')
+tasks.append('Celebrate')
+db.set('tasks', tasks)
 
-# Get all keys and values
-db.dkeys('mydict')  # ['key1', 'key2', 'key3']
-db.dvalues('mydict')  # ['value1', 'value2', 'value3']
+print(db.get('tasks'))  # Output: ['Write code', 'Test app', 'Deploy', 'Celebrate']
+```
 
-# Remove a key
-db.dremove('mydict', 'key1')
+### **Store Configurations**
+Create a simple, persistent configuration store:
+```python
+# Set configuration options
+db.set('config', {'theme': 'dark', 'notifications': True})
+
+# Access and update settings
+config = db.get('config')
+config['notifications'] = False
+db.set('config', config)
+print(db.get('config'))  # Output: {'theme': 'dark', 'notifications': False}
+```
+
+### **Session Management**
+Track user sessions effortlessly:
+```python
+# Add session data
+db.set('session_12345', {'user_id': 1, 'status': 'active'})
+
+# End a session
+session = db.get('session_12345')
+session['status'] = 'inactive'
+db.set('session_12345', session)
+
+print(db.get('session_12345'))  # Output: {'user_id': 1, 'status': 'inactive'}
 ```
 
 ---
 
-## Notes
-- Always ensure proper file permissions for the database file.
-- Use thread-safe practices when accessing the database concurrently.
+## **Performance Highlights**
+
+pickleDB demonstrates strong performance for handling large-sized datasets:
+
+| Entries      | Memory Load Time | Retrieval Time | Save Time |
+|--------------|------------------|----------------|-----------|
+| **1M**       | 1.21 sec         | 0.90 sec       | 0.17 sec  |
+| **10M**      | 14.11 sec        | 10.30 sec      | 1.67 sec  |
+| **50M**      | 93.79 sec        | 136.42 sec     | 61.08 sec |
+
+Tests were performed on a StarLabs StarLite Mk IV (Quad-Core Intel® Pentium® Silver N5030 CPU @ 1.10GHz w/ 8GB memory) running elementary OS 7.1 Horus.
 
 ---
 
-## Changelog
-- **Enhanced Features**: Added methods for list sorting, removal, range fetching, and dictionary merging.
+## **Minimal, Powerful API**
 
+pickleDB offers a clean and Pythonic API for managing data efficiently:
+
+### **`set(key, value)`**
+Add or update a key-value pair:
+```python
+# Add a new key-value pair
+db.set('username', 'admin')
+
+# Update an existing key-value pair
+db.set('username', 'superadmin')
+print(db.get('username'))  # Output: 'superadmin'
+```
+
+### **`get(key)`**
+Retrieve the value associated with a key:
+```python
+# Get the value for a key
+print(db.get('username'))  # Output: 'superadmin'
+
+# Attempt to retrieve a non-existent key
+print(db.get('nonexistent_key'))  # Output: None
+```
+
+### **`all()`**
+Get a list of all keys:
+```python
+# Add multiple keys
+db.set('item1', 'value1')
+db.set('item2', 'value2')
+
+# Retrieve all keys
+print(db.all())  # Output: ['username', 'item1', 'item2']
+```
+
+### **`remove(key)`**
+Delete a key and its value:
+```python
+# Remove a key-value pair
+db.remove('item1')
+print(db.all())  # Output: ['username', 'item2']
+```
+
+### **`purge()`**
+Clear all data in the database:
+```python
+# Clear the database
+db.purge()
+print(db.all())  # Output: []
+```
+
+### **`save()`**
+Persist the database to disk:
+```python
+# Save the current state of the database
+db.save()
+print("Database saved successfully!")
+```
+
+---
+
+## **Key Improvements in Version 1.0**
+
+pickleDB 1.0 is a reimagined version designed for speed, simplicity, and reliability. Key changes include:
+
+- **Atomic Saves**: Ensures data integrity during writes, eliminating potential corruption issues.
+- **Faster Serialization**: Switched to `orjson` for significantly improved speed.
+- **Streamlined API**: Removed legacy methods (e.g., `ladd`, `dmerge`) in favor of native Python operations.
+- **Unified Handling of Data Types**: Treats all Python-native types (lists, dicts, etc.) as first-class citizens.
+- **Explicit Saves**: The `auto_save` feature was removed to provide users greater control and optimize performance.
+
+If backward compatibility is essential, version 0.9 is still available:
+- View the legacy code [here](https://gist.github.com/patx/3ad47fc3814d7293feb902f6ab49c48f).
+- Install it by:
+  ```bash
+  pip uninstall pickledb
+  ```
+  Then download the legacy file and include it in your project.
+
+---
+
+## **Limitations**
+
+While pickleDB is powerful, it’s important to understand its limitations:
+
+- **Memory Usage**: The entire dataset is loaded into memory, which might be a constraint on systems with limited RAM for extremely large datasets.
+- **Single-Threaded**: The program is not thread-safe. For concurrent access, use external synchronization like Python's `RLock()`.
+- **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use asynchronous wrappers.
+- **Lack of Advanced Features**: pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features.
+
+For projects requiring more robust solutions, consider alternatives like **[kenobiDB](Https://github.com/patx/kenobi)**, [Redis](http://redis.io/), [SQLite](https://www.sqlite.org/), or [MongoDB](https://www.mongodb.com/).
+
+---
+
+## **Asynchronous Saves**
+Want non-blocking saves? You can implement an async wrapper to handle saves in the background. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
+
+---
+
+## **Community & Contributions**
+
+### **Join the Community**
+We’re passionate about making pickleDB better every day. Got ideas, feedback, or an issue to report? Let’s connect:
+- **File an Issue**: [GitHub Issues](https://github.com/patx/pickledb/issues)
+- **Ask Questions**: Reach out to our growing community of users and developers.
+
+### **Contribute to pickleDB**
+Want to leave your mark? Help us make pickleDB even better:
+- **Submit a Pull Request**: Whether it's fixing a bug, improving the documentation, or adding a feature, we’d love your contributions.
+- **Suggest New Features**: Share your ideas to make pickleDB more powerful.
+
+Together, we can build a better tool for everyone.
+
+---
+
+## **Documentation**
+
+Explore the full capabilities of pickleDB with our detailed documentation:
+- **API Reference**: [Commands and Examples](https://patx.github.io/pickledb/commands.html)
+- [GitHub Repository](https://github.com/patx/pickledb)
+- [Installation Details (PyPI)](http://pypi.python.org/pypi/pickleDB)
+
+Whether you're a beginner or an experienced developer, these resources will guide you through everything pickleDB has to offer.

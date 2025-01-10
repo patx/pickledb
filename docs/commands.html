@@ -1,59 +1,82 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="shortcut icon" href="http://packages.python.org/pickleDB/favicon.ico" type="image/x-icon">
-<link rel="icon" href="http://packages.python.org/pickleDB/favicon.ico" type="image/x-icon">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>pickleDB - simple key-value database</title>
-<style type="text/css">
-.logo { width: 800px; margin: 40px auto; }
-.body { font-family: "helvetica"; width: 540px; margin: 40px auto; }
-img.c1 { position: absolute; top: 0; right: 0; border: 0; }
-span.c2 { color: #8F5902 }
-span.c9 { color: #4E9A06 }
-a { color: #008000; border-bottom: 0px dotted white; text-decoration: none; }
-a:hover { color: #008000; border-bottom: 0px solid white; }
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://packages.python.org/pickleDB/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://packages.python.org/pickleDB/favicon.ico" type="image/x-icon">
+    <title>pickleDB API Documentation</title>
+    <style>
+        .logo { width: 800px; margin: 40px auto; }
+        .body { font-family: "Helvetica", sans-serif; width: 540px; margin: 40px auto; }
+        img.c1 { position: absolute; top: 0; right: 0; border: 0; }
+        span.c2 { color: #8F5902; }
+        span.c9 { color: #4E9A06; }
+        a { color: #008000; border-bottom: 0px dotted white; text-decoration: none; }
+        a:hover { color: #008000; border-bottom: 0px solid white; }
+    </style>
 </head>
 <body>
-<div class="logo"><a href="index.html"><img src="logo.png" alt="pickleDB logo"></a></div>
-<div class="body">
-<h1>Current Commands</h1>
-<p><code><span class="c2">LOAD</span> <span class="c9">path</span> <span class="c9">auto_dump</span></code> &rarr; Load a database from a path with auto_dump enabled or not <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">SET</span> <span class="c9">key</span> <span class="c9">value</span></code> &rarr; Set the value of a <em>str</em> key <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">GET</span> <span class="c9">key</span></code> &rarr; Get the value of a key <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">GETALL</span></code> &rarr; Return a list of all keys in database <small><em>(available since 0.4)</em></small></p>
-<p><code><span class="c2">REM</span> <span class="c9">key</span></code> &rarr; Delete a key <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">APPEND</span> <span class="c9">key</span> <span class="c9">more</span></code> &rarr; Add more to a key's value <small><em>(available since 0.1.3)</em></small></p>
-<p><code><span class="c2">EXISTS</span> <span class="c9">key</span></code> &rarr; Determine if a key exists <small><em>(available since 0.7.2)</em></small></p>
-<p><code><span class="c2">TOTALKEYS</span> <span class="c9">name</span></code> &rarr; Get the total number of keys in whole database or in a specified (<code>name</code>) dict or list <small><em>(available since 0.7.3)</em></small></p>
-<p><code><span class="c2">LCREATE</span> <span class="c9">name</span></code> &rarr; Create a list with <em>str</em> name <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">LADD</span> <span class="c9">name</span> <span class="c9">value</span></code> &rarr; Add a value to a list <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">LGETALL</span> <span class="c9">name</span></code> &rarr; Return all values in a list <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">LEXTEND</span> <span class="c9">name</span> <span class="c9">seq</span></code> &rarr; Extend a list with a sequence <small><em>(available since 0.6)</em></small></p>
-<p><code><span class="c2">LGET</span> <span class="c9">name</span> <span class="c9">pos</span></code> &rarr; Return one value in a list <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">LRANGE</span> <span class="c9">name</span> <span class="c9">start</span> <span class="c9">end</span></code> &rarr; Return all the values from a given range in a list <small><em></em></small></p>
-<p><code><span class="c2">LREMLIST</span> <span class="c9">name</span></code> &rarr; Remove a list and all of its values <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">LREMVALUE</span> <span class="c9">name</span> <span class="c9">value</span></code> &rarr; Remove a value from list <code>name</code> <small><em>(available since 0.8.2)</em></small></p>
-<p><code><span class="c2">LPOP</span> <span class="c9">name</span> <span class="c9">pos</span></code> &rarr; Remove one value in a list <small><em>(available since 0.1)</em></small></p>
-<p><code><span class="c2">LLEN</span> <span class="c9">name</span></code> &rarr; Return the length of a list <small><em>(available since 0.6)</em></small></p>
-<p><code><span class="c2">LAPPEND</span> <span class="c9">name</span> <span class="c9">pos</span> <span class="c9">more</span></code> &rarr; Add more to a value in a list <small><em>(available since 0.1.3)</em></small></p>
-<p><code><span class="c2">LEXISTS</span> <span class="c9">name</span> <span class="c9">value</span></code> &rarr; Determine if a value is in a certain list <small><em>(available since 0.7.2)</em></small></p>
-<p><code><span class="c2">DCREATE</span> <span class="c9">name</span></code> &rarr; Create a dict with <em>str</em> name <small><em>(available since 0.2.2)</em></small></p>
-<p><code><span class="c2">DADD</span> <span class="c9">name</span> <span class="c9">pair</span></code> &rarr; Add a key-value pair to a dict, <code>pair</code> is a tuple <small><em>(available since 0.2.2)</em></small></p>
-<p><code><span class="c2">DGETALL</span> <span class="c9">name</span></code> &rarr; Return all key-value pairs from a dict <small><em>(available since 0.2.2)</em></small></p>
-<p><code><span class="c2">DGET</span> <span class="c9">name</span> <span class="c9">key</span></code> &rarr; Return the value for a key in a dict <small><em>(available since 0.2.2)</em></small></p>
-<p><code><span class="c2">DKEYS</span> <span class="c9">name</span></code> &rarr; Return all the keys for a dict <small><em>(available since 0.6)</em></small></p>
-<p><code><span class="c2">DVALS</span> <span class="c9">name</span></code> &rarr; Return all the values for a dict <small><em>(available) since 0.6)</em></small></p>
-<p><code><span class="c2">DEXISTS</span> <span class="c9">name</span> <span class="c9">key</span></code> &rarr; Determine if a key exists <small><em>(available since 0.6)</em></small></p>
-<p><code><span class="c2">DREM</span> <span class="c9">name</span></code> &rarr; Remove a dict and all of its pairs <small><em>(available since 0.2.2)</em></small></p>
-<p><code><span class="c2">DPOP</span> <span class="c9">name</span> <span class="c9">key</span></code> &rarr; Remove one key-value in a dict <small><em>(available since 0.2.2)</em></small></p>
-<p><code><span class="c2">DMERGE</span> <span class="c9">name1</span> <span class="c9">name2</span> <span class="c9">name3</span></code> &rarr; Merge <code>name1</code> and <code>name2</code> into a new dict: <code>name3</code> <small><em>(available since 0.7.3)</em></small>
-<p><code><span class="c2">DELDB</span></code> &rarr; Delete everything from the database <small><em>(available since 0.2.1)</em></small></p>
-<p><code><span class="c2">DUMP</span></code> &rarr; Save the database from memory to a file specified in <code>LOAD</code> <small><em>(available since 0.3)</em></small></p>
-<h1>Suggestions</h1>
-<p>If you would like to suggest a command, you can create an <a href="http://github.com/patx/pickledb/issues">issue on GitHub</a>.</p>
-</div>
+    <div class="logo">
+        <a href="index.html">
+            <img src="logo.png" alt="pickleDB logo">
+        </a>
+    </div>
+    <div class="body">
+        <h1>API Documentation</h1>
+        <p>For examples and help on getting started/installation see the <a href="https://github.com/patx/pickledb/?tab=readme-ov-file#readme">README on GitHub.</a></p>
+
+        <p>
+            <strong>Class Initialization</strong>
+        </p>
+
+        <p><code><span class="c2">PickleDB</span>(<span class="c9">path</span>)</code></p>
+        <p>Initialize a PickleDB instance with the specified path.</p>
+        <ul>
+            <li><span class="c9">path</span>: The path to the database file.</li>
+        </ul>
+
+        <p>
+            <strong><code><span class="c2">PickleDB</span></code> Class Methods</strong>
+        </p>
+
+        <p><code><span class="c2">set</span>(<span class="c9">key</span>, <span class="c9">value</span>)</code> &rarr; Add or update a key-value pair in the database.</p>
+        <ul>
+            <li><span class="c9">key</span>: The key to set. Converted to string if not already.</li>
+            <li><span class="c9">value</span>: The value to associate with the key. This can be any JSON serializable Python data type.</li>
+            <li><span class="c9">Returns</span>: <em>True</em>.</li>
+        </ul>
+
+        <p><code><span class="c2">get</span>(<span class="c9">key</span>)</code> &rarr; Retrieve the value associated with a key.</p>
+        <ul>
+            <li><span class="c9">key</span>: The key to retrieve.</li>
+            <li><span class="c9">Returns</span>: The value associated with the key, or <em>None</em> if the key does not exist.</li>
+        </ul>
+
+        <p><code><span class="c2">all</span>()</code> &rarr; Retrieve a list of all keys in the database.</p>
+        <ul>
+            <li><span class="c9">Returns</span>: A list of keys.</li>
+        </ul>
+
+        <p><code><span class="c2">remove</span>(<span class="c9">key</span>)</code> &rarr; Delete a key and its value from the database.</p>
+        <ul>
+            <li><span class="c9">key</span>: The key to delete.</li>
+            <li><span class="c9">Returns</span>: <em>True</em> if the key was deleted, or <em>False</em> if the key does not exist.</li>
+        </ul>
+
+        <p><code><span class="c2">purge</span>()</code> &rarr; Clear all keys and values from the database.</p>
+        <ul>
+            <li><span class="c9">Returns</span>: <em>True</em>.</li>
+        </ul>
+
+        <p><code><span class="c2">save</span>()</code> &rarr; Save the current state of the database to the file.</p>
+        <ul>
+            <li><span class="c9">Returns</span>: <em>True</em> if the operation succeeds, or <em>False</em> otherwise.</li>
+            <li>For larger datasets consider using a non-blocking wrapper around this method <a href="https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000">like this</a>.
+        </ul>
+
+        <h1>Suggestions</h1>
+        <p>If you would like to suggest an improvement or report an issue, please create an <a href="https://github.com/patx/pickledb/issues">issue on GitHub</a>.</p>
+    </div>
 </body>
 </html>

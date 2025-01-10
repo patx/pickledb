@@ -1,10 +1,9 @@
-
 """
 pickleDB
 --------
 
-pickleDB is lightweight, fast, and simple database based on Python's own
-json module. And it's BSD licensed!
+pickleDB is lightweight, fast, and simple database based on the orjson module. And it's BSD licensed!
+
 
 pickleDB is Fun
 ```````````````
@@ -13,7 +12,7 @@ pickleDB is Fun
 
     >>> import pickledb
 
-    >>> db = pickledb.load('test.db', False)
+    >>> db = pickledb.load('test.db')
 
     >>> db.set('key', 'value')
 
@@ -31,33 +30,31 @@ And Easy to Install
 
     $ pip install pickledb
 
+
 Links
 `````
 
-* `website <https://patx.github.io/pickledb>`_
-* `documentation <http://patx.github.io/pickledb/commands.html>`_
-* `pypi <http://pypi.python.org/pypi/pickleDB>`_
-* `github repo <https://github.com/patx/pickledb>`_
+* `Website <https://patx.github.io/pickledb>`_
+* `Documentation <http://patx.github.io/pickledb/commands.html>`_
+* `PyPI <http://pypi.python.org/pypi/pickleDB>`_
+* `Github Repo <https://github.com/patx/pickledb>`_
 
-Latest Release Notes (version: 0.9)
-```````````````````````````````````
 
-* Now load() uses *'rt'* mode instead of 'rb' (0.9.2)
-* Change lrem(name) to *lremlist(name)* (0.9)
-* Add *lremvalue(name, value)* (0.9)
-* Add load() option to use sigterm handler or not (0.9)
-* All *keys* must now be strings (0.8)
-* All *names* for lists must now be strings (0.8)
-* All *names* for dicts must now be strings (0.8)
-* The get(key) function now returns *False* instead of None if there is no key (0.8)
-* Switched to Python's built in json module from simplejson (0.8.1)
+Key Improvements in Version 1.0
+```````````````````````````````
+
+*pickleDB 1.0 is a reimagined version designed for speed, simplicity, and reliability. This version is NOT backwards compatible. Key changes include:
+* Atomic Saves: Ensures data integrity during writes, eliminating potential corruption issues.
+* Faster Serialization**: Switched to `orjson` for significantly improved speed.
+* Streamlined API**: Removed legacy methods (e.g., `ladd`, `dmerge`) in favor of native Python operations.
+* Unified Handling of Data Types**: Treats all Python-native types (lists, dicts, etc.) as first-class citizens.
+* Explicit Saves**: The `auto_save` feature was removed to provide users greater control and optimize performance.
+
 
 """
 
-from distutils.core import setup
-
 setup(name="pickleDB",
-    version="0.9.3",
+    version="1.0",
     description="A lightweight and simple database using json.",
     long_description=__doc__,
     author="Harrison Erd",
@@ -69,5 +66,7 @@ setup(name="pickleDB",
         "License :: OSI Approved :: BSD License",
         "Intended Audience :: Developers",
         "Topic :: Database" ],
-    py_modules=['pickledb'],)
+    py_modules=['pickledb'],
+    install_requires=['orjson'],
+)
 

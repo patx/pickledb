@@ -1,66 +1,82 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<link rel="shortcut icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
-<link rel="icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>pickleDB - simple key-value database</title>
-
-<style type="text/css">
-.logo { width: 800px; margin: 40px auto; }
-.body { font-family: "helvetica"; width: 540px; margin: 40px auto; }
-img.c1 { position: absolute; top: 0; right: 0; border: 0; }
-span.c2 { color: #8F5902 }
-span.c9 { color: #4E9A06 }
-a { color: #008000; border-bottom: 1px dotted #008000; text-decoration: none; }
-a:hover { color: #008000; border-bottom: 1px solid #008000; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
+    <title>pickleDB - Simple Key-Value Database</title>
+    <style>
+        .logo {
+            width: 800px;
+            margin: 40px auto;
+        }
+        .body {
+            font-family: "Helvetica", sans-serif;
+            width: 540px;
+            margin: 40px auto;
+        }
+        img.c1 {
+            position: absolute;
+            top: 0;
+            right: 0;
+            border: 0;
+        }
+        span.c2 {
+            color: #8F5902;
+        }
+        span.c9 {
+            color: #4E9A06;
+        }
+        a {
+            color: #008000;
+            border-bottom: 1px dotted #008000;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #008000;
+            border-bottom: 1px solid #008000;
+        }
+    </style>
 </head>
 <body>
-<div class="logo"><img src="logo.png" alt="pickleDB logo"></div>
-<div class="body">
-<h1>Welcome</h1>
-<strong>pickleDB is a lightweight and simple key-value store.</strong>
-It is built upon Python's <a href="https://docs.python.org/3/library/json.html">json</a>
-module and was inspired by <a href="http://redis.io/">redis</a>. It is licensed
-with the BSD three-clause license.
-<h1>pickleDB is Fun</h1>
-<code>
-<span class="c2">&gt;&gt;&gt;</span> <span class="c9">import</span> pickledb
-<br /><br />
-<span class="c2">&gt;&gt;&gt;</span> db = pickledb.load(<span class="c9">'example.db', False</span>)
-<br /><br />
+    <div class="logo">
+        <img src="logo.png" alt="pickleDB logo">
+    </div>
+    <div class="body">
+        <h1>Welcome</h1>
+        <p><strong>pickleDB is a lightweight, simple and fast key-value store.</strong>
+        It is built upon the <a href="https://pypi.org/project/orjson/">orjson</a> module for extremely high performance and was inspired by <a href="http://redis.io/">redis</a>. It is licensed under the BSD three-clause license.</p>
+
+        <h2>pickleDB is Fun</h2>
+        <pre><code>
+<span class="c2">&gt;&gt;&gt;</span> <span class="c9">from</span> pickledb <span class="c9">import</span> pickleDB
+
+<span class="c2">&gt;&gt;&gt;</span> db = PickleDB(<span class="c9">'example.json'</span>)
+
 <span class="c2">&gt;&gt;&gt;</span> db.set(<span class="c9">'key', 'value'</span>)
-<br />
 True
-<br /><br />
+
 <span class="c2">&gt;&gt;&gt;</span> db.get(<span class="c9">'key'</span>)
-<br />
 'value'
-<br /><br />
-<span class="c2">&gt;&gt;&gt;</span> db.dump()
-<br />
+
+<span class="c2">&gt;&gt;&gt;</span> db.save()
 True
-</code>
-<h1>And Easy to Install</h1>
-<code>
+        </code></pre>
+
+        <h2>And Easy to Install</h2>
+        <pre><code>
 <span class="c2">$</span> pip install <span class="c9">pickledb</span>
-</code>
-<h1>More Information</h1>
-You can view all of pickleDB's commands and what they do <a href="commands.html">here</a>.<br />
-<br />
-pickleDB was written by <a href="http://patx.github.io">Harrison Erd</a>. If you would like
-to file an issue report or fork the project,
-check out the <a href="http://github.com/patx/pickledb">Github project page</a>.
-You can also take a look at pickleDB <a href="https://pypi.python.org/pypi/pickleDB">on PyPI</a>.<br />
-<br />
-pickleDB got its name from Python's "pickle" module, which it previously used.
-However, now pickleDB uses the "json" module. It is faster and cleaner.
-But the name stuck!  
-<br />
-<br />
-<br>
-<a href="http://github.com/patx/pickledb"><img style="position: fixed; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-</div>
+        </code></pre>
+
+        <h2>More Information</h2>
+        <p>You can view all of pickleDB's commands and what they do <a href="commands.html">here</a>.</p>
+        <p>pickleDB was written by <a href="http://patx.github.io">Harrison Erd</a>. If you would like to file an issue report or fork the project, check out the <a href="https://github.com/patx/pickledb">Github project page</a>. You can also take a look at pickleDB <a href="https://pypi.python.org/pypi/pickleDB">on PyPI</a>.</p>
+
+        <a href="https://github.com/patx/pickledb">
+            <img style="position: fixed; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png" alt="Fork me on GitHub">
+        </a>
+    </div>
 </body>
 </html>
+
