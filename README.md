@@ -3,7 +3,6 @@
 ## **Fast. Simple. Reliable.**
 Unlock the power of effortless data storage with **pickleDB**—the no-fuss, blazing-fast key-value store designed for Python developers. Whether you're building a small script or a performant microservice, pickleDB delivers simplicity and speed with the reliability you can count on.
 
----
 
 ## **Why Choose pickleDB?**
 
@@ -19,7 +18,6 @@ Your data deserves to be safe. Atomic saves ensure your database remains consist
 ### ✅ **Pythonic Flexibility**
 Store strings, lists, dictionaries, and more—all with native Python operations. No need to learn special commands. If you know Python, you already know pickleDB.
 
----
 
 ## **Getting Started**
 
@@ -47,7 +45,6 @@ db.save()
 ```
 It’s that simple! In just a few lines, you have a fully functioning key-value store.
 
----
 
 ## **More Examples to Get You Inspired**
 
@@ -107,7 +104,6 @@ db.set('session_12345', session)
 print(db.get('session_12345'))  # Output: {'user_id': 1, 'status': 'inactive'}
 ```
 
----
 
 ## **Performance Highlights**
 
@@ -121,7 +117,6 @@ pickleDB demonstrates strong performance for handling large-sized datasets:
 
 Tests were performed on a StarLabs StarLite Mk IV (Quad-Core Intel® Pentium® Silver N5030 CPU @ 1.10GHz w/ 8GB memory) running elementary OS 7.1 Horus.
 
----
 
 ## **Minimal, Powerful API**
 
@@ -183,7 +178,6 @@ db.save()
 print("Database saved successfully!")
 ```
 
----
 
 ## **Key Improvements in Version 1.0**
 
@@ -203,7 +197,6 @@ If backward compatibility is essential, version 0.9 is still available:
   ```
   Then download the legacy file and include it in your project.
 
----
 
 ## **Limitations**
 
@@ -216,12 +209,10 @@ While pickleDB is powerful, it’s important to understand its limitations:
 
 For projects requiring more robust solutions, consider alternatives like **[kenobiDB](Https://github.com/patx/kenobi)**, [Redis](http://redis.io/), [SQLite](https://www.sqlite.org/), or [MongoDB](https://www.mongodb.com/).
 
----
 
 ## **Asynchronous Saves**
 Want non-blocking saves? You can implement an async wrapper to handle saves in the background. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
 
----
 
 ## **Community & Contributions**
 
@@ -237,7 +228,6 @@ Want to leave your mark? Help us make pickleDB even better:
 
 Together, we can build a better tool for everyone.
 
----
 
 ## **Documentation**
 

@@ -43,7 +43,7 @@ Links
 Key Improvements in Version 1.0
 ```````````````````````````````
 
-*pickleDB 1.0 is a reimagined version designed for speed, simplicity, and reliability. This version is NOT backwards compatible. Key changes include:
+* pickleDB 1.0 is a reimagined version designed for speed, simplicity, and reliability. This version is NOT backwards compatible. Key changes include:
 * Atomic Saves: Ensures data integrity during writes, eliminating potential corruption issues.
 * Faster Serialization**: Switched to `orjson` for significantly improved speed.
 * Streamlined API**: Removed legacy methods (e.g., `ladd`, `dmerge`) in favor of native Python operations.
@@ -52,6 +52,8 @@ Key Improvements in Version 1.0
 
 
 """
+
+from distutils.core import setup
 
 setup(name="pickleDB",
     version="1.0",
