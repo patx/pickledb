@@ -65,6 +65,31 @@ class PickleDB:
             self.db = {}
             print("Database created")
 
+    def __setitem__(self, key, value):
+        key = str(key) if not isinstance(key, str) else key
+        self.set(key, value)
+
+    def __getitem__(self, key):
+        key = str(key) if not isinstance(key, str) else key
+        result = self.get(key)
+        return result
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.save()
+
+    def __contains__(self, key):
+        key = str(key) if not isinstance(key, str) else key
+        return key in self.db
+
+    def __iter__(self):
+        return iter(self.db)
+
+    def __len__(self):
+        return len(self.db)
+
     def save(self):
         """
         Save the database to the file using an atomic save.
