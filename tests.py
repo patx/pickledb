@@ -9,7 +9,7 @@ class TestPickleDB(unittest.TestCase):
     def setUp(self):
         """Set up a PickleDB instance with a real file."""
         self.test_file = "test_pickledb.json"
-        self.db = PickleDB(self.test_file, auto_dump=False)
+        self.db = PickleDB(self.test_file)
 
     def tearDown(self):
         """Clean up after tests."""
@@ -48,7 +48,7 @@ class TestPickleDB(unittest.TestCase):
 
             # Measure dump performance
             start_time = time.time()
-            self.db.dump()
+            self.db.save()
             dump_time = time.time() - start_time
             print(f"Dumped {num_docs} key-value pairs to disk in {dump_time:.2f} seconds")
 
@@ -91,23 +91,16 @@ class TestPickleDB(unittest.TestCase):
     def test_dump_and_reload(self):
         """Test dumping the database to disk and reloading it."""
         self.db.set("key1", "value1")
-        self.db.dump()
-        reloaded_db = PickleDB(self.test_file, auto_dump=False)
+        self.db.save()
+        reloaded_db = PickleDB(self.test_file)
         self.assertEqual(reloaded_db.get("key1"), "value1")
 
     def test_invalid_file_loading(self):
         """Test initializing a database with a corrupt file."""
         with open(self.test_file, 'w') as f:
             f.write("corrupt data")
-        db = PickleDB(self.test_file, auto_dump=False)
+        db = PickleDB(self.test_file)
         self.assertEqual(db.all(), [])
-
-    def test_auto_dump(self):
-        """Test the auto-dump functionality."""
-        db = PickleDB(self.test_file, auto_dump=True)
-        db.set("key1", "value1")
-        reloaded_db = PickleDB(self.test_file, auto_dump=False)
-        self.assertEqual(reloaded_db.get("key1"), "value1")
 
     def test_set_non_string_key(self):
         """Test setting a non-string key."""
