@@ -65,6 +65,12 @@ class PickleDB:
             self.db = {}
             print("Database created")
 
+    def __setitem__(self, key, value):
+        return self.set(key, value)
+
+    def __getitem__(self, key):
+        return self.get(key)
+
     def save(self):
         """
         Save the database to the file using an atomic save.
