@@ -128,6 +128,9 @@ Add or update a key-value pair:
 # Add a new key-value pair
 db.set('username', 'admin')
 
+# Or shorthand
+db['username'] = 'admin'
+
 # Update an existing key-value pair
 db.set('username', 'superadmin')
 print(db.get('username'))  # Output: 'superadmin'
@@ -138,6 +141,9 @@ Retrieve the value associated with a key:
 ```python
 # Get the value for a key
 print(db.get('username'))  # Output: 'superadmin'
+
+# Like the set() method, you can use Python syntax sugar here as well
+print(db['username']) # Output: 'superadmin'
 
 # Attempt to retrieve a non-existent key
 print(db.get('nonexistent_key'))  # Output: None
