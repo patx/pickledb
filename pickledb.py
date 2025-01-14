@@ -39,13 +39,19 @@ class PickleDB:
 
     def __init__(self, location):
         """
-        Initialize the pkldb object.
+        Initialize the PickleDB object.
 
         Args:
             location (str): Path to the JSON file.
         """
         self.location = os.path.expanduser(location)
         self._load()
+
+    def __setitem__(self, key, value):
+        return self.set(key, value)
+
+    def __getitem__(self, key):
+        return self.get(key)
 
     def _load(self):
         """
@@ -57,19 +63,10 @@ class PickleDB:
             try:
                 with open(self.location, 'rb') as f:
                     self.db = orjson.loads(f.read())
-                    print("Database loaded")
             except Exception as e:
-                self.db = {}
                 print(f"Failed to load database: {e}")
         else:
             self.db = {}
-            print("Database created")
-
-    def __setitem__(self, key, value):
-        return self.set(key, value)
-
-    def __getitem__(self, key):
-        return self.get(key)
 
     def save(self):
         """
@@ -90,7 +87,7 @@ class PickleDB:
             os.replace(temp_location, self.location)  # Atomic replace
             return True
         except Exception as e:
-            print(f"Failed to write database to disk: {e}")
+            print(f"Failed to save database: {e}")
             return False
 
     def set(self, key, value):
