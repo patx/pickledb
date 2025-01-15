@@ -1,8 +1,9 @@
+[![PyPI Downloads](https://static.pepy.tech/badge/pickledb)](https://pepy.tech/projects/pickledb)
+
 # **pickleDB: Your Lightweight, High-Speed Key-Value Store**
 
 ## **Fast. Simple. Reliable.**
 Unlock the power of effortless data storage with **pickleDB**—the no-fuss, blazing-fast key-value store designed for Python developers. Whether you're building a small script or a performant microservice, pickleDB delivers simplicity and speed with the reliability you can count on.
-
 
 ## **Why Choose pickleDB?**
 
