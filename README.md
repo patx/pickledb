@@ -144,18 +144,6 @@ If backward compatibility is essential, version 0.9 is still available:
   Then download the legacy file and include it in your project.
 
 
-## **Limitations**
-
-While pickleDB is powerful, it’s important to understand its limitations:
-
-- **Memory Usage**: The entire dataset is loaded into memory, which might be a constraint on systems with limited RAM for extremely large datasets.
-- **Single-Threaded**: The program is not thread-safe. For concurrent access, use external synchronization like Python's `RLock()`.
-- **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use asynchronous wrappers.
-- **Lack of Advanced Features**: pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features.
-
-For projects requiring more robust solutions, consider alternatives like **[kenobiDB](Https://github.com/patx/kenobi)**, [Redis](http://redis.io/), [SQLite](https://www.sqlite.org/), or [MongoDB](https://www.mongodb.com/).
-
-
 ## **With pickleDB you have the full power of Python behind you! Check out examples of advanced use cases**
 
 ### **Store and Retrieve Complex Data**
@@ -363,6 +351,17 @@ except KeyboardInterrupt:
 
 ### **Asynchronous Saves**
 Want non-blocking saves? You can implement an async wrapper to handle saves in the background. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
+
+## **Limitations**
+
+While pickleDB is powerful, it’s important to understand its limitations:
+
+- **Memory Usage**: The entire dataset is loaded into memory, which might be a constraint on systems with limited RAM for extremely large datasets.
+- **Single-Threaded**: The program is not thread-safe. For concurrent access, use external synchronization like Python's `RLock()`.
+- **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use [asynchronous wrapper](https://github.com/patx/pickledb#asynchronous-saves).
+- **Lack of Advanced Features**: pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features.
+
+For projects requiring more robust solutions, consider alternatives like **[kenobiDB](Https://github.com/patx/kenobi)**, [Redis](http://redis.io/), [SQLite](https://www.sqlite.org/), or [MongoDB](https://www.mongodb.com/).
 
 ## **Community & Contributions**
 
