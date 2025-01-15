@@ -144,7 +144,7 @@ If backward compatibility is essential, version 0.9 is still available:
   Then download the legacy file and include it in your project.
 
 
-## **With pickleDB you have the full power of Python behind you! Check out examples of advanced use cases**
+## **With pickleDB you have the full power of Python behind you! Check out some examples of advanced use cases**
 
 ### **Store and Retrieve Complex Data**
 PickleDB works seamlessly with Python data structures. Example:
@@ -269,6 +269,26 @@ time.sleep(6)
 print(get_if_not_expired(db, 'session_123'))  # Output: None
 ```
 
+### Encrypted Storage
+Use encryption for secure storage of sensitive data:
+```python
+from cryptography.fernet import Fernet
+
+# Initialize encryption
+key = Fernet.generate_key()
+cipher = Fernet(key)
+
+# Encrypt and save data
+encrypted_value = cipher.encrypt(b"My secret data")
+db.set('secure_key', encrypted_value)
+
+# Retrieve and decrypt data
+encrypted_value = db.get('secure_key')
+decrypted_value = cipher.decrypt(encrypted_value)
+print(decrypted_value.decode())  # Output: My secret data
+
+```
+
 ### Batch Operations
 Add multiple key-value pairs in a single operation:
 ```python
@@ -279,6 +299,32 @@ def batch_set(db_instance, items):
 # Add multiple keys
 batch_set(db, {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'})
 print(db.all())  # Output: ['key1', 'key2', 'key3']
+```
+
+Delete multiple key-value pairs in a single operation:
+```python
+def batch_delete(db_instance, keys):
+    for key in keys:
+        db_instance.remove(key)
+
+# Example usage
+db.set('temp1', 'value1')
+db.set('temp2', 'value2')
+batch_delete(db, ['temp1', 'temp2'])
+print(db.all())  # Output: []
+```
+
+### Manipulate Database Stats
+Display database statistics, such as the total number of keys, data size, or memory usage:
+```python
+def db_stats(db_instance):
+    total_keys = len(db_instance.all())
+    data_size = sum(len(str(value)) for value in db_instance.db.values())
+    return {"total_keys": total_keys, "data_size": data_size}
+
+# Example usage
+stats = db_stats(db)
+print(stats)  # Output: {'total_keys': 10, 'data_size': 12345}
 ```
 
 ### Data Migration
@@ -300,6 +346,45 @@ export_db(db, 'exported_data.json')
 db.purge()
 import_db(db, 'exported_data.json')
 print(db.all())  # Restores all keys
+```
+
+### Backup to AWS
+Demonstrate a method for backing up the database to a remote location, such as an AWS S3 bucket:
+```python
+import boto3
+
+def backup_to_s3(db_instance, bucket_name, s3_key):
+    s3 = boto3.client('s3')
+    with open(db_instance.location, 'rb') as f:
+        s3.upload_fileobj(f, bucket_name, s3_key)
+
+# Example usage
+backup_to_s3(db, 'my-s3-bucket', 'backup/my_database.db')
+```
+
+### Use pickleDB over HTTP (REST)
+Access pickleDB database with any language that can handle REST requests:
+```python
+from flask import Flask, request, jsonify
+from pickledb import PickleDB
+
+app = Flask(__name__)
+db = PickleDB('api.db')
+
+@app.route('/set', methods=['POST'])
+def set_value():
+    data = request.json
+    db.set(data['key'], data['value'])
+    db.save()
+    return jsonify({"message": "Value saved!"})
+
+@app.route('/get/<key>', methods=['GET'])
+def get_value(key):
+    value = db.get(key)
+    return jsonify({"value": value})
+
+if __name__ == '__main__':
+    app.run(debug=True)
 ```
 
 ### Key Pattern Matching
