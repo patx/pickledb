@@ -46,7 +46,7 @@ db.save()
 It’s that simple! In just a few lines, you have a fully functioning key-value store.
 
 
-## **More Examples to Get You Inspired**
+## **With pickleDB you have the full power of Python behind you...**
 
 ### **Store and Retrieve Complex Data**
 PickleDB works seamlessly with Python data structures. Example:
@@ -104,6 +104,123 @@ db.set('session_12345', session)
 print(db.get('session_12345'))  # Output: {'user_id': 1, 'status': 'inactive'}
 ```
 
+### **Advanced Key Search**
+Search the database with the full power of Python:
+```python
+# Create simple helper methods based on what YOU need
+def get_keys_with_match_list(db_instance, match):
+    return [key for key in db_instance.all() if match in key]
+
+def get_keys_with_match_dict(db_instance, match):
+    return dict(filter(lambda item: match in item[0], db_instance.db.items()))
+
+# Create an instance of PickleDB
+db = PickleDB("example.json")
+
+# Add key-value pairs
+db.set('apple', 1)
+db.set('apricot', 2)
+db.set('banana', 3)
+
+# Use glob search to return a list
+matching_keys = get_keys_with_match_list(db, 'ap')
+print(matching_keys)  # Output: ['apple', 'apricot']
+
+# Use glob search to return a dict
+matching_dict = get_keys_with_match_dict(db, 'ap')
+print(matching_dict)  # Output: {"apple": 1, "apricot": 3}
+```
+
+### Namespace Support
+If you use prefixes to simulate namespaces, you can manage groups of keys more efficiently:
+```python
+# Set multiple keys with a namespace
+db.set('user:1', {'name': 'Alice', 'age': 30})
+db.set('user:2', {'name': 'Bob', 'age': 25})
+
+# Get all keys in a namespace
+def get_namespace_keys(db_instance, namespace):
+    return [key for key in db_instance.all() if key.startswith(f"{namespace}:")]
+
+user_keys = get_namespace_keys(db, 'user')
+print(user_keys)  # Output: ['user:1', 'user:2']
+```
+
+### Expire Keys
+Manually simulate a basic TTL (time-to-live) mechanism for expiring keys:
+```python
+import time
+
+# Set a key with an expiration time
+def set_with_expiry(db_instance, key, value, ttl):
+    db_instance.set(key, {'value': value, 'expires_at': time.time() + ttl})
+
+# Get a key only if it hasn't expired
+def get_if_not_expired(db_instance, key):
+    data = db_instance.get(key)
+    if data and time.time() < data['expires_at']:
+        return data['value']
+    db_instance.remove(key)  # Remove expired key
+    return None
+
+# Example usage
+set_with_expiry(db, 'session_123', 'active', ttl=10)
+time.sleep(5)
+print(get_if_not_expired(db, 'session_123'))  # Output: 'active'
+time.sleep(6)
+print(get_if_not_expired(db, 'session_123'))  # Output: None
+```
+
+### Batch Operations
+Add multiple key-value pairs in a single operation:
+```python
+def batch_set(db_instance, items):
+    for key, value in items.items():
+        db_instance.set(key, value)
+
+# Add multiple keys
+batch_set(db, {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'})
+print(db.all())  # Output: ['key1', 'key2', 'key3']
+```
+
+### Data Migration
+Export and import database content between files:
+```python
+# Export database content
+def export_db(db_instance, export_path):
+    with open(export_path, 'w') as f:
+        f.write(orjson.dumps(db_instance.db).decode())
+
+# Import database content
+def import_db(db_instance, import_path):
+    with open(import_path, 'r') as f:
+        db_instance.db = orjson.loads(f.read())
+    db_instance.save()
+
+# Example usage
+export_db(db, 'exported_data.json')
+db.purge()
+import_db(db, 'exported_data.json')
+print(db.all())  # Restores all keys
+```
+
+### Key Pattern Matching
+Support complex matching patterns using regular expressions:
+```python
+import re
+
+# Get keys that match a regex pattern
+def get_keys_by_pattern(db_instance, pattern):
+    regex = re.compile(pattern)
+    return [key for key in db_instance.all() if regex.search(key)]
+
+# Example usage
+db.set('user:1', {'name': 'Alice'})
+db.set('user:2', {'name': 'Bob'})
+db.set('admin:1', {'name': 'Charlie'})
+matching_keys = get_keys_by_pattern(db, r'user:\d')
+print(matching_keys)  # Output: ['user:1', 'user:2']
+```
 
 ## **Performance Highlights**
 
