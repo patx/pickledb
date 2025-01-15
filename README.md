@@ -434,8 +434,8 @@ except KeyboardInterrupt:
     pass
 ```
 
-### **Asynchronous Saves**
-Want non-blocking saves? You can implement an async wrapper to handle saves in the background. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
+### **Asynchronous Operations**
+Want non-blocking saves? Thread-saftey? What about async execution? You can implement an async wrappers to handle saves in the background and more. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
 
 ## **Limitations**
 
