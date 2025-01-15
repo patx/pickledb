@@ -337,6 +337,34 @@ For projects requiring more robust solutions, consider alternatives like **[keno
 ## **Asynchronous Saves**
 Want non-blocking saves? You can implement an async wrapper to handle saves in the background. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
 
+## Adding Custom Signal Handling
+You can easily implement custom signal handling in your application to ensure graceful shutdowns and data persistence during unexpected terminations. Below is an example of how to integrate custom signal handling with pickleDB:
+
+```python
+import signal
+import sys
+from pickledb import PickleDB  # Import the PickleDB class
+
+# Initialize the PickleDB instance
+db = PickleDB('my_database.db')
+
+# Register signal handlers for SIGINT (Ctrl+C) and SIGTERM (system termination)
+signal.signal(signal.SIGINT, lambda signum, frame: (db.save(), sys.exit(0)))
+signal.signal(signal.SIGTERM, lambda signum, frame: (db.save(), sys.exit(0)))
+
+# Example usage
+db.set('key1', 'value1')
+db.set('key2', 'value2')
+
+print("Database is running. Press Ctrl+C to save and exit.")
+
+# Keep the program running to allow signal handling
+try:
+    while True:
+        pass
+except KeyboardInterrupt:
+    pass
+```
 
 ## **Community & Contributions**
 
