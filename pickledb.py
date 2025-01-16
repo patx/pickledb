@@ -75,7 +75,7 @@ class PickleDB:
                 with open(self.location, 'rb') as f:
                     self.db = orjson.loads(f.read())
             except Exception as e:
-                print(f"Failed to load database: {e}")
+                raise RuntimeError(f"{e}\nFailed to load database.")
         else:
             self.db = {}
 
