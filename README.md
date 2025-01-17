@@ -436,6 +436,31 @@ except KeyboardInterrupt:
     pass
 ```
 
+### ***Async For Web Frameworks***
+For frameworks like FastAPI, use async wrappers to handle requests without blocking the server:
+
+```python
+from fastapi import FastAPI
+import asyncio
+from pickledb import PickleDB
+
+app = FastAPI()
+db = PickleDB('web_db.db')
+
+@app.get("/get/{key}")
+async def get_key(key: str):
+    loop = asyncio.get_event_loop()
+    value = await loop.run_in_executor(None, db.get, key)
+    return {"key": key, "value": value}
+
+@app.post("/set/")
+async def set_key(key: str, value: str):
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, db.set, key, value)
+    db.save()
+    return {"message": "Key-value pair saved!"}
+```
+
 ### **Asynchronous Operations**
 Want non-blocking saves? Thread-saftey? What about async execution? You can implement an async wrappers to handle saves in the background and more. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
 
