@@ -72,16 +72,20 @@ class PickleDB:
         if (os.path.exists(self.location) and
                 os.path.getsize(self.location) > 0):
             try:
-                with open(self.location, 'rb') as f:
+                with open(self.location, "rb") as f:
                     self.db = orjson.loads(f.read())
             except Exception as e:
                 raise RuntimeError(f"{e}\nFailed to load database.")
         else:
             self.db = {}
 
-    def save(self):
+    def save(self, option=0):
         """
         Save the database to the file using an atomic save.
+
+        Args:
+            options (int): `orjson.OPT_*` flags to configure
+                           serialization behavior.
 
         Behavior:
             - Writes to a temporary file and replaces the
@@ -93,8 +97,8 @@ class PickleDB:
         """
         temp_location = f"{self.location}.tmp"
         try:
-            with open(temp_location, 'wb') as temp_file:
-                temp_file.write(orjson.dumps(self.db))
+            with open(temp_location, "wb") as temp_file:
+                temp_file.write(orjson.dumps(self.db, option=option))
             os.replace(temp_location, self.location)
             return True
         except Exception as e:

@@ -56,7 +56,7 @@ Key Improvements in Version 1.0
 from distutils.core import setup
 
 setup(name="pickleDB",
-    version="1.0",
+    version="1.1",
     description="A lightweight and simple database using json.",
     long_description=__doc__,
     author="Harrison Erd",
