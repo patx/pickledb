@@ -178,3 +178,5 @@ class PickleDB:
         """
         return list(self.db.keys())
 
+    def getkmatch(self, match):
+        return dict(filter(lambda item: match in item[0], self.db.items()))

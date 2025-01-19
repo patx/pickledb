@@ -113,6 +113,14 @@ class TestPickleDB(unittest.TestCase):
         self.assertTrue(self.db.remove(123))
         self.assertIsNone(self.db.get("123"))
 
+    def test_key_match(self):
+        self.db.set('key1', 'value')
+        self.db.set('key2', 'value2')
+        self.db.set('something', 'value')
+        x = self.db.getkmatch('key')
+        y = {'key1': 'value', 'key2': 'value2'}
+        assert x == y
+
 
 if __name__ == "__main__":
     unittest.main()
