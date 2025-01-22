@@ -10,16 +10,16 @@ pickleDB is Fun
 
 ::
 
-    >>> import pickledb
+    >>> from pickledb import PickleDB
 
-    >>> db = pickledb.load('test.db')
+    >>> db = PickleDB('test.db')
 
     >>> db.set('key', 'value')
 
     >>> db.get('key')
     'value'
 
-    >>> db.dump()
+    >>> db.save()
     True
 
 
@@ -35,8 +35,6 @@ Links
 `````
 
 * `Website <https://patx.github.io/pickledb>`_
-* `Documentation <http://patx.github.io/pickledb/commands.html>`_
-* `PyPI <http://pypi.python.org/pypi/pickleDB>`_
 * `Github Repo <https://github.com/patx/pickledb>`_
 
 
@@ -56,7 +54,7 @@ Key Improvements in Version 1.0
 from distutils.core import setup
 
 setup(name="pickleDB",
-    version="1.1",
+    version="1.1.1",
     description="A lightweight and simple database using json.",
     long_description=__doc__,
     author="Harrison Erd",
