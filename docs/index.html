@@ -5,48 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
     <link rel="icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>pickleDB - Simple Key-Value Database</title>
     <style>
-        .logo {
-            width: 800px;
-            margin: 40px auto;
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+
+            color: #333;
         }
-        .body {
-            font-family: "Helvetica", sans-serif;
-            width: 540px;
-            margin: 40px auto;
+        .container {
+            max-width: 800px;
+            margin: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
         }
-        img.c1 {
-            position: absolute;
-            top: 0;
-            right: 0;
-            border: 0;
+        h1, h2 {
+            font-weight: 600;
         }
-        span.c2 {
-            color: #8F5902;
+        h2 {
+            color: #008000;
+            text-align: left;
         }
-        span.c9 {
-            color: #4E9A06;
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #555;
         }
         a {
             color: #008000;
-            border-bottom: 1px dotted #008000;
             text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
         }
         a:hover {
             color: #008000;
             border-bottom: 1px solid #008000;
         }
+        pre {
+            background: #f5f2f0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            overflow-x: auto;
+            font-size: 1.1em;
+        }
+        .logo img {
+            max-width: 600px;
+        }
+        span.c2 {
+            color: #8F5902;
+        }
+        span.c9 {
+            color: #008000;
+        }
+        .github-banner img {
+            position: fixed;
+            top: 0;
+            right: 0;
+            border: 0;
+        }
+        .button {
+            display: inline-block;
+            background: #008000;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background: white;
+            border: 2px solid #008000;
+            color: #008000
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 20px;
+            }
+            .logo img {
+                max-width: 100%;
+            }
+            .button {
+                max-width: 100%;
+                text-align: center;
+            }
+            .github-banner {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="logo">
+    <div class="container">
+        <div class="logo">
             <img src="logo.png" alt="pickleDB logo">
-    </div>
-    <div class="body">
-        <h1>Welcome</h1>
-        <p><strong>pickleDB is a lightweight, simple and fast key-value store.</strong>
-        It is built upon the <a href="https://pypi.org/project/orjson/">orjson</a> module for extremely high performance and was inspired by <a href="http://redis.io/">redis</a>. It is licensed under the BSD three-clause license.</p>
+        </div>
+        <p><strong>pickleDB is a lightweight, simple and fast Python key-value store.</strong>
+        It is built with the <a href="https://pypi.org/project/orjson/">orjson</a> module for extremely high performance and was inspired by <a href="http://redis.io/">Redis</a>. It is licensed under the BSD three-clause license.</p>
+
 
         <h2>pickleDB is Fun</h2>
         <pre><code>
@@ -61,14 +125,14 @@ True
 'value'
         </code></pre>
 
-        <h2>And Easy to Install</h2>
-        <pre><code>
-<span class="c2">$</span> pip install <span class="c9">pickledb</span>
-        </code></pre>
+        <h2> And Easy to Install</h2>
+        <pre><code><span class="c2">$</span> pip install <span class="c9">pickledb</span></code></pre>
 
-        <h2>More Information</h2>
-        <p>pickleDB was written by <a href="http://patx.github.io">Harrison Erd</a>. If you would like to file an issue report or fork the project, check out the <a href="https://github.com/patx/pickledb">Github project page</a>. You can view examples and documentation <a href="commands.html">here</a>. You can also take a look at pickleDB <a href="https://pypi.python.org/pypi/pickleDB">on PyPI</a>.</p>
-
+        <p><br><br>
+        <a href="https://github.com/patx/pickledb" class="button">View source code, examples and documentation on GitHub</a>
+        </p>
+    </div>
+    <div class="github-banner">
         <a href="https://github.com/patx/pickledb">
             <img style="position: fixed; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png" alt="Fork me on GitHub">
         </a>
