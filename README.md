@@ -436,94 +436,56 @@ except KeyboardInterrupt:
     pass
 ```
 
-## **Using AsyncPickleDB**
+### ***Async For Web Frameworks***
+For frameworks like FastAPI, Starlette, or MicroPie, use async wrappers to handle requests without blocking the server:
 
-In addition to the standard `PickleDB` class, pickleDB now includes an asynchronous version called `AsyncPickleDB`. This class provides non-blocking operations, making it ideal for high-performance applications that require concurrent access to a key-value store without blocking the event loop. Ensure you have `aiofiles` installed, as it is required for async file operations:
-
-### **Initializing an Async Database**
 ```python
+from uuid import uuid4
 import asyncio
-from pickledb import AsyncPickleDB
-
-async def main():
-    # Initialize an async database
-    db = AsyncPickleDB("async_db.json", batch_size=5, cleanup_interval=10)
-
-    # Set a value
-    await db.set("username", "admin")
-
-    # Retrieve a value
-    value = await db.get("username")
-    print(value)  # Output: admin
-
-    # Save the database asynchronously
-    await db._save_batch()
-
-asyncio.run(main())
-```
-
-### **Key Features of AsyncPickleDB**
-- **Asynchronous Reads and Writes**: No blocking operations, ensuring smooth performance in async applications.
-- **Batch Writes**: Entries are written in batches to optimize disk I/O.
-- **Automatic Cleanup**: The database compacts itself periodically to remove stale entries.
-
-### **Async CRUD Operations**
-
-#### **`set(key, value)` - Store a Key-Value Pair**
-```python
-await db.set("language", "Python")
-```
-
-#### **`get(key)` - Retrieve a Value**
-```python
-value = await db.get("language")
-print(value)  # Output: Python
-```
-
-#### **`remove(key)` - Delete a Key**
-```python
-await db.remove("language")
-```
-
-#### **`purge()` - Clear All Data**
-```python
-await db.purge()
-```
-
-#### **`all()` - Get All Keys**
-```python
-keys = await db.all()
-print(keys)  # Output: [list of stored keys]
-```
-
-### **Example: Using AsyncPickleDB in a ASGI Application**
-```python
 from MicroPie import App
-from pickledb import AsyncPickleDB
+from pickledb import PickleDB
+from markupsafe import escape
 
-db = AsyncPickleDB("fastapi_db.json", batch_size=500)
+db = PickleDB('pastes.db')
+db_lock = asyncio.Lock()
 
 class Root(App):
 
-    async def get(self, key):
-        value = await db.get(key)
-        return f'<b>{key}:</b> {value}'
+    async def index(self):
+        if self.request.method == "POST":
+            paste_content = self.request.body_params.get('paste_content', [''])[0]
+            pid = str(uuid4())
+            async with db_lock:
+                await asyncio.to_thread(db.set, pid, escape(paste_content))
+                await asyncio.to_thread(db.save)
+            return self._redirect(f'/paste/{pid}')
+        return await self._render_template('index.html')
 
-    async def set(self, key, value):
-        await db.set(key, value)
-        return self._redirect('/get/{key}')
+    async def paste(self, paste_id, delete=None):
+        if delete == 'delete':
+            async with db_lock:
+                await asyncio.to_thread(db.remove, paste_id)
+                await asyncio.to_thread(db.save)
+            return self._redirect('/')
+        async with db_lock:
+            paste_content = await asyncio.to_thread(db.get, paste_id) or ""
+        return await self._render_template(
+            'paste.html',
+            paste_id=paste_id,
+            paste_content=paste_content
+        )
 
 app = Root()
 ```
-
 
 ## **Limitations**
 
 While pickleDB is powerful, it’s important to understand its limitations:
 
 - **Memory Usage**: The entire dataset is loaded into memory, which might be a constraint on systems with limited RAM for extremely large datasets.
+- **Single-Threaded**: The program is not thread-safe. For concurrent access, use external synchronization like Python's `RLock()`.
+- **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use [asynchronous wrappers](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000) and external locks.
 - **Lack of Advanced Features**: pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features.
-- **Async support in alpha stages**: `AsyncPickleDB` is not stable, expect breaking changes. Not for use in production yet.
 
 For projects requiring more robust solutions, consider alternatives like **[kenobiDB](Https://github.com/patx/kenobi)**, [Redis](http://redis.io/), [SQLite](https://www.sqlite.org/), or [MongoDB](https://www.mongodb.com/).
 
