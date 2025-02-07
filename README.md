@@ -436,42 +436,94 @@ except KeyboardInterrupt:
     pass
 ```
 
-### ***Async For Web Frameworks***
-For frameworks like FastAPI, use async wrappers to handle requests without blocking the server:
+## **Using AsyncPickleDB**
 
+In addition to the standard `PickleDB` class, pickleDB now includes an asynchronous version called `AsyncPickleDB`. This class provides non-blocking operations, making it ideal for high-performance applications that require concurrent access to a key-value store without blocking the event loop. Ensure you have `aiofiles` installed, as it is required for async file operations:
+
+### **Initializing an Async Database**
 ```python
-from fastapi import FastAPI
 import asyncio
-from pickledb import PickleDB
+from pickledb import AsyncPickleDB
 
-app = FastAPI()
-db = PickleDB('web_db.db')
+async def main():
+    # Initialize an async database
+    db = AsyncPickleDB("async_db.json", batch_size=5, cleanup_interval=10)
 
-@app.get("/get/{key}")
-async def get_key(key: str):
-    loop = asyncio.get_event_loop()
-    value = await loop.run_in_executor(None, db.get, key)
-    return {"key": key, "value": value}
+    # Set a value
+    await db.set("username", "admin")
 
-@app.post("/set/")
-async def set_key(key: str, value: str):
-    loop = asyncio.get_event_loop()
-    await loop.run_in_executor(None, db.set, key, value)
-    db.save()
-    return {"message": "Key-value pair saved!"}
+    # Retrieve a value
+    value = await db.get("username")
+    print(value)  # Output: admin
+
+    # Save the database asynchronously
+    await db._save_batch()
+
+asyncio.run(main())
 ```
 
-### **Asynchronous Operations**
-Want non-blocking saves? Thread-saftey? What about async execution? You can implement an async wrappers to handle saves in the background and more. This is particularly useful for applications that need high responsiveness without delaying due to disk operations, like small web applications. Check out examples [here](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
+### **Key Features of AsyncPickleDB**
+- **Asynchronous Reads and Writes**: No blocking operations, ensuring smooth performance in async applications.
+- **Batch Writes**: Entries are written in batches to optimize disk I/O.
+- **Automatic Cleanup**: The database compacts itself periodically to remove stale entries.
+
+### **Async CRUD Operations**
+
+#### **`set(key, value)` - Store a Key-Value Pair**
+```python
+await db.set("language", "Python")
+```
+
+#### **`get(key)` - Retrieve a Value**
+```python
+value = await db.get("language")
+print(value)  # Output: Python
+```
+
+#### **`remove(key)` - Delete a Key**
+```python
+await db.remove("language")
+```
+
+#### **`purge()` - Clear All Data**
+```python
+await db.purge()
+```
+
+#### **`all()` - Get All Keys**
+```python
+keys = await db.all()
+print(keys)  # Output: [list of stored keys]
+```
+
+### **Example: Using AsyncPickleDB in a ASGI Application**
+```python
+from MicroPie import App
+from pickledb import AsyncPickleDB
+
+db = AsyncPickleDB("fastapi_db.json", batch_size=500)
+
+class Root(App):
+
+    async def get(self, key):
+        value = await db.get(key)
+        return f'<b>{key}:</b> {value}'
+
+    async def set(self, key, value):
+        await db.set(key, value)
+        return self._redirect('/get/{key}')
+
+app = Root()
+```
+
 
 ## **Limitations**
 
 While pickleDB is powerful, it’s important to understand its limitations:
 
 - **Memory Usage**: The entire dataset is loaded into memory, which might be a constraint on systems with limited RAM for extremely large datasets.
-- **Single-Threaded**: The program is not thread-safe. For concurrent access, use external synchronization like Python's `RLock()`.
-- **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use [asynchronous wrappers](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000).
 - **Lack of Advanced Features**: pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features.
+- **Async support in alpha stages**: `AsyncPickleDB` is not stable, expect breaking changes. Not for use in production yet.
 
 For projects requiring more robust solutions, consider alternatives like **[kenobiDB](Https://github.com/patx/kenobi)**, [Redis](http://redis.io/), [SQLite](https://www.sqlite.org/), or [MongoDB](https://www.mongodb.com/).
 

@@ -38,8 +38,8 @@ Links
 * `Github Repo <https://github.com/patx/pickledb>`_
 
 
-Key Improvements in Version 1.0
-```````````````````````````````
+Key Improvements in Version 1.0+
+````````````````````````````````
 
 * pickleDB 1.0 is a reimagined version designed for speed, simplicity, and reliability. This version is NOT backwards compatible. Key changes include:
 * Atomic Saves: Ensures data integrity during writes, eliminating potential corruption issues.
@@ -47,14 +47,14 @@ Key Improvements in Version 1.0
 * Streamlined API: Removed legacy methods (e.g., `ladd`, `dmerge`) in favor of native Python operations.
 * Unified Handling of Data Types: Treats all Python-native types (lists, dicts, etc.) as first-class citizens.
 * Explicit Saves: The `auto_save` feature was removed to provide users greater control and optimize performance.
-
+* Added fully built in async class for use with even based applications.
 
 """
 
 from distutils.core import setup
 
 setup(name="pickleDB",
-    version="1.1.1",
+    version="1.2",
     description="A lightweight and simple database using json.",
     long_description=__doc__,
     author="Harrison Erd",
@@ -67,6 +67,6 @@ setup(name="pickleDB",
         "Intended Audience :: Developers",
         "Topic :: Database" ],
     py_modules=['pickledb'],
-    install_requires=['orjson'],
+    install_requires=['orjson', 'aiofiles'],
 )
 
