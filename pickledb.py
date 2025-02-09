@@ -28,6 +28,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
+import asyncio
 import os
 
 import orjson
@@ -192,3 +193,76 @@ class PickleDB:
             list: A list of all keys.
         """
         return list(self.db.keys())
+
+
+class AsyncPickleDB(PickleDB):
+
+    def __init__(self, location):
+        super().__init__(location)
+        self._lock = asyncio.Lock()
+
+    async def aset(self, key, value):
+        """
+        Async version of the set method.
+
+        Args:
+            key (any): The key to set. If the key is not a string, it
+                       will be converted to a string.
+            value (any): The value to associate with the key.
+
+        Behavior:
+            - If the key already exists, its value will be updated.
+            - If the key does not exist, it will be added to the
+              database.
+
+        Returns:
+            bool: True if the operation succeeds.
+        """
+        async with self._lock:
+            self.db[str(key)] = value
+            return True
+
+    async def aget(self, key):
+        """
+        Async version of the get method.
+
+        Args:
+            key (any): The key to retrieve. If the key is not a
+                       string, it will be converted to a string.
+
+        Returns:
+            any: The value associated with the key, or None if the
+            key does not exist.
+        """
+        async with self._lock:
+            return self.db.get(str(key))
+
+    async def aremove(self, key):
+        """
+        Async version of the remove method.
+
+        Args:
+            key (any): The key to delete. If the key is not a string,
+                       it will be converted to a string.
+
+        Returns:
+            bool: True if the key was deleted, False if the key does
+                  not exist.
+        """
+        async with self._lock:
+            return self.db.pop(str(key), None) is not None
+
+    async def asave(self):
+        """
+        Async version of the save method.
+
+        Behavior:
+            - Writes to a temporary file and replaces the
+              original file only after the write is successful,
+              ensuring data integrity.
+
+        Returns:
+            bool: True if save was successful, False if not.
+        """
+        async with self._lock:
+            return self.save()
