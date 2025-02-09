@@ -269,7 +269,7 @@ class AsyncPickleDB(PickleDB):
         async with self._lock:
             try:
                 async with aiofiles.open(temp_location, "wb") as temp_file:
-                    await temp_file.write(orjson.dumps(self.db, option=option))
+                    await temp_file.write(orjson.dumps(self.db))
                 os.replace(temp_location, self.location)
                 return True
             except Exception as e:

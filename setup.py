@@ -47,14 +47,14 @@ Key Improvements in Version 1.0+
 * Streamlined API: Removed legacy methods (e.g., `ladd`, `dmerge`) in favor of native Python operations.
 * Unified Handling of Data Types: Treats all Python-native types (lists, dicts, etc.) as first-class citizens.
 * Explicit Saves: The `auto_save` feature was removed to provide users greater control and optimize performance.
-* Added fully built in async class for use with event based applications.
+* Added built in async class for use with event based applications.
 
 """
 
 from distutils.core import setup
 
 setup(name="pickleDB",
-    version="1.3",
+    version="1.3.2",
     description="A lightweight and simple database using json.",
     long_description=__doc__,
     author="Harrison Erd",
