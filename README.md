@@ -148,6 +148,7 @@ pickleDB 1.0 is a reimagined version designed for speed, simplicity, and reliabi
 - **Streamlined API**: Removed legacy methods (e.g., `ladd`, `dmerge`) in favor of native Python operations.
 - **Unified Handling of Data Types**: Treats all Python-native types (lists, dicts, etc.) as first-class citizens.
 - **Explicit Saves**: The `auto_save` feature was removed to provide users greater control and optimize performance.
+- **`AsyncPickleDB`**: Added built in async class for use with event based applications.
 
 If backward compatibility is essential, version 0.9 is still available:
 - View the legacy code [here](https://gist.github.com/patx/3ad47fc3814d7293feb902f6ab49c48f).
