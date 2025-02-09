@@ -63,6 +63,22 @@ class PickleDB:
         """
         return self.get(key)
 
+    def __enter__(self):
+        """
+        Enter the context manager.
+        Does nothing but return `self` for modifications.
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """
+        Exit the context manager.
+        Automatically saves changes if no exception occurred.
+        """
+        if exc_type is None:
+            self.save()
+        return False
+
     def _load(self):
         """
         Load data from the JSON file if it exists, or initialize an empty
