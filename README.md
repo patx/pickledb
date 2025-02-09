@@ -21,6 +21,8 @@ Your data deserves to be safe. Atomic saves ensure your database remains consist
 ### ✅ **Pythonic Flexibility**
 Store strings, lists, dictionaries, and more—all with native Python operations. No need to learn special commands. If you know Python, you already know pickleDB.
 
+### ✅ **Async Support**
+Use pickleDB's `AsyncPickleDB` class for async operations and saves made possible with aiofiles. Ready to go for use with web frameworks like Starlette, FastAPI, and [MicroPie](https://patx.github.io/micropie).
 
 ## **Getting Started**
 
@@ -41,7 +43,7 @@ db = PickleDB('my_database.db')
 db.set('greeting', 'Hello, world!')
 
 # Retrieve the value
-print(db.get('greeting'))  # Output: Hello, world!
+db.get('greeting')  # Output: Hello, world!
 
 # Save the data to disk
 db.save()
@@ -126,7 +128,17 @@ db.save()
 print("Database saved successfully!")
 ```
 
+### **Asynchronous API (AsyncPickleDB)**
 
+- `aset(key, value)`: Async version of `set()`.
+- `aget(key)`: Async version of `get()`.
+- `aall()`: Async version of `all()`.
+- `aremove(key)`: Async version of `remove()`.
+- `apurge()`: Async version of `purge()`.
+- `asave()`: Async version of `save()`.
+
+
+See full API documentation at [patx.github.io/pickledb/commands](https://patx.github.io/pickledb/commands).
 ## **Key Improvements in Version 1.0**
 
 pickleDB 1.0 is a reimagined version designed for speed, simplicity, and reliability. Key changes include:
@@ -413,7 +425,7 @@ You can easily implement custom signal handling in your application to ensure gr
 ```python
 import signal
 import sys
-from pickledb import PickleDB  # Import the PickleDB class
+from pickledb import PickleDB
 
 # Initialize the PickleDB instance
 db = PickleDB('my_database.db')
@@ -436,7 +448,7 @@ except KeyboardInterrupt:
     pass
 ```
 
-### ***Async For Web Frameworks***
+### **Async For Web Frameworks**
 For frameworks like FastAPI, Starlette, or MicroPie, use `AsyncPickleDB` to handle requests without blocking the server:
 
 ```python
@@ -479,7 +491,7 @@ app = Root()
 While pickleDB is powerful, it’s important to understand its limitations:
 
 - **Memory Usage**: The entire dataset is loaded into memory, which might be a constraint on systems with limited RAM for extremely large datasets.
-- **Single-Threaded**: The program is not thread-safe. For concurrent access, use external synchronization like Python's `RLock()`.
+- **Single-Threaded**: The program is not thread-safe by default. For concurrent access, use the async class `AsyncPickleDB`.
 - **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use the `AsyncPickleDB` class.
 - **Lack of Advanced Features**: pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features.
 
