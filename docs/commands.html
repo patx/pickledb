@@ -27,7 +27,7 @@
         <p>For installation, more documentation, and examples see the <a href="https://github.com/patx/pickledb/?tab=readme-ov-file#readme">README on GitHub.</a></p>
 
         <p>
-            <strong>Class Initialization</strong>
+            <h2>PickleDB</h2>
         </p>
 
         <p><code><span class="c2">PickleDB</span>(<span class="c9">path</span>)</code> &rarr; Initialize a PickleDB instance with the specified path.</p>
@@ -70,8 +70,51 @@
 
         <p><code><span class="c2">save</span>(<span class="c9">option</span>)</code> &rarr; Save the current state of the database to the file.</p>
         <ul>
-
             <li><span class="c9">option</span>: OPTIONAL argument to pass `orjson.OPT_*` flags to configure serialization behavior.</li>
+            <li><span class="c9">Returns</span>: <em>True</em> if the operation succeeds, or <em>False</em> otherwise.</li>
+        </ul>
+
+        <h2>AsyncPickleDB</h2>
+        <p><code><span class="c2">AsyncPickleDB</span>(<span class="c9">path</span>)</code> &rarr; Initialize an AsyncPickleDB instance with the specified path.</p>
+        <ul>
+            <li><span class="c9">path</span>: The path to the database file.</li>
+        </ul>
+
+        <p>
+            <strong><code><span class="c2">AsyncPickleDB</span></code> Class Methods</strong>
+        </p>
+
+        <p><code><span class="c2">aset</span>(<span class="c9">key</span>, <span class="c9">value</span>)</code> &rarr; Asynchronously add or update a key-value pair in the database.</p>
+        <ul>
+            <li><span class="c9">key</span>: The key to set. Converted to string if not already.</li>
+            <li><span class="c9">value</span>: The value to associate with the key. This can be any JSON serializable Python data type.</li>
+            <li><span class="c9">Returns</span>: <em>True</em>.</li>
+        </ul>
+
+        <p><code><span class="c2">aget</span>(<span class="c9">key</span>)</code> &rarr; Asynchronously retrieve the value associated with a key.</p>
+        <ul>
+            <li><span class="c9">key</span>: The key to retrieve.</li>
+            <li><span class="c9">Returns</span>: The value associated with the key, or <em>None</em> if the key does not exist.</li>
+        </ul>
+
+        <p><code><span class="c2">aremove</span>(<span class="c9">key</span>)</code> &rarr; Asynchronously delete a key and its value from the database.</p>
+        <ul>
+            <li><span class="c9">key</span>: The key to delete.</li>
+            <li><span class="c9">Returns</span>: <em>True</em> if the key was deleted, or <em>False</em> if the key does not exist.</li>
+        </ul>
+
+        <p><code><span class="c2">aall</span>()</code> &rarr; Asynchronously retrieve a list of all keys in the database.</p>
+        <ul>
+            <li><span class="c9">Returns</span>: A list of keys.</li>
+        </ul>
+
+        <p><code><span class="c2">apurge</span>()</code> &rarr; Asynchronously clear all keys and values from the database.</p>
+        <ul>
+            <li><span class="c9">Returns</span>: <em>True</em>.</li>
+        </ul>
+
+        <p><code><span class="c2">asave</span>()</code> &rarr; Asynchronously save the current state of the database to the file.</p>
+        <ul>
             <li><span class="c9">Returns</span>: <em>True</em> if the operation succeeds, or <em>False</em> otherwise.</li>
         </ul>
 
