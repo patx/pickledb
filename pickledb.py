@@ -275,3 +275,24 @@ class AsyncPickleDB(PickleDB):
             except Exception as e:
                 print(f"Failed to save database: {e}")
                 return False
+
+    async def aall(self):
+        """
+        Async version of the all method.
+
+        Returns:
+            list: A list of all keys.
+        """
+        async with self._lock:
+            return list(self.db.keys())
+
+    async def apurge(self):
+        """
+        Async version of the purge method.
+
+        Returns:
+            bool: True if the operation succeeds.
+        """
+        async with self._lock:
+            self.db.clear()
+            return True
