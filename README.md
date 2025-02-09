@@ -437,7 +437,7 @@ except KeyboardInterrupt:
 ```
 
 ### ***Async For Web Frameworks***
-For frameworks like FastAPI, Starlette, or MicroPie, use async wrappers to handle requests without blocking the server:
+For frameworks like FastAPI, Starlette, or MicroPie, use `AsyncPickleDB` to handle requests without blocking the server:
 
 ```python
 from uuid import uuid4
@@ -480,7 +480,7 @@ While pickleDB is powerful, it’s important to understand its limitations:
 
 - **Memory Usage**: The entire dataset is loaded into memory, which might be a constraint on systems with limited RAM for extremely large datasets.
 - **Single-Threaded**: The program is not thread-safe. For concurrent access, use external synchronization like Python's `RLock()`.
-- **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use [asynchronous wrappers](https://gist.github.com/patx/5c12d495ff142f3262325eeae81eb000) and external locks.
+- **Blocking Saves**: Saves are blocking by default. To achieve non-blocking saves, use the `AsyncPickleDB` class.
 - **Lack of Advanced Features**: pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features.
 
 For projects requiring more robust solutions, consider alternatives like **[kenobiDB](Https://github.com/patx/kenobi)**, [Redis](http://redis.io/), [SQLite](https://www.sqlite.org/), or [MongoDB](https://www.mongodb.com/).
