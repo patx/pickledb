@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import asyncio
 import os
 
+import aiofiles
 import orjson
 
 
@@ -264,5 +265,13 @@ class AsyncPickleDB(PickleDB):
         Returns:
             bool: True if save was successful, False if not.
         """
+        temp_location = f"{self.location}.tmp"
         async with self._lock:
-            return self.save()
+            try:
+                async with aiofiles.open(temp_location, "wb") as temp_file:
+                    await temp_file.write(orjson.dumps(self.db, option=option))
+                os.replace(temp_location, self.location)
+                return True
+            except Exception as e:
+                print(f"Failed to save database: {e}")
+                return False
