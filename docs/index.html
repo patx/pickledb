@@ -70,20 +70,37 @@
             right: 0;
             border: 0;
         }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+        }
         .button {
-            display: inline-block;
+            display: flex; /* Use flexbox for proper vertical centering */
+            align-items: center; /* Vertically center the text */
+            justify-content: center; /* Horizontally center the text */
             background: #008000;
             color: #fff;
-            padding: 15px 30px;
+            padding: 0 30px; /* Only horizontal padding */
+            height: 100px; /* Set a fixed height for both buttons */
             border-radius: 30px;
             font-size: 18px;
             font-weight: 600;
+            text-align: center;
+            width: 48%; /* Ensure both buttons take up equal width */
             transition: background 0.3s ease;
         }
         .button:hover {
             background: white;
             border: 2px solid #008000;
-            color: #008000
+            color: #008000;
+        }
+        .left-button {
+            margin-right: 10px;
+        }
+        .right-button {
+            margin-left: 10px;
         }
         @media (max-width: 768px) {
             .container {
@@ -96,6 +113,7 @@
             .button {
                 max-width: 100%;
                 text-align: center;
+                align-items: center
             }
             .github-banner {
                 display: none;
@@ -110,7 +128,6 @@
         </div>
         <p><strong>pickleDB is a lightweight, simple and fast Python key-value store with asynchronous support.</strong>
         It is built with the <a href="https://pypi.org/project/orjson/">orjson</a> module for extremely high performance and was inspired by <a href="http://redis.io/">Redis</a>. It is licensed under the BSD three-clause license.</p>
-
 
         <h2>pickleDB is Fun</h2>
         <pre><code>
@@ -129,7 +146,10 @@ True
         <pre><code><span class="c2">$</span> pip install <span class="c9">pickledb</span></code></pre>
 
         <p><br><br>
-        <a href="https://github.com/patx/pickledb" class="button">View source code, examples and documentation on GitHub</a>
+            <div class="button-container">
+                <a href="https://github.com/patx/pickledb" class="button left-button">View the source code and examples on GitHub</a>
+                <a href="commands.html" class="button right-button">View the API reference</a>
+            </div>
         </p>
     </div>
     <div class="github-banner">
