@@ -376,29 +376,48 @@ def backup_to_s3(db_instance, bucket_name, s3_key):
 backup_to_s3(db, 'my-s3-bucket', 'backup/my_database.db')
 ```
 
-### Use pickleDB over HTTP (REST)
+### Use pickleDB over HTTP
 Access pickleDB database with any language that can handle REST requests:
 ```python
-from flask import Flask, request, jsonify
-from pickledb import PickleDB
+from pickledb import AsyncPickleDB
+from MicroPie import App
+import orjson
+import uvicorn
 
-app = Flask(__name__)
-db = PickleDB('api.db')
+DB_NAME = input('Enter database name: ')
+db = AsyncPickleDB(DB_NAME)
 
-@app.route('/set', methods=['POST'])
-def set_value():
-    data = request.json
-    db.set(data['key'], data['value'])
-    db.save()
-    return jsonify({"message": "Value saved!"})
 
-@app.route('/get/<key>', methods=['GET'])
-def get_value(key):
-    value = db.get(key)
-    return jsonify({"value": value})
+class Root(App):
 
-if __name__ == '__main__':
-    app.run(debug=True)
+    async def set(self, key, value):
+        await db.aset(key, value)
+        return orjson.dumps({key: value})
+
+    async def get(self, key):
+        value = await db.aget(key)
+        return orjson.dumps({key: value})
+
+    async def remove(self, key):
+        await db.aremove(key)
+        return orjson.dumps({'action': 'removed'})
+
+    async def purge(self):
+        await db.apurge()
+        return orjson.dumps({'action': 'purge'})
+
+    async def all(self):
+        return orjson.dumps(await db.aall())
+
+    async def save(self):
+        await db.asave()
+        return orjson.dumps({'action': 'save'})
+
+
+app = Root()
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=5272)
 ```
 
 ### Key Pattern Matching
