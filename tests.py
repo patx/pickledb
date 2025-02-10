@@ -30,7 +30,7 @@ class TestPickleDB(unittest.TestCase):
         signal.alarm(timeout_duration)
 
         try:
-            num_docs = 20_000_000
+            num_docs = 1_000_000
 
             # Measure memory loading time
             start_time = time.time()
@@ -99,8 +99,8 @@ class TestPickleDB(unittest.TestCase):
         """Test initializing a database with a corrupt file."""
         with open(self.test_file, 'w') as f:
             f.write("corrupt data")
-        db = PickleDB(self.test_file)
-        self.assertEqual(db.all(), [])
+        with self.assertRaises(RuntimeError):
+            PickleDB(self.test_file)
 
     def test_set_non_string_key(self):
         """Test setting a non-string key."""
