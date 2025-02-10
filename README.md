@@ -4,10 +4,6 @@
 
 # **pickleDB: Your Lightweight, High-Speed Key-Value Store**
 
-**Fast. Simple. Reliable.** Unlock the power of effortless data storage with **pickleDB**—the no-fuss, blazing-fast key-value store designed for Python developers. Whether you're building a small script or a performant microservice, pickleDB delivers simplicity and speed with the reliability you can count on.
-
-## **Why Choose pickleDB?**
-
 ### ✅ **Blazing Speed**
 Backed by the high-performance [orjson](https://pypi.org/project/orjson/) library, pickleDB handles millions of records with ease. Perfect for applications where every millisecond counts.
 
@@ -23,8 +19,8 @@ Store strings, lists, dictionaries, and more—all with native Python operations
 ### ✅ **Async Support**
 Use pickleDB's `AsyncPickleDB` class for async operations and saves made possible with aiofiles. Ready to go for use with web frameworks like Starlette, FastAPI, and [MicroPie](https://patx.github.io/micropie).
 
-## **Getting Started**
-### Check out pickleDB's [website](https://patx.github.io/pickledb) for a [user guide](https://patx.github.io/pickledb/guide) complete with advanced examples and the complete [API documentation](https://patx.github.io/pickledb/commands).
+### 💡 **Getting Started**
+Check out pickleDB's [website](https://patx.github.io/pickledb) for a [user guide](https://patx.github.io/pickledb/guide) complete with advanced examples and the complete [API documentation](https://patx.github.io/pickledb/commands).
 
 
 ## **Performance Highlights**
