@@ -1,7 +1,5 @@
 [![PyPI Downloads](https://static.pepy.tech/badge/pickledb)](https://pepy.tech/projects/pickledb)
 
-[![Logo](https://patx.github.io/pickledb/logo.png)](https://patx.github.io/pickledb)
-
 ## **pickleDB: Your Lightweight, High-Speed Key-Value Store**
 
 - 💡 **Getting Started**: Check out pickleDB's [website](https://patx.github.io/pickledb) for installation instructions, a [user guide](https://patx.github.io/pickledb/guide) complete with advanced examples and the complete [API documentation](https://patx.github.io/pickledb/commands).
