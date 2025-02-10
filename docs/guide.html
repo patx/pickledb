@@ -1,162 +1,153 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <title>pickleDB - Simple Key-Value Database</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-
-            color: #333;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            margin-top: auto;
-            margin-bottom: auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-        }
-        h1, h2 {
-            font-weight: 600;
-        }
-        h2 {
-            color: #008000;
-            text-align: left;
-        }
-        p {
-            font-size: 18px;
-            line-height: 1.6;
-            color: #555;
-            text-align: left;
-        }
-        a {
-            color: #008000;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: #008000;
-        }
-        pre {
-            background: #f5f2f0;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: left;
-            overflow-x: auto;
-            font-size: 1.1em;
-        }
-        .logo img {
-            max-width: 600px;
-        }
-        span.c2 {
-            color: #8F5902;
-        }
-        span.c9 {
-            color: #008000;
-        }
-        .github-banner img {
-            position: fixed;
-            top: 0;
-            right: 0;
-            border: 0;
-        }
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            align-items: center;
-        }
-        .button {
-            display: flex; /* Use flexbox for proper vertical centering */
-            align-items: center; /* Vertically center the text */
-            justify-content: center; /* Horizontally center the text */
-            background: #008000;
-            color: #fff;
-            padding: 0 30px; /* Only horizontal padding */
-            height: 100px; /* Set a fixed height for both buttons */
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: 600;
-            text-align: center;
-            width: 48%; /* Ensure both buttons take up equal width */
-            transition: background 0.3s ease;
-        }
-        .button:hover {
-            background: white;
-            border: 2px solid #008000;
-            color: #008000;
-        }
-        .left-button {
-            margin-right: 10px;
-        }
-        .right-button {
-            margin-left: 10px;
-        }
-        @media (max-width: 768px) {
-            .container {
-                width: 100%;
-                padding: 20px;
-            }
-            .logo img {
-                max-width: 100%;
-            }
-            .button {
-                max-width: 100%;
-                text-align: center;
-                align-items: center
-            }
-            .github-banner {
-                display: none;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Highlight.js default style with explicit HTTPS URL -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+  <title>pickleDB - Simple Key-Value Database</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      margin-top: auto;
+      margin-bottom: auto;
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+    }
+    h1, h2 {
+      font-weight: 600;
+    }
+    h2 {
+      color: #008000;
+      text-align: left;
+    }
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #555;
+      text-align: left;
+    }
+    a {
+      color: #008000;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    a:hover {
+      color: #008000;
+    }
+    pre {
+      background: #f5f2f0;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: left;
+      overflow-x: auto;
+      font-size: 1.1em;
+    }
+    .logo img {
+      max-width: 600px;
+    }
+    span.c2 {
+      color: #8F5902;
+    }
+    span.c9 {
+      color: #008000;
+    }
+    .github-banner img {
+      position: fixed;
+      top: 0;
+      right: 0;
+      border: 0;
+    }
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #008000;
+      color: #fff;
+      padding: 0 30px;
+      height: 100px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+      width: 48%;
+      transition: background 0.3s ease;
+    }
+    .button:hover {
+      background: white;
+      border: 2px solid #008000;
+      color: #008000;
+    }
+    .left-button {
+      margin-right: 10px;
+    }
+    .right-button {
+      margin-left: 10px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        width: 100%;
+        padding: 20px;
+      }
+      .logo img {
+        max-width: 100%;
+      }
+      .button {
+        max-width: 100%;
+        text-align: center;
+        align-items: center;
+      }
+      .github-banner {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <a href='index.html'><img src="logo.png" alt="pickleDB logo"></a>
-        </div>
-<h2>Installation</h2>
-<p>pickleDB is available on PyPI. Install it with pip in just one command:
-<pre>
-pip install pickledb
-</pre>
+  <div class="container">
+    <div class="logo">
+      <a href="index.html"><img src="logo.png" alt="pickleDB logo"></a>
+    </div>
+    <h2>Installation</h2>
+    <p>
+      pickleDB is available on <a href="https://pypi.org/project/pickleDB/">PyPI</a>. Install it with <a href="https://pypi.org/project/pip/">pip</a> in just one command:
+    </p>
+    <pre><code class="language-bash">pip install pickledb</code></pre>
+    <h2>Your first pickleDB</h2>
+    <p>Open up your favorite terminal and start a Python shell. Enter the following commands and watch pickleDB go to work!</p>
+    <pre><code class="language-python">from pickledb import PickleDB
 
-<h2>Your first pickleDB</h2>
-<p>Open up your favorite terminal and start a Python shell. Enter the following commands and watch pickleDB go to work!</p>
-<pre>
-from pickledb import PickleDB
+db = PickleDB('my_database.db')  # Initialize the database
 
+db.set('greeting', 'Hello, world!')  # Add a key-value pair
 
-db = PickleDB('my_database.db')  <small># Initialize the database</small>
+db.get('greeting')  # Retrieve the value. Output: 'Hello, world!'
 
-
-db.set('greeting', 'Hello, world!')  <small># Add a key-value pair</small>
-
-
-db.get('greeting')  <small># Retrieve the value. Output: `Hello, world!`</small>
-
-
-db.save()  <small># Save the data to disk</small>
-</pre>
-<p>You should now have a file called <code>my_database.py</code> in your working directory. In it you should see your key-value pair you just added.
-It’s that simple! In just a few lines, you have a fully functioning key-value store.</p>
-
-<h2>Add or update a key-value pair</h2>
-<p>We can add key-value pairs to our database with the <code>set(key, value)</code> method provided in the <code>PickleDB</code> class for synchronous operations:
-<pre>
-# Add a new key-value pair
+db.save()  # Save the data to disk</code></pre>
+    <p>You should now have a file called <code>my_database.py</code> in your working directory. In it you should see your key-value pair you just added.
+      It’s that simple! In just a few lines, you have a fully functioning key-value store.</p>
+    <h2>Add or update a key-value pair</h2>
+    <p>We can add key-value pairs to our database with the <code>set(key, value)</code> method provided in the <code>PickleDB</code> class for synchronous operations:</p>
+    <pre><code class="language-python"># Add a new key-value pair
 db.set('username', 'admin')
 
 # Or shorthand
@@ -164,72 +155,52 @@ db['username'] = 'admin'
 
 # Update an existing key-value pair
 db.set('username', 'superadmin')
-db.get('username')  # Output: 'superadmin'
-</pre>
-<p>Your <code>key</code> must be a string. If it is not, pickleDB will convert it into one for you using <code>str()</code>. Your <code>value</code> can be any JSON serializable object.</p>
-
-<h2>Retrieve the value associated with a key</h2>
-<p>In order to get the <code>value</code> of a <code>key</code> we can use <code>PickleDB</code>'s <code>get(key)</code> method. Remember your <code>key</code> must be a string.
-<pre>
-# Get the value for a key
+db.get('username')  # Output: 'superadmin'</code></pre>
+    <p>Your <code>key</code> must be a string. If it is not, pickleDB will convert it into one for you using <code>str()</code>. Your <code>value</code> can be any JSON serializable object.</p>
+    <h2>Retrieve the value associated with a key</h2>
+    <p>In order to get the <code>value</code> of a <code>key</code> we can use <code>PickleDB</code>'s <code>get(key)</code> method. Remember your <code>key</code> must be a string.</p>
+    <pre><code class="language-python"># Get the value for a key
 print(db.get('username'))  # Output: 'superadmin'
 
 # Like the set() method, you can use Python syntax sugar here as well
-db['username'] # Output: 'superadmin'
+db['username']  # Output: 'superadmin'
 
 # Attempt to retrieve a non-existent key
-db.get('nonexistent_key')  # Output: None
-</pre>
-
-<h2>Get a list of all keys</h2>
-<p>It is useful to get a list of all the keys in your database for many reasons. To do this we can use the <code>all()</code> method for this:</p>
-<pre>
-# Add multiple keys
+db.get('nonexistent_key')  # Output: None</code></pre>
+    <h2>Get a list of all keys</h2>
+    <p>It is useful to get a list of all the keys in your database for many reasons. To do this we can use the <code>all()</code> method for this:</p>
+    <pre><code class="language-python"># Add multiple keys
 db.set('item1', 'value1')
 db.set('item2', 'value2')
 
 # Retrieve all keys
-db.all()  # Output: ['username', 'item1', 'item2']
-</pre>
-
-<h2>Delete a key and its value</h2>
-<p>To delete a key from the database you can use the <code>remove(key)</code> method. This will delete the key and its associated value.</p>
-<pre>
-# Remove a key-value pair
+db.all()  # Output: ['username', 'item1', 'item2']</code></pre>
+    <h2>Delete a key and its value</h2>
+    <p>To delete a key from the database you can use the <code>remove(key)</code> method. This will delete the key and its associated value.</p>
+    <pre><code class="language-python"># Remove a key-value pair
 db.remove('item1')
-db.all()  # Output: ['username', 'item2']
-</pre>
-<p>As you can see, when we call the <code>all()</code> method now, it no longer shows the key we removed.</p>
+db.all()  # Output: ['username', 'item2']</code></pre>
+    <p>As you can see, when we call the <code>all()</code> method now, it no longer shows the key we removed.</p>
+    <h2>Delete all keys</h2>
+    <p>You can delete all data in the database using the <code>purge()</code> method in the <code>PickleDB</code> class.</p>
+    <pre><code class="language-python">db.purge()
 
-<h2>Delete all keys</h2>
-<p>You can delete all data in the database using the <code>purge()</code> method in the <code>PickleDB</code> class.</p>
-<pre>
-db.purge()
-
-db.all()  # Output: []
-</pre>
-
-<h2>Persist the database to disk</h2>
-<p>In order for <strong>any</strong> of these other methods to be permanent you <strong>must</strong> call the <code>save()</code> method. Saving to disk only happens when this method is called. If you add a bunch of
-key-value pairs to your database and the program exits without this command being called all data will be lost! The explicit nature lets you tune the performance of pickleDB to your needs.</p>
-<pre>
-db.save()  # Output: True
-</pre>
-<p>You can also also save the database using a context manager:</p>
-<pre>
-with db:
+db.all()  # Output: []</code></pre>
+    <h2>Persist the database to disk</h2>
+    <p>In order for <strong>any</strong> of these other methods to be permanent you <strong>must</strong> call the <code>save()</code> method. Saving to disk only happens when this method is called. If you add a bunch of
+      key-value pairs to your database and the program exits without this command being called all data will be lost! The explicit nature lets you tune the performance of pickleDB to your needs.</p>
+    <pre><code class="language-python">db.save()  # Output: True</code></pre>
+    <p>You can also save the database using a context manager:</p>
+    <pre><code class="language-python">with db:
     db.set('foo', 'bar')
     db.set('hello', 'world')
-    db.set('candy': 'bad')
+    db.set('candy', 'bad')
 
-# Database saved when the `with` statement exits.
-</pre>
-
-<h2>The <code>AsyncPickleDB</code> Class</h2>
-<p>While the <code>PickleDB</code> is great for simple and fast data storage, it is not thread safe or asynchronous. So when you are working with things like ASGI frameworks the standard <code>PickleDB</code class is ill-suited.
-When you need async you need to use the <code>AsyncPickleDB</code class. This class operates close to the same as we are used to. Lets take a look:</p>
-<pre>
-import asyncio
+# Database saved when the `with` statement exits.</code></pre>
+    <h2>The <code>AsyncPickleDB</code> Class</h2>
+    <p>While the <code>PickleDB</code> is great for simple and fast data storage, it is not thread safe or asynchronous. So when you are working with things like ASGI frameworks the standard <code>PickleDB</code> class is ill-suited.
+      When you need async you need to use the <code>AsyncPickleDB</code> class. This class operates close to the same as we are used to. Let's take a look:</p>
+    <pre><code class="language-python">import asyncio
 from pickledb import AsyncPickleDB
 
 async def main():
@@ -246,11 +217,9 @@ async def main():
     # Save the data to disk
     await db.asave()
 
-asyncio.run(main())
-</pre>
-<p>To use <code>AsyncPickleDB</code> you can simply add the <code>await</code> keyword and an "<code>a</code>" to the beginning of the sync commands your used to:</p>
-<pre>
-await db.aset('foo', 'bar')
+asyncio.run(main())</code></pre>
+    <p>To use <code>AsyncPickleDB</code> you can simply add the <code>await</code> keyword and an "a" to the beginning of the synchronous commands you are used to:</p>
+    <pre><code class="language-python">await db.aset('foo', 'bar')
 
 await db.aget('foo')
 
@@ -260,13 +229,10 @@ await db.aall()
 
 await db.apurge()
 
-await db.asave()
-</pre>
-
-<h2>Store and Retrieve Complex Data</h2>
-<p>PickleDB works seamlessly with Python data structures. Example:</p>
-<pre>
-# Store a dictionary
+await db.asave()</code></pre>
+    <h2>Store and Retrieve Complex Data</h2>
+    <p>PickleDB works seamlessly with Python data structures. Example:</p>
+    <pre><code class="language-python"># Store a dictionary
 db.set('user', {'name': 'Alice', 'age': 30, 'city': 'Wonderland'})
 
 # Retrieve and update it
@@ -275,13 +241,10 @@ user['age'] += 1
 
 # Save the updated data
 db.set('user', user)
-print(db.get('user'))  # Output: {'name': 'Alice', 'age': 31, 'city': 'Wonderland'}
-</pre>
-
-<h2>Use Lists for Dynamic Data</h2>
-<p>Handle lists with ease:</p>
-<pre>
-# Add a list of items
+print(db.get('user'))  # Output: {'name': 'Alice', 'age': 31, 'city': 'Wonderland'}</code></pre>
+    <h2>Use Lists for Dynamic Data</h2>
+    <p>Handle lists with ease:</p>
+    <pre><code class="language-python"># Add a list of items
 db.set('tasks', ['Write code', 'Test app', 'Deploy'])
 
 # Retrieve and modify
@@ -289,13 +252,10 @@ tasks = db.get('tasks')
 tasks.append('Celebrate')
 db.set('tasks', tasks)
 
-print(db.get('tasks'))  # Output: ['Write code', 'Test app', 'Deploy', 'Celebrate']
-</pre>
-
-<h2>Advanced Key Search</h2>
-<p>Search the database with the full power of Python:</p>
-<pre>
-# Create simple helper methods based on what YOU need
+print(db.get('tasks'))  # Output: ['Write code', 'Test app', 'Deploy', 'Celebrate']</code></pre>
+    <h2>Advanced Key Search</h2>
+    <p>Search the database with the full power of Python:</p>
+    <pre><code class="language-python"># Create simple helper methods based on what YOU need
 def get_keys_with_match_list(db_instance, match):
     return [key for key in db_instance.all() if match in key]
 
@@ -316,13 +276,10 @@ print(matching_keys)  # Output: ['apple', 'apricot']
 
 # Use glob search to return a dict
 matching_dict = get_keys_with_match_dict(db, 'ap')
-print(matching_dict)  # Output: {"apple": 1, "apricot": 3}
-</pre>
-
-<h2>Namespace Support</h2>
-<p>If you use prefixes to simulate namespaces, you can manage groups of keys more efficiently:</p>
-<pre>
-# Set multiple keys with a namespace
+print(matching_dict)  # Output: {"apple": 1, "apricot": 3}</code></pre>
+    <h2>Namespace Support</h2>
+    <p>If you use prefixes to simulate namespaces, you can manage groups of keys more efficiently:</p>
+    <pre><code class="language-python"># Set multiple keys with a namespace
 db.set('user:1', {'name': 'Alice', 'age': 30})
 db.set('user:2', {'name': 'Bob', 'age': 25})
 
@@ -331,13 +288,10 @@ def get_namespace_keys(db_instance, namespace):
     return [key for key in db_instance.all() if key.startswith(f"{namespace}:")]
 
 user_keys = get_namespace_keys(db, 'user')
-print(user_keys)  # Output: ['user:1', 'user:2']
-</pre>
-
-<h2>Expire Keys</h2>
-<p>Manually simulate a basic TTL (time-to-live) mechanism for expiring keys:</p>
-<pre>
-import time
+print(user_keys)  # Output: ['user:1', 'user:2']</code></pre>
+    <h2>Expire Keys</h2>
+    <p>Manually simulate a basic TTL (time-to-live) mechanism for expiring keys:</p>
+    <pre><code class="language-python">import time
 
 # Set a key with an expiration time
 def set_with_expiry(db_instance, key, value, ttl):
@@ -356,13 +310,10 @@ set_with_expiry(db, 'session_123', 'active', ttl=10)
 time.sleep(5)
 print(get_if_not_expired(db, 'session_123'))  # Output: 'active'
 time.sleep(6)
-print(get_if_not_expired(db, 'session_123'))  # Output: None
-</pre>
-
-<h2>Encrypted Storage</h2>
-<p>Use encryption for secure storage of sensitive data:</p>
-<pre>
-from cryptography.fernet import Fernet
+print(get_if_not_expired(db, 'session_123'))  # Output: None</code></pre>
+    <h2>Encrypted Storage</h2>
+    <p>Use encryption for secure storage of sensitive data:</p>
+    <pre><code class="language-python">from cryptography.fernet import Fernet
 
 # Initialize encryption
 key = Fernet.generate_key()
@@ -375,14 +326,10 @@ db.set('secure_key', encrypted_value)
 # Retrieve and decrypt data
 encrypted_value = db.get('secure_key')
 decrypted_value = cipher.decrypt(encrypted_value)
-print(decrypted_value.decode())  # Output: My secret data
-</pre>
-
-
-<h2>Batch Operations</h2>
-<p>Add multiple key-value pairs in a single operation:</p>
-<pre>
-def batch_set(db_instance, items):
+print(decrypted_value.decode())  # Output: My secret data</code></pre>
+    <h2>Batch Operations</h2>
+    <p>Add multiple key-value pairs in a single operation:</p>
+    <pre><code class="language-python">def batch_set(db_instance, items):
     for key, value in items.items():
         db_instance.set(key, value)
 
@@ -391,7 +338,6 @@ batch_set(db, {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'})
 print(db.all())  # Output: ['key1', 'key2', 'key3']
 
 # Delete multiple key-value pairs in a single operation:
-
 def batch_delete(db_instance, keys):
     for key in keys:
         db_instance.remove(key)
@@ -400,13 +346,10 @@ def batch_delete(db_instance, keys):
 db.set('temp1', 'value1')
 db.set('temp2', 'value2')
 batch_delete(db, ['temp1', 'temp2'])
-print(db.all())  # Output: []
-</pre>
-
-<h2>Key Pattern Matching</h2>
-<p>Support complex matching patterns using regular expressions:</p>
-<pre>
-import re
+print(db.all())  # Output: []</code></pre>
+    <h2>Key Pattern Matching</h2>
+    <p>Support complex matching patterns using regular expressions:</p>
+    <pre><code class="language-python">import re
 
 # Get keys that match a regex pattern
 def get_keys_by_pattern(db_instance, pattern):
@@ -418,14 +361,11 @@ db.set('user:1', {'name': 'Alice'})
 db.set('user:2', {'name': 'Bob'})
 db.set('admin:1', {'name': 'Charlie'})
 matching_keys = get_keys_by_pattern(db, r'user:\d')
-print(matching_keys)  # Output: ['user:1', 'user:2']
-</pre>
-
-<h2>Adding Custom Signal Handling</h2>
-<p>You can easily implement custom signal handling in your application to ensure graceful shutdowns and data persistence during unexpected terminations.
-Below is an example of how to integrate custom signal handling with pickleDB:</p>
-<pre>
-import signal
+print(matching_keys)  # Output: ['user:1', 'user:2']</code></pre>
+    <h2>Adding Custom Signal Handling</h2>
+    <p>You can easily implement custom signal handling in your application to ensure graceful shutdowns and data persistence during unexpected terminations.
+      Below is an example of how to integrate custom signal handling with pickleDB:</p>
+    <pre><code class="language-python">import signal
 import sys
 from pickledb import PickleDB
 
@@ -447,13 +387,10 @@ try:
     while True:
         pass
 except KeyboardInterrupt:
-    pass
-</pre>
-
-<h2>Async For Web Frameworks</h2>
-<p>For frameworks like FastAPI, Starlette, or MicroPie, use AsyncPickleDB to handle requests without blocking the server:</p>
-<pre>
-from uuid import uuid4
+    pass</code></pre>
+    <h2>Async For Web Frameworks</h2>
+    <p>For frameworks like FastAPI, Starlette, or MicroPie, use AsyncPickleDB to handle requests without blocking the server:</p>
+    <pre><code class="language-python">from uuid import uuid4
 import asyncio
 from MicroPie import App
 from markupsafe import escape
@@ -484,15 +421,18 @@ class Root(App):
             paste_content=paste_content
         )
 
-app = Root()
-</pre>
-    </div>
-    <div class="github-banner">
-        <a href="https://github.com/patx/pickledb">
-            <img style="position: fixed; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png" alt="Fork me on GitHub">
-        </a>
-    </div>
+app = Root()</code></pre>
+  </div>
+  <div class="github-banner">
+    <a href="https://github.com/patx/pickledb">
+      <img style="position: fixed; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png" alt="Fork me on GitHub">
+    </a>
+  </div>
+  <!-- Highlight.js Library with explicit HTTPS URL -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  <script>
+    // Initialize syntax highlighting on all code blocks
+    hljs.highlightAll();
+  </script>
 </body>
 </html>
-
-
