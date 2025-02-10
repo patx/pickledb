@@ -1,30 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="https://packages.python.org/pickleDB/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="https://packages.python.org/pickleDB/favicon.ico" type="image/x-icon">
-    <title>pickleDB API Documentation</title>
+    <link rel="shortcut icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://pythonhosted.org/pickleDB/favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>pickleDB - Simple Key-Value Database</title>
     <style>
-        .logo { width: 800px; margin: 40px auto; }
-        .body { font-family: "Helvetica", sans-serif; width: 540px; margin: 40px auto; }
-        img.c1 { position: absolute; top: 0; right: 0; border: 0; }
-        span.c2 { color: #8F5902; }
-        span.c9 { color: #4E9A06; }
-        a { color: #008000; border-bottom: 0px dotted white; text-decoration: none; }
-        a:hover { color: #008000; border-bottom: 0px solid white; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        h1, h2 {
+            font-weight: 600;
+        }
+        h2 {
+            color: #008000;
+            text-align: left;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #555;
+            text-align: left;
+        }
+        ul {
+            text-align: left;
+        }
+        a {
+            color: #008000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: #008000;
+        }
+        pre {
+            background: #f5f2f0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            overflow-x: auto;
+            font-size: 1.1em;
+        }
+        .logo img {
+            max-width: 600px;
+        }
+        span.c2 {
+            color: #8F5902;
+        }
+        span.c9 {
+            color: #008000;
+        }
+        .github-banner img {
+            position: fixed;
+            top: 0;
+            right: 0;
+            border: 0;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+        }
+        .button {
+            display: flex; /* Use flexbox for proper vertical centering */
+            align-items: center; /* Vertically center the text */
+            justify-content: center; /* Horizontally center the text */
+            background: #008000;
+            color: #fff;
+            padding: 0 30px; /* Only horizontal padding */
+            height: 100px; /* Set a fixed height for both buttons */
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            width: 48%; /* Ensure both buttons take up equal width */
+            transition: background 0.3s ease;
+        }
+        .button:hover {
+            background: white;
+            border: 2px solid #008000;
+            color: #008000;
+        }
+        .left-button {
+            margin-right: 10px;
+        }
+        .right-button {
+            margin-left: 10px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 20px;
+            }
+            .logo img {
+                max-width: 100%;
+            }
+            .button {
+                max-width: 100%;
+                text-align: center;
+                align-items: center
+            }
+            .github-banner {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="logo">
-        <a href="index.html">
-            <img src="logo.png" alt="pickleDB logo">
-        </a>
-    </div>
-    <div class="body">
+    <div class="container">
+        <div class="logo">
+            <a href="index.html"><img src="logo.png" alt="pickleDB logo"></a>
+        </div>
         <h1>API Documentation</h1>
-        <p>For installation, more documentation, and examples see the <a href="https://github.com/patx/pickledb/?tab=readme-ov-file#readme">README on GitHub.</a></p>
 
         <p>
             <h2>PickleDB</h2>

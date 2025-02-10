@@ -83,12 +83,12 @@
             background: #008000;
             color: #fff;
             padding: 0 30px; /* Only horizontal padding */
-            height: 100px; /* Set a fixed height for both buttons */
+            height: 60px; /* Set a fixed height for both buttons */
             border-radius: 30px;
             font-size: 18px;
             font-weight: 600;
             text-align: center;
-            width: 48%; /* Ensure both buttons take up equal width */
+            width: 32%; /* Ensure both buttons take up equal width */
             transition: background 0.3s ease;
         }
         .button:hover {
@@ -101,6 +101,9 @@
         }
         .right-button {
             margin-left: 10px;
+        }
+        .middle-button {
+            margin: 0 10px;
         }
         @media (max-width: 768px) {
             .container {
@@ -147,8 +150,9 @@ True
 
         <p><br><br>
             <div class="button-container">
-                <a href="https://github.com/patx/pickledb" class="button left-button">View the source code and examples on GitHub</a>
-                <a href="commands.html" class="button right-button">View the API reference</a>
+                <a href="guide.html" class="button left-button">User Guide</a>
+                <a href="commands.html" class="button middle-button">API Reference</a>
+                <a href="https://github.com/patx/pickledb" class="button right-button">GitHub Repo</a>
             </div>
         </p>
     </div>
