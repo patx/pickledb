@@ -270,7 +270,7 @@ class AsyncPickleDB(PickleDB):
             try:
                 async with aiofiles.open(temp_location, "wb") as temp_file:
                     await temp_file.write(orjson.dumps(self.db))
-                os.replace(temp_location, self.location)
+            await asyncio.to_thread(os.replace, temp_location, self.location)
                 return True
             except Exception as e:
                 print(f"Failed to save database: {e}")
