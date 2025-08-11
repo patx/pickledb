@@ -30,7 +30,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 import asyncio
 import os
-
 import aiofiles
 import orjson
 
@@ -196,103 +195,74 @@ class PickleDB:
         return list(self.db.keys())
 
 
-class AsyncPickleDB(PickleDB):
+class AsyncPickleDB:
+    """
+    A fully asynchronous orjson-based key-value store.
+    Provides async load, save, and CRUD operations with file locking.
+    """
 
     def __init__(self, location):
-        super().__init__(location)
+        self.location = os.path.expanduser(location)
         self._lock = asyncio.Lock()
+        self.db = {}
 
-    async def aset(self, key, value):
+    async def __aenter__(self):
+        await self.aload()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            await self.asave()
+        return False  # Do not suppress exceptions
+
+    async def aload(self):
         """
-        Async version of the set method.
-
-        Args:
-            key (any): The key to set. If the key is not a string, it
-                       will be converted to a string.
-            value (any): The value to associate with the key.
-
-        Behavior:
-            - If the key already exists, its value will be updated.
-            - If the key does not exist, it will be added to the
-              database.
-
-        Returns:
-            bool: True if the operation succeeds.
+        Load data from the JSON file if it exists.
         """
-        async with self._lock:
-            self.db[str(key)] = value
-            return True
+        if os.path.exists(self.location) and os.path.getsize(self.location) > 0:
+            try:
+                async with aiofiles.open(self.location, "rb") as f:
+                    content = await f.read()
+                self.db = orjson.loads(content)
+            except Exception as e:
+                raise RuntimeError(f"{e}\nFailed to load database.")
+        else:
+            self.db = {}
 
-    async def aget(self, key):
+    async def asave(self, option=0):
         """
-        Async version of the get method.
-
-        Args:
-            key (any): The key to retrieve. If the key is not a
-                       string, it will be converted to a string.
-
-        Returns:
-            any: The value associated with the key, or None if the
-            key does not exist.
-        """
-        async with self._lock:
-            return self.db.get(str(key))
-
-    async def aremove(self, key):
-        """
-        Async version of the remove method.
-
-        Args:
-            key (any): The key to delete. If the key is not a string,
-                       it will be converted to a string.
-
-        Returns:
-            bool: True if the key was deleted, False if the key does
-                  not exist.
-        """
-        async with self._lock:
-            return self.db.pop(str(key), None) is not None
-
-    async def asave(self):
-        """
-        Async version of the save method.
-
-        Behavior:
-            - Writes to a temporary file and replaces the
-              original file only after the write is successful,
-              ensuring data integrity.
-
-        Returns:
-            bool: True if save was successful, False if not.
+        Save the database to file atomically.
         """
         temp_location = f"{self.location}.tmp"
         async with self._lock:
             try:
                 async with aiofiles.open(temp_location, "wb") as temp_file:
-                    await temp_file.write(orjson.dumps(self.db))
+                    await temp_file.write(orjson.dumps(self.db, option=option))
                 await asyncio.to_thread(os.replace, temp_location, self.location)
                 return True
             except Exception as e:
                 print(f"Failed to save database: {e}")
                 return False
 
-    async def aall(self):
-        """
-        Async version of the all method.
+    async def aset(self, key, value):
+        async with self._lock:
+            self.db[str(key)] = value
+            return True
 
-        Returns:
-            list: A list of all keys.
-        """
+    async def aget(self, key):
+        async with self._lock:
+            return self.db.get(str(key))
+
+    async def aremove(self, key):
+        async with self._lock:
+            return self.db.pop(str(key), None) is not None
+
+    async def aall(self):
         async with self._lock:
             return list(self.db.keys())
 
     async def apurge(self):
-        """
-        Async version of the purge method.
-
-        Returns:
-            bool: True if the operation succeeds.
-        """
         async with self._lock:
             self.db.clear()
             return True
+
