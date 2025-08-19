@@ -266,3 +266,5 @@ class AsyncPickleDB:
             self.db.clear()
             return True
 
+    def getkmatch(self, match):
+        return dict(filter(lambda item: match in item[0], self.db.items()))
