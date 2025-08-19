@@ -90,10 +90,12 @@ class PickleDB:
             try:
                 with open(self.location, "rb") as f:
                     self.db = orjson.loads(f.read())
+                return True # Successfully loaded existing database
             except Exception as e:
                 raise RuntimeError(f"{e}\nFailed to load database.")
         else:
             self.db = {}
+            return False # Initialized empty database
 
     def save(self, option=0):
         """
