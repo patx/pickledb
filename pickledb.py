@@ -33,13 +33,28 @@ import os
 import aiofiles
 import orjson
 
+class ModifiedFlagImpl:
+    __slots__ = ('_dirty',)
+    def __init__(self):
+        self._dirty = False
 
-class PickleDB:
+    def get_modified(self):
+        return self._dirty
+
+    def set_modified(self):
+        self._dirty = True
+        return self._dirty
+
+    def clear_modified(self):
+        self._dirty = False
+        return self._dirty
+
+class PickleDB(ModifiedFlagImpl):
     """
     A barebones orjson-based key-value store with essential methods:
     set, get, save, remove, purge, and all.
     """
-
+    __slots__ = ('location','db')
     def __init__(self, location):
         """
         Initialize the PickleDB object.
@@ -47,14 +62,17 @@ class PickleDB:
         Args:
             location (str): Path to the JSON file.
         """
+        super(PickleDB,self).__init__()
         self.location = os.path.expanduser(location)
-        self._load()
+        self._load() #defines .db
+
 
     def __setitem__(self, key, value):
         """
         Wraps the `set` method to allow `db[key] = value`. See `set`
         method for details.
         """
+        self.set_modified()
         return self.set(key, value)
 
     def __getitem__(self, key):
@@ -94,6 +112,8 @@ class PickleDB:
                 raise RuntimeError(f"{e}\nFailed to load database.")
         else:
             self.db = {}
+        self.clear_modified()
+        return
 
     def save(self, option=0):
         """
@@ -116,6 +136,7 @@ class PickleDB:
             with open(temp_location, "wb") as temp_file:
                 temp_file.write(orjson.dumps(self.db, option=option))
             os.replace(temp_location, self.location)
+            self.clear_modified()
             return True
         except Exception as e:
             print(f"Failed to save database: {e}")
@@ -140,6 +161,7 @@ class PickleDB:
         """
         key = str(key) if not isinstance(key, str) else key
         self.db[key] = value
+        self.set_modified()
         return True
 
     def remove(self, key):
@@ -157,6 +179,7 @@ class PickleDB:
         key = str(key) if not isinstance(key, str) else key
         if key in self.db:
             del self.db[key]
+            self.set_modified()
             return True
         return False
 
@@ -168,6 +191,7 @@ class PickleDB:
             bool: True if the operation succeeds.
         """
         self.db.clear()
+        self.set_modified()
         return True
 
     def get(self, key):
@@ -195,13 +219,14 @@ class PickleDB:
         return list(self.db.keys())
 
 
-class AsyncPickleDB:
+class AsyncPickleDB(ModifiedFlagImpl):
     """
     A fully asynchronous orjson-based key-value store.
     Provides async load, save, and CRUD operations with file locking.
     """
-
+    __slots__ = ('_lock','location', 'db')
     def __init__(self, location):
+        super(AsyncPickleDB,self).__init__()
         self.location = os.path.expanduser(location)
         self._lock = asyncio.Lock()
         self.db = {}
@@ -224,6 +249,7 @@ class AsyncPickleDB:
                 async with aiofiles.open(self.location, "rb") as f:
                     content = await f.read()
                 self.db = orjson.loads(content)
+                self.clear_modified()
             except Exception as e:
                 raise RuntimeError(f"{e}\nFailed to load database.")
         else:
@@ -239,6 +265,7 @@ class AsyncPickleDB:
                 async with aiofiles.open(temp_location, "wb") as temp_file:
                     await temp_file.write(orjson.dumps(self.db, option=option))
                 await asyncio.to_thread(os.replace, temp_location, self.location)
+                self.clear_modified()
                 return True
             except Exception as e:
                 print(f"Failed to save database: {e}")
@@ -247,6 +274,7 @@ class AsyncPickleDB:
     async def aset(self, key, value):
         async with self._lock:
             self.db[str(key)] = value
+            self.set_modified()
             return True
 
     async def aget(self, key):
@@ -255,6 +283,7 @@ class AsyncPickleDB:
 
     async def aremove(self, key):
         async with self._lock:
+            self.set_modified()
             return self.db.pop(str(key), None) is not None
 
     async def aall(self):
@@ -263,6 +292,6 @@ class AsyncPickleDB:
 
     async def apurge(self):
         async with self._lock:
+            self.set_modified()
             self.db.clear()
             return True
-

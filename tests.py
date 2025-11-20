@@ -1,17 +1,14 @@
-import pathlib
 import unittest
 import os
 import time
 import signal
 import asyncio
-import aiofiles
-import orjson
 
 # Adjust the import path if needed. For example, if 'pickledb' is your own module,
 # ensure the relative or absolute path matches your project structure.
-from pickledb import PickleDB, AsyncPickleDB
 from pathlib import Path
-CURRENT_DIR = Path(__file__).absolute().parent
+from pickledb import PickleDB, AsyncPickleDB
+CURRENT_DIR = Path(__file__).parent.absolute()
 
 class TestPickleDB(unittest.TestCase):
     def setUp(self):
@@ -56,7 +53,9 @@ class TestPickleDB(unittest.TestCase):
 
             # Measure dump performance
             start_time = time.time()
+            self.assertTrue( self.db.get_modified() )
             self.db.save()
+            self.assertFalse( self.db.get_modified() )
             dump_time = time.time() - start_time
             print(f"Dumped {num_docs} key-value pairs to disk in {dump_time:.2f} seconds")
 
@@ -99,6 +98,7 @@ class TestPickleDB(unittest.TestCase):
     def test_dump_and_reload(self):
         """Test dumping the database to disk and reloading it."""
         self.db.set("key1", "value1")
+        self.assertTrue(self.db.get_modified())
         self.db.save()
         reloaded_db = PickleDB(self.test_file)
         self.assertEqual(reloaded_db.get("key1"), "value1")
