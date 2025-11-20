@@ -1,3 +1,4 @@
+import pathlib
 import unittest
 import os
 import time
@@ -9,12 +10,13 @@ import orjson
 # Adjust the import path if needed. For example, if 'pickledb' is your own module,
 # ensure the relative or absolute path matches your project structure.
 from pickledb import PickleDB, AsyncPickleDB
-
+from pathlib import Path
+CURRENT_DIR = Path(__file__).absolute().parent
 
 class TestPickleDB(unittest.TestCase):
     def setUp(self):
         """Set up a PickleDB instance with a real file."""
-        self.test_file = "test_pickledb.json"
+        self.test_file =CURRENT_DIR / "test_pickledb.json"
         self.db = PickleDB(self.test_file)
 
     def tearDown(self):
@@ -123,7 +125,7 @@ class TestPickleDB(unittest.TestCase):
 class TestAsyncPickleDB(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         """Set up an AsyncPickleDB instance with a real file."""
-        self.test_file = "test_async_pickledb.json"
+        self.test_file = CURRENT_DIR / "test_async_pickledb.json"
         if os.path.exists(self.test_file):
             os.remove(self.test_file)
         self.db = AsyncPickleDB(self.test_file)
@@ -183,7 +185,9 @@ class TestAsyncPickleDB(unittest.IsolatedAsyncioTestCase):
         # Create a new AsyncPickleDB instance to verify persistence,
         # then use its inherited synchronous `get` method.
         new_db = AsyncPickleDB(self.test_file)
-        self.assertEqual(new_db.get("async_key"), "async_val")
+        await new_db.aload()
+        keyval = await new_db.aget("async_key")
+        self.assertEqual(keyval, "async_val")
 
     async def test_aset_non_string_key(self):
         """Test setting a non-string key asynchronously."""
