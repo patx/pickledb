@@ -7,7 +7,7 @@ name = "pickledb"
 version = "1.4"
 description = "An ultra micro ASGI web framework"
 keywords = ["pickle", "database", "json", "redis", "asyncio"]
-readme = "docs/README.md"
+readme = "README.md"
 authors = [{ name = "Harrison Erd", email = "harrisonerd@gmail.com" }]
 license = {file = "LICENSE"}
 dependencies = ["orjson>=3.11.5", "aiofiles>=25.1.0"]
