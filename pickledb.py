@@ -1,8 +1,13 @@
+"""
+pickleDB - https://patx.github.io/pickledb
+Harrison Erd - https://harrisonerd.com/
+Licensed - BSD 3 Clause (see LICENSE)
+"""
+
 import asyncio
 import os
 import aiofiles
 import orjson
-from typing import Any
 
 
 def in_async():
@@ -19,9 +24,7 @@ def dualmethod(func):
     def wrapper(self, *args, **kwargs):
         coro = func(self, *args, **kwargs)
         if in_async():
-            # In an async context: return coroutine for 'await'
             return coro
-        # In sync context: run it to completion and return result
         return asyncio.run(coro)
     return wrapper
 
@@ -33,20 +36,42 @@ class PickleDB:
 
     def __init__(self, location: str):
         self.location = os.path.expanduser(location)
-        self.db: dict[str, Any] = {}
+        self.db = {}
         self._lock = asyncio.Lock()
 
-    async def _load(self):
-        """Pure async loader used by both sync and async entrypoints."""
+    def __enter__(self):
+        self.load()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            self.save()
+
+    async def __aenter__(self):
+        await self.load()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if exc_type is None:
+            await self.save()
+
+    @dualmethod
+    async def load(self) -> bool:
+        """Load JSON database from disk into memory."""
         if os.path.exists(self.location) and os.path.getsize(self.location) > 0:
             async with aiofiles.open(self.location, "rb") as f:
                 data = await f.read()
-            self.db = orjson.loads(data)
+            new_db = orjson.loads(data)
         else:
-            self.db = {}
+            new_db = {}
 
-    async def _save(self):
-        """Pure async saver used by both sync and async entrypoints."""
+        async with self._lock:
+            self.db = new_db
+        return self
+
+    @dualmethod
+    async def save(self) -> bool:
+        """Atomically save database to disk."""
         temp = f"{self.location}.tmp"
         async with self._lock:
             async with aiofiles.open(temp, "wb") as f:
@@ -54,35 +79,8 @@ class PickleDB:
             await asyncio.to_thread(os.replace, temp, self.location)
         return True
 
-    def __enter__(self):
-        # Call the *internal* async method, not the dualmethod wrapper
-        asyncio.run(self._load())
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type is None:
-            asyncio.run(self._save())
-
-    async def __aenter__(self):
-        await self._load()
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        if exc_type is None:
-            await self._save()
-
     @dualmethod
-    async def load(self):
-        """Load JSON database from disk."""
-        await self._load()
-
-    @dualmethod
-    async def save(self):
-        """Atomically save database to disk."""
-        return await self._save()
-
-    @dualmethod
-    async def set(self, key, value):
+    async def set(self, key, value) -> bool:
         """Set a key-value pair."""
         async with self._lock:
             self.db[str(key)] = value
@@ -95,7 +93,7 @@ class PickleDB:
             return self.db.get(str(key), default)
 
     @dualmethod
-    async def remove(self, key):
+    async def remove(self, key) -> bool:
         """Remove a key-value pair."""
         async with self._lock:
             return self.db.pop(str(key), None) is not None
@@ -107,7 +105,7 @@ class PickleDB:
             return list(self.db.keys())
 
     @dualmethod
-    async def purge(self):
+    async def purge(self) -> bool:
         """Remove all key-value pairs from database."""
         async with self._lock:
             self.db.clear()

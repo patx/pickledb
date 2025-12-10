@@ -9,7 +9,9 @@ for installation instructions, API docs, advanced examples, benchmarks, and more
 ```python
 from pickledb import PickleDB
 
-async with PickleDB("example.json") as db:
-    await db["key"] = "value"
+db = PickleDB("example.json").load()
+db.set("key", "value")
+
+db.get("key")  # return "value"
 ```
 

@@ -4,7 +4,7 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "pickledb"
-version = "1.4"
+version = "1.4.1"
 description = "An ultra micro ASGI web framework"
 keywords = ["pickle", "database", "json", "redis", "asyncio"]
 readme = "README.md"

@@ -2,647 +2,448 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>pickleDB: Your Lightweight, High-Speed Key-Value Store</title>
+  <title>pickleDB · Lightweight Key-Value Store for Python</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    :root {
+      --bg: #fafafa;
+      --bg-card: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --code-bg: #111827;
+      --code-fg: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.6;
       margin: 0;
-      padding: 2rem 1rem 4rem;
+      padding: 2rem 1rem 3rem;
       max-width: 900px;
       margin-inline: auto;
-      background: #fafafa;
-      color: #111827;
+      background: var(--bg);
+      color: var(--text);
     }
-    img {
-      max-width: 100%;
-      height: auto;
-    }
+
     a {
-      color: #2563eb;
+      color: var(--accent);
       text-decoration: none;
     }
     a:hover {
       text-decoration: underline;
     }
+
     h1, h2, h3 {
-      color: #111827;
+      color: var(--text);
     }
+
     h1 {
       font-size: 2rem;
-      margin-top: 1.5rem;
+      margin: 0 0 0.5rem;
     }
+
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       margin-top: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.35rem;
     }
+
     h3 {
-      font-size: 1.25rem;
-      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      margin-top: 1.2rem;
     }
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      background: #f3f4f6;
-      padding: 0.15em 0.35em;
-      border-radius: 4px;
-      font-size: 0.95em;
+
+    p {
+      margin: 0.35rem 0 0.6rem;
     }
+
+    ul {
+      padding-left: 1.25rem;
+      margin: 0.25rem 0 0.6rem;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
     pre {
-      background: #111827;
-      color: #e5e7eb;
-      padding: 1rem;
+      background: var(--code-bg);
+      color: var(--code-fg);
+      padding: 0.9rem 1rem;
       border-radius: 8px;
       overflow: auto;
       font-size: 0.9rem;
+      margin: 0.6rem 0 1rem;
     }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: #f3f4f6;
+      padding: 0.1em 0.35em;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+
     pre code {
       background: transparent;
       padding: 0;
     }
-    ul {
-      padding-left: 1.25rem;
-    }
+
     table {
       border-collapse: collapse;
       width: 100%;
-      margin: 1rem 0;
+      margin: 0.75rem 0 1rem;
       font-size: 0.95rem;
+      background: var(--bg-card);
     }
+
     th, td {
-      border: 1px solid #e5e7eb;
-      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.6rem;
       text-align: left;
     }
+
     thead {
       background: #f3f4f6;
       font-weight: 600;
     }
+
     tbody tr:nth-child(even) {
       background: #f9fafb;
     }
-    .badge-links {
+
+    .badges {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
-    .small-note {
-      font-size: 0.85rem;
-      color: #6b7280;
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      border-left: 3px solid var(--border);
+      padding-left: 0.75rem;
+      margin: 0.3rem 0 0.7rem;
+    }
+
+    .pill-note {
+      display: inline-block;
+      font-size: 0.9rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      margin: 0.35rem 0 0.75rem;
+    }
+
+    .section-intro {
+      margin-bottom: 0.4rem;
     }
   </style>
 </head>
 <body>
 
-  <div class="badge-links">
+  <div class="badges">
     <a href="https://patx.github.io/pickledb">
       <img src="https://patx.github.io/pickledb/logo.png" alt="pickleDB Logo">
     </a>
-
     <a href="https://pepy.tech/projects/pickledb">
       <img src="https://static.pepy.tech/badge/pickledb" alt="PyPI Downloads">
     </a>
+    <a href="https://github.com/patx/pickledb">
+      <img src="https://img.shields.io/github/stars/patx/pickledb?style=flat&logo=github" alt="GitHub Stars">
+    </a>
   </div>
 
-  <h1><strong>pickleDB: Your Lightweight, High-Speed Key-Value Store</strong></h1>
+  <h1>pickleDB</h1>
+  <p class="section-intro">
+    <code>pickleDB</code> is a lightweight, JSON-backed key-value store for Python, designed for
+    <strong>simple APIs</strong>, <strong>fast in-memory operations</strong>, and a
+    <strong>unified sync/async interface</strong>. BSD 3-Clause License · © Harrison Erd.
+  </p>
 
-  <p><code>pickleDB</code> is a lightweight, in-memory key-value store designed for developers who want <strong>simplicity, speed, and reliability</strong> — without sacrificing modern capabilities. BSD 3-Clause License © Harrison Erd.</p>
+  <h2>Quick Start</h2>
 
-  <ul>
-    <li>💫 <strong>Blazing Speed</strong>: Backed by the high-performance <a href="https://pypi.org/project/orjson/">orjson</a> library, pickleDB handles millions of records with ease. Perfect for applications where every millisecond counts.</li>
-    <li>😋 <strong>Ridiculously Easy to Use</strong>: With its minimalist API, pickleDB makes adding, retrieving, and managing your data as simple as writing a Python list. No steep learning curves. No unnecessary complexity.</li>
-    <li>🔒 <strong>Rock-Solid Reliability</strong>: Your data deserves to be safe. Atomic saves ensure your database remains consistent—even if something goes wrong.</li>
-    <li>🐍 <strong>Simple Pythonic Flexibility</strong>: Store strings, lists, dictionaries, and more—all with native Python operations. No need to learn special commands. If you know Python, you already know pickleDB.</li>
-    <li>🙋 <strong>Community &amp; Contributions</strong>: We’re passionate about making pickleDB better every day. Got ideas, feedback, or an issue to report? Let’s connect on <a href="https://github.com/patx/pickledb/issues">GitHub Issues</a>.</li>
-    <li>💾 <strong>Portable</strong>: Data is stored as standard JSON, human-readable and cross-language friendly.</li>
-    <li>🕸️ <strong>Async-Ready</strong>: Non-blocking I/O with <a href="https://pypi.org/project/aiofiles/">aiofiles</a>. Works with web frameworks like Starlette, FastAPI, or <a href="https://patx.github.io/micropie">MicroPie</a>.</li>
-    <li>⚡ <strong>Unified API</strong>: One class, one set of methods - works seamlessly in <strong>both sync and async</strong> environments.</li>
-    <li>💢 <strong>Limitations</strong>: The entire dataset resides <strong>in memory</strong> while loaded which might be a constraint on systems with limited RAM for extremely large datasets. pickleDB is designed for simplicity, so it may not meet the needs of applications requiring advanced database features. For larger-scale or concurrent applications requiring a more robust solution, consider <a href="https://dataset.readthedocs.io/en/latest/">DataSet</a>, <a href="https://redis.io/">Redis</a>, <a href="https://www.sqlite.org/">SQLite</a>, or <a href="https://www.mongodb.com/">MongoDB</a>.</li>
-    <li>📎 <strong>Useful Links</strong>:
-      <a href="https://github.com/patx/pickledb">GitHub</a> -
-      <a href="https://pypi.org/project/pickleDB/">PyPI</a> -
-      <a href="https://github.com/patx/pickledb/issues">Report an Issue/Ask for Help</a> -
-      <a href="https://harrisonerd.com/pickledb">Documentation</a>
-    </li>
-  </ul>
-
-  <h2>Getting Started</h2>
-
-  <h3>Installation</h3>
-  <p>Install via pip:</p>
+  <h3>Install</h3>
   <pre><code class="language-bash">pip install pickledb
 </code></pre>
 
-  <h3>Synchronous Example</h3>
-
+  <h3>Sync Example</h3>
   <pre><code class="language-python">from pickledb import PickleDB
 
-db = PickleDB("data.json")
-db.load()
+# Bind to a JSON file; no I/O yet
+db = PickleDB("data.json").load()  # load from disk into memory (if file exists)
 
 db.set("username", "alice")
 db.set("theme", {"color": "blue", "font": "sans-serif"})
 
 print(db.get("username"))  # → "alice"
 
-db.save()
+db.save()  # atomically write in-memory DB back to data.json
 </code></pre>
 
-  <h3>Asynchronous Example</h3>
+  <h3>Async Example</h3>
+  <pre><code class="language-python">import asyncio
+from pickledb import PickleDB
 
+async def main():
+    db = await PickleDB("data.json").load()
+
+    await db.set("score", 42)
+    value = await db.get("score")
+    print(value)  # → 42
+
+    await db.save()
+
+asyncio.run(main())
+</code></pre>
+
+  <div class="note">
+    <strong>Explicit I/O:</strong> the constructor <code>PickleDB("data.json")</code> never touches disk.
+    <code>load()</code> and <code>save()</code> are explicit (or handled by context managers).
+  </div>
+
+  <h2>Design & Behavior</h2>
+  <ul>
+    <li><strong>In-memory first:</strong> all data lives in memory while you work; JSON is used only for persistence.</li>
+    <li><strong>Method-only API:</strong> no dict syntax. Use <code>set()</code>, <code>get()</code>, <code>remove()</code>, etc.</li>
+    <li><strong>Unified sync/async:</strong> every core method works in both worlds via the same name.</li>
+    <li><strong>Atomic disk writes:</strong> uses a temp file and <code>os.replace</code> to avoid partial writes.</li>
+    <li><strong>No hidden autosave:</strong> nothing is written to disk unless you call <code>save()</code> or exit a context manager cleanly.</li>
+  </ul>
+
+  <h2>Context Managers</h2>
+
+  <h3>Synchronous</h3>
+  <pre><code class="language-python">from pickledb import PickleDB
+
+with PickleDB("data.json") as db:
+    # On enter: db.load()
+    db.set("foo", "bar")
+    db.set("hello", "world")
+    # On successful exit: db.save()
+</code></pre>
+
+  <h3>Asynchronous</h3>
   <pre><code class="language-python">import asyncio
 from pickledb import PickleDB
 
 async def main():
     async with PickleDB("data.json") as db:
-        await db.set("score", 42)
-        value = await db.get("score")
-        print(value)  # → 42
+        # On enter: await db.load()
+        await db.set("foo", "bar")
+        await db.set("hello", "world")
+        # On successful exit: await db.save()
 
 asyncio.run(main())
 </code></pre>
 
   <h2>Core Methods</h2>
 
+  <p class="section-intro">
+    These are the only methods you really need to know. Every method works the same in sync and async code;
+    just add <code>await</code> when you’re in an async function. All of these methods are part of the <code>PickleDB</code> class.
+  </p>
+
   <table>
     <thead>
       <tr>
         <th>Method</th>
+        <th>Sync usage</th>
+        <th>Async usage</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><code>load()</code></td>
-        <td>Loads the database from disk (async-aware).</td>
+        <td><code>db.load()</code></td>
+        <td><code>await db.load()</code></td>
+        <td>Load (or reload) the JSON file into memory. Returns the same <code>PickleDB</code> instance for chaining.</td>
       </tr>
       <tr>
         <td><code>save()</code></td>
-        <td>Atomically saves the database to disk.</td>
+        <td><code>db.save()</code></td>
+        <td><code>await db.save()</code></td>
+        <td>Atomically save the in-memory database back to disk.</td>
       </tr>
       <tr>
         <td><code>set(key, value)</code></td>
-        <td>Sets or updates a key.</td>
+        <td><code>db.set(k, v)</code></td>
+        <td><code>await db.set(k, v)</code></td>
+        <td>Store a value under <code>key</code>. Keys are coerced to <code>str</code>; values must be JSON-serializable.</td>
       </tr>
       <tr>
         <td><code>get(key, default=None)</code></td>
-        <td>Returns the value for a key.</td>
+        <td><code>db.get(k, d)</code></td>
+        <td><code>await db.get(k, d)</code></td>
+        <td>Retrieve the stored value, or <code>default</code> if the key doesn’t exist.</td>
       </tr>
       <tr>
         <td><code>remove(key)</code></td>
-        <td>Deletes a key if it exists.</td>
+        <td><code>db.remove(k)</code></td>
+        <td><code>await db.remove(k)</code></td>
+        <td>Delete a key. Returns <code>True</code> if it existed and was removed.</td>
       </tr>
       <tr>
         <td><code>all()</code></td>
-        <td>Returns a list of all keys.</td>
+        <td><code>db.all()</code></td>
+        <td><code>await db.all()</code></td>
+        <td>Return a list of all keys in the in-memory database.</td>
       </tr>
       <tr>
         <td><code>purge()</code></td>
-        <td>Clears the entire database.</td>
+        <td><code>db.purge()</code></td>
+        <td><code>await db.purge()</code></td>
+        <td>Clear the in-memory database. Returns <code>True</code>.</td>
       </tr>
     </tbody>
   </table>
 
-  <p>All of these methods can be used <strong>synchronously or asynchronously</strong> — just <code>await</code> them if inside an event loop.</p>
+  <p class="note">
+    pickleDB is intentionally <strong>method-based only</strong>. Dict-style access like
+    <code>db["key"]</code> or <code>db["key"] = value</code> is not supported.
+  </p>
 
-  <h2>Performance Highlights</h2>
+  <h2>Common Patterns</h2>
 
-  <p>pickleDB demonstrates strong performance for handling large-sized datasets:</p>
+  <h3>Storing Complex Data</h3>
+  <pre><code class="language-python"># Store a dictionary
+db.set("user", {"name": "Alice", "age": 30})
+
+# Update it
+user = db.get("user")
+user["age"] += 1
+db.set("user", user)
+
+print(db.get("user"))
+# {'name': 'Alice', 'age': 31}
+</code></pre>
+
+  <h3>Lists / Simple Queues</h3>
+  <pre><code class="language-python">db.set("tasks", ["write", "test", "deploy"])
+
+tasks = db.get("tasks", [])
+tasks.append("celebrate")
+db.set("tasks", tasks)
+
+print(db.get("tasks"))
+# ['write', 'test', 'deploy', 'celebrate']
+</code></pre>
+
+  <h3>Namespace Keys</h3>
+  <pre><code class="language-python">db.set("user:1", {"name": "Alice"})
+db.set("user:2", {"name": "Bob"})
+
+def keys_with_prefix(db, prefix):
+    return [k for k in db.all() if k.startswith(prefix)]
+
+print(keys_with_prefix(db, "user:"))
+# ['user:1', 'user:2']
+</code></pre>
+
+  <h3>Basic TTL Pattern (App-Level)</h3>
+  <pre><code class="language-python">import time
+
+def set_with_ttl(db, key, value, ttl_seconds):
+    db.set(key, {
+        "value": value,
+        "expires_at": time.time() + ttl_seconds,
+    })
+
+def get_if_fresh(db, key):
+    data = db.get(key)
+    if not data:
+        return None
+    if time.time() &lt; data.get("expires_at", 0):
+        return data["value"]
+    db.remove(key)
+    return None
+
+set_with_ttl(db, "session", "active", ttl_seconds=5)
+time.sleep(3)
+print(get_if_fresh(db, "session"))  # 'active'
+time.sleep(3)
+print(get_if_fresh(db, "session"))  # None
+</code></pre>
+
+  <h2>Performance Snapshot</h2>
+
+  <p class="section-intro">
+    Example timings loading, reading, and saving large JSON payloads using async mode on a Dell XPS 9350, Ubuntu 24.04:
+  </p>
 
   <table>
     <thead>
       <tr>
         <th>Entries</th>
-        <th>Memory Load Time</th>
-        <th>Retrieval Time</th>
-        <th>Save Time</th>
+        <th>Load (into memory)</th>
+        <th>Bulk read</th>
+        <th>Save (to disk)</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><strong>1M</strong></td>
-        <td>0.68 sec</td>
-        <td>0.64 sec</td>
-        <td>0.03 sec</td>
+        <td>0.68 s</td>
+        <td>0.64 s</td>
+        <td>0.03 s</td>
       </tr>
       <tr>
         <td><strong>10M</strong></td>
-        <td>7.48 sec</td>
-        <td>7.27 sec</td>
-        <td>0.22 sec</td>
+        <td>7.48 s</td>
+        <td>7.27 s</td>
+        <td>0.22 s</td>
       </tr>
       <tr>
         <td><strong>50M</strong></td>
-        <td>43.36 sec</td>
-        <td>36.53 sec</td>
-        <td>1.09 sec</td>
+        <td>43.36 s</td>
+        <td>36.53 s</td>
+        <td>1.09 s</td>
       </tr>
     </tbody>
   </table>
 
-  <p class="small-note">Tests were performed on a Dell XPS 9350 running Ubuntu 24.04 using pickleDB's async mode. <a href="https://gist.github.com/patx/025ed3a10482459f35c738228ebd0721">See the benchmark script used here.</a></p>
-
-  <h2>User Guide and Examples</h2>
-
-  <h3>Add or Update Data</h3>
-
-  <p>You can add or update key-value pairs using the <code>set()</code> method:</p>
-
-  <pre><code class="language-python"># Add a new key-value pair
-db.set('username', 'admin')
-
-# Or shorthand
-db['username'] = 'admin'
-
-# Update an existing key-value pair
-db.set('username', 'superadmin')
-print(db.get('username'))  # Output: 'superadmin'
-</code></pre>
-
-  <p>Keys are automatically converted to strings, and values can be any <strong>JSON-serializable</strong> object.</p>
-
-  <h3>Retrieve Values</h3>
-
-  <p>You can retrieve a keys value using the <code>get()</code> method:</p>
-
-  <pre><code class="language-python"># Get the value for a key
-print(db.get('username'))  # Output: 'superadmin'
-
-# Using Python syntax sugar
-db['username']  # Output: 'superadmin'
-
-# Attempt to retrieve a non-existent key
-print(db.get('nonexistent'))  # Output: None
-</code></pre>
-
-  <h3>List All Keys</h3>
-
-  <p>You can get a list of all the keys currently in the database using the <code>all()</code> method:</p>
-
-  <pre><code class="language-python">db.set('item1', 'value1')
-db.set('item2', 'value2')
-
-print(db.all())  # Output: ['username', 'item1', 'item2']
-</code></pre>
-
-  <p><em>Note:</em> This method shows all keys currently loaded, it does <strong>not</strong> guarantee they are persisted to the disk (yet).</p>
-
-  <h3>Remove Keys</h3>
-
-  <p>To remove a key from the database use the <code>remove()</code> method:</p>
-
-  <pre><code class="language-python">db.remove('item1')
-print(db.all())  # Output: ['username', 'item2']
-</code></pre>
-
-  <h3>Purge the Database</h3>
-
-  <p>To remove all keys and their values from the database use the <code>purge()</code> method:</p>
-
-  <pre><code class="language-python">db.purge()
-print(db.all())  # Output: []
-</code></pre>
-
-  <h3>Saving Data</h3>
-
-  <p><strong>pickleDB does not auto-save by default</strong> for performance reasons. To persist data, call <code>save()</code> manually or use a context manager:</p>
-
-  <pre><code class="language-python">db.save()  # Output: True
-
-# Context manager example
-with db:
-    db.set('foo', 'bar')
-    db.set('hello', 'world')
-# Automatically saves when exiting the context
-</code></pre>
-
-  <p><em>Note:</em> All the above methods work/display on the in-memory database. To persist any of the above methods actions you must call the <code>save()</code> method or use a context manager, as stated above.</p>
-
-  <h3>Asynchronous Usage</h3>
-
-  <p>pickleDB 1.4 uses a <strong>single unified class</strong> for both synchronous and asynchronous contexts.</p>
-
-  <pre><code class="language-python">import asyncio
-from pickledb import PickleDB
-
-async def main():
-    async with PickleDB('data.json') as db:
-        await db.set('score', 42)
-        print(await db.get('score'))  # Output: 42
-
-asyncio.run(main())
-</code></pre>
-
-  <p>Just <code>await</code> any method when inside an async function/event-loop.</p>
-
-  <h3>Store and Retrieve Complex Data</h3>
-
-  <pre><code class="language-python"># Store a dictionary
-db.set('user', {'name': 'Alice', 'age': 30, 'city': 'Wonderland'})
-
-# Retrieve and modify
-user = db.get('user')
-user['age'] += 1
-db.set('user', user)
-
-print(db.get('user'))
-# Output: {'name': 'Alice', 'age': 31, 'city': 'Wonderland'}
-</code></pre>
-
-  <h3>Use Lists for Dynamic Data</h3>
-
-  <pre><code class="language-python">db.set('tasks', ['Write code', 'Test app', 'Deploy'])
-
-tasks = db.get('tasks')
-tasks.append('Celebrate')
-db.set('tasks', tasks)
-
-print(db.get('tasks'))
-# Output: ['Write code', 'Test app', 'Deploy', 'Celebrate']
-</code></pre>
-
-  <h3>Advanced Key Search</h3>
-
-  <p>You can filter keys dynamically using Python list comprehensions:</p>
-
-  <pre><code class="language-python">def get_keys_with_match(db_instance, match):
-    return [key for key in db_instance.all() if match in key]
-
-db.set('apple', 1)
-db.set('apricot', 2)
-db.set('banana', 3)
-
-print(get_keys_with_match(db, 'ap'))
-# Output: ['apple', 'apricot']
-</code></pre>
-
-  <h3>Namespaces</h3>
-
-  <p>Simulate namespaces using prefixes:</p>
-
-  <pre><code class="language-python">db.set('user:1', {'name': 'Alice'})
-db.set('user:2', {'name': 'Bob'})
-
-def get_namespace_keys(db_instance, namespace):
-    return [key for key in db_instance.all() if key.startswith(f"{namespace}:")]
-
-print(get_namespace_keys(db, 'user'))
-# Output: ['user:1', 'user:2']
-</code></pre>
-
-  <h3>Key Expiration (TTL)</h3>
-
-  <p>pickleDB doesn’t include TTL natively, but you can simulate it:</p>
-
-  <pre><code class="language-python">import time
-
-def set_with_expiry(db, key, value, ttl):
-    db.set(key, {'value': value, 'expires_at': time.time() + ttl})
-
-def get_if_not_expired(db, key):
-    data = db.get(key)
-    if data and time.time() &lt; data['expires_at']:
-        return data['value']
-    db.remove(key)
-    return None
-
-set_with_expiry(db, 'session', 'active', ttl=5)
-time.sleep(3)
-print(get_if_not_expired(db, 'session'))  # 'active'
-time.sleep(3)
-print(get_if_not_expired(db, 'session'))  # None
-</code></pre>
-
-  <h3>Encrypted Storage</h3>
-
-  <pre><code class="language-python">from cryptography.fernet import Fernet
-
-key = Fernet.generate_key()
-cipher = Fernet(key)
-
-encrypted = cipher.encrypt(b"My secret data")
-db.set('secure', encrypted)
-
-decrypted = cipher.decrypt(db.get('secure'))
-print(decrypted.decode())  # Output: My secret data
-</code></pre>
-
-  <h3>Batch Operations</h3>
-
-  <pre><code class="language-python">def batch_set(db, items):
-    for key, value in items.items():
-        db.set(key, value)
-
-batch_set(db, {'k1': 'v1', 'k2': 'v2', 'k3': 'v3'})
-print(db.all())
-
-def batch_delete(db, keys):
-    for key in keys:
-        db.remove(key)
-
-batch_delete(db, ['k1', 'k2'])
-print(db.all())
-</code></pre>
-
-  <h3>Key Pattern Matching</h3>
-
-  <pre><code class="language-python">import re
-
-def get_keys_by_pattern(db, pattern):
-    regex = re.compile(pattern)
-    return [key for key in db.all() if regex.search(key)]
-
-db.set('user:1', {'name': 'Alice'})
-db.set('user:2', {'name': 'Bob'})
-db.set('admin:1', {'name': 'Charlie'})
-
-print(get_keys_by_pattern(db, r'user:\d'))
-# Output: ['user:1', 'user:2']
-</code></pre>
-
-  <h3>Signal Handling for Graceful Shutdowns</h3>
-
-  <pre><code class="language-python">import signal, sys
-from pickledb import PickleDB
-
-db = PickleDB('data.json')
-
-signal.signal(signal.SIGINT, lambda s, f: (db.save(), sys.exit(0)))
-signal.signal(signal.SIGTERM, lambda s, f: (db.save(), sys.exit(0)))
-
-db.set('key1', 'value1')
-print("Running... Press Ctrl+C to save and exit.")
-while True:
-    pass
-</code></pre>
-
-  <h3>Using pickleDB with Web Frameworks</h3>
-
-  <p>Example using <a href="https://patx.github.io/micropie">MicroPie</a>:</p>
-
-  <pre><code class="language-python">from uuid import uuid4
-from micropie import App
-from pickledb import PickleDB
-
-db = PickleDB('pastes.json')
-
-class Root(App):
-    async def index(self, paste_content=None):
-        if self.request.method == "POST":
-            pid = str(uuid4())
-            await db.set(pid, paste)
-            await db.save()
-            return self._redirect(f'/paste/{pid}')
-        return await self._render_template('index.html')
-
-    async def paste(self, paste_id):
-        paste = await db.get(paste_id)
-        return await self._render_template('paste.html', paste_id=paste_id, paste_content=paste)
-
-app = Root()
-</code></pre>
-
-  <h2>Core API Reference</h2>
-
-  <h3>Class: <code>PickleDB</code></h3>
-
-  <pre><code class="language-python">class PickleDB(location: str)
-</code></pre>
-
-  <p>A lightweight, JSON-backed key-value database. All data is kept in memory while loaded and written atomically to disk on <code>save()</code>.</p>
-
-  <h4>Parameters</h4>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>location</code></td>
-        <td><code>str</code></td>
-        <td>Path to the JSON file backing the database. Tilde (<code>~</code>) is expanded.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <h3>Context Manager Support</h3>
-
-  <h4>Synchronous</h4>
-
-  <pre><code class="language-python">with PickleDB("data.json") as db:
-    db.set("foo", "bar")
-</code></pre>
-
-  <h4>Asynchronous</h4>
-
-  <pre><code class="language-python">async with PickleDB("data.json") as db:
-    await db.set("foo", "bar")
-</code></pre>
-
-  <p>On successful exit, the DB is automatically saved.</p>
-
-  <h3>Method Reference</h3>
-
-  <h4><code>load()</code></h4>
-
-  <pre><code class="language-python">load() -&gt; None
-await load() -&gt; None
-</code></pre>
-
-  <p>Loads the database into memory from disk if the file exists and contains valid JSON. Creates an empty database otherwise.</p>
-
-  <h4><code>save()</code></h4>
-
-  <pre><code class="language-python">save() -&gt; bool
-await save() -&gt; bool
-</code></pre>
-
-  <p>Writes the in-memory database to disk.</p>
-
-  <p>Returns <code>True</code> on success.</p>
-
-  <p>Notes:</p>
+  <p class="muted">
+    Full benchmark script: <a href="https://gist.github.com/patx/025ed3a10482459f35c738228ebd0721">available here</a>.
+  </p>
+
+  <h2>When Not to Use pickleDB</h2>
   <ul>
-    <li>Uses a temporary file + <code>os.replace</code> for durability.</li>
-    <li>Automatically called on successful context-manager exit.</li>
+    <li>You need multi-process or multi-host concurrency.</li>
+    <li>Your dataset is too large to comfortably fit in memory.</li>
+    <li>You need rich querying, indexing, or joins.</li>
   </ul>
+  <p class="muted">
+    In those cases, consider <a href="https://redis.io/">Redis</a> or
+    <a href="https://www.mongodb.com/">MongoDB</a> instead.
+  </p>
 
-  <h4><code>set()</code></h4>
+  <p class="muted">
+    Issues, questions, or ideas? Open an issue on
+    <a href="https://github.com/patx/pickledb/issues">GitHub</a>.
+  </p>
 
-  <pre><code class="language-python">set(key: str, value: Any) -&gt; bool
-await set(key: str, value: Any) -&gt; bool
-</code></pre>
-
-  <p>Sets or updates a value for a key. <code>key</code> is coerced to <code>str</code>, and <code>value</code> must be JSON-serializable.</p>
-
-  <p>Returns <code>True</code>.</p>
-
-  <h5>Syntax Sugar</h5>
-
-  <pre><code class="language-python">db["username"] = "alice"
-</code></pre>
-
-  <h4><code>get()</code></h4>
-
-  <pre><code class="language-python">get(key: str, default: Any = None) -&gt; Any
-await get(key: str, default: Any = None) -&gt; Any
-</code></pre>
-
-  <p>Retrieves a value by key.</p>
-
-  <p>Returns:</p>
-  <ul>
-    <li>stored value</li>
-    <li><code>default</code> if key does not exist</li>
-  </ul>
-
-  <h5>Syntax Sugar</h5>
-
-  <pre><code class="language-python">value = db["username"]
-</code></pre>
-
-  <h4><code>remove()</code></h4>
-
-  <pre><code class="language-python">remove(key: str) -&gt; bool
-await remove(key: str) -&gt; bool
-</code></pre>
-
-  <p>Removes a key.</p>
-
-  <p>Returns:</p>
-  <ul>
-    <li><code>True</code> if removed</li>
-    <li><code>False</code> if not found</li>
-  </ul>
-
-  <h4><code>all()</code></h4>
-
-  <pre><code class="language-python">all() -&gt; list[str]
-await all() -&gt; list[str]
-</code></pre>
-
-  <p>Returns a list of all keys currently in memory.</p>
-
-  <h4><code>purge()</code></h4>
-
-  <pre><code class="language-python">purge() -&gt; bool
-await purge() -&gt; bool
-</code></pre>
-
-  <p>Clears the entire in-memory database.</p>
-
-  <p>Returns:</p>
-  <ul>
-    <li><code>True</code></li>
-  </ul>
-
+    <div class="github-banner">
+        <a href="https://github.com/patx/pickledb">
+            <img style="position: fixed; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png" alt="Fork me on GitHub">
+        </a>
+    </div>
+    
 </body>
 </html>
 
