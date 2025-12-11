@@ -224,6 +224,7 @@ asyncio.run(main())
     <li><strong>Unified sync/async:</strong> every core method works in both worlds via the same name.</li>
     <li><strong>Atomic disk writes:</strong> uses a temp file and <code>os.replace</code> to avoid partial writes.</li>
     <li><strong>No hidden autosave:</strong> nothing is written to disk unless you call <code>save()</code> or exit a context manager cleanly.</li>
+    <li><strong>Single file simplicity:</strong> because the database is saved to a single file pickleDB is not thread safe or process safe. If you need this and you want to use the same/similar API check out <a href="https://github.com/patx/mkvdb">mkvDB</a>.</li>
   </ul>
 
   <h2>Context Managers</h2>
