@@ -425,12 +425,12 @@ print(get_if_fresh(db, "session"))  # None
   <h2>When Not to Use pickleDB</h2>
   <ul>
     <li>You need multi-process or multi-host concurrency.</li>
+    <li>ASGI web servers or frameworks. <small>unless your using a single worker ;)</small></li>
     <li>Your dataset is too large to comfortably fit in memory.</li>
     <li>You need rich querying, indexing, or joins.</li>
   </ul>
   <p class="muted">
-    In those cases, consider <a href="https://redis.io/">Redis</a> or
-    <a href="https://www.mongodb.com/">MongoDB</a> instead.
+    In those cases, consider Redis, SQLite, PostgreSQL, MongoDB, or <a href="https://github.com/patx/mkvdb">mkvDB</a>.
   </p>
 
   <p class="muted">
