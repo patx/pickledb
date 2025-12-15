@@ -2,449 +2,1038 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>pickleDB · Lightweight Key-Value Store for Python</title>
+  <title>pickleDB · Lightning-Fast Key-Value Store for Python</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg: #fafafa;
+      --bg-primary: #f8fdf9;
+      --bg-secondary: #f0f9f2;
       --bg-card: #ffffff;
-      --border: #e5e7eb;
-      --text: #111827;
-      --muted: #6b7280;
-      --accent: #2563eb;
-      --code-bg: #111827;
-      --code-fg: #e5e7eb;
+      --text-primary: #1a1f1b;
+      --text-secondary: #4a5c4d;
+      --text-muted: #7a8a7d;
+      --accent-pickle: #5fc45f;
+      --accent-lime: #8fd460;
+      --accent-forest: #3a9943;
+      --accent-sage: #6b9b6e;
+      --accent-mint: #4ecdc4;
+      --border: #dfe8e0;
+      --border-dark: #c5d4c7;
+      --shadow: rgba(26, 31, 27, 0.08);
+      --shadow-strong: rgba(26, 31, 27, 0.15);
+      --mono: 'Fira Code', 'Courier New', monospace;
+      --sans: 'Outfit', system-ui, sans-serif;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 2rem 1rem 3rem;
-      max-width: 900px;
-      margin-inline: auto;
-      background: var(--bg);
-      color: var(--text);
+      font-family: var(--sans);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      overflow-x: hidden;
     }
 
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
+    /* Animated background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(95, 196, 95, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(143, 212, 96, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(78, 205, 196, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+      animation: patternShift 30s ease-in-out infinite alternate;
     }
 
-    h1, h2, h3 {
-      color: var(--text);
+    @keyframes patternShift {
+      0% { transform: scale(1) rotate(0deg); }
+      100% { transform: scale(1.1) rotate(5deg); }
+    }
+
+    .page {
+      position: relative;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+      z-index: 1;
+    }
+
+    /* Hero Section */
+    header {
+      padding: 60px 0 80px;
+      text-align: center;
+      position: relative;
+    }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      animation: fadeIn 0.8s ease 0.2s both;
+    }
+
+    .badges img {
+      height: 28px;
+      transition: transform 0.2s ease;
+    }
+
+    .badges img:hover {
+      transform: scale(1.05);
     }
 
     h1 {
+      font-size: clamp(3.5rem, 10vw, 6.5rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      margin-bottom: 24px;
+      position: relative;
+      display: inline-block;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1::before {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 10%;
+      right: 10%;
+      height: 12px;
+      background: linear-gradient(90deg, 
+        var(--accent-forest), 
+        var(--accent-pickle), 
+        var(--accent-lime));
+      border-radius: 6px;
+      z-index: -1;
+      animation: expandBar 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
+    }
+
+    @keyframes expandBar {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    .tagline {
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      font-weight: 500;
+      animation: fadeIn 0.8s ease 0.6s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .tagline strong {
+      color: var(--accent-forest);
+      font-weight: 700;
+    }
+
+    .license-note {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      animation: fadeIn 0.8s ease 0.8s both;
+    }
+
+    /* Feature Badges */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 48px 0 80px;
+      animation: fadeIn 0.8s ease 1s both;
+    }
+
+    .feature-badge {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-forest), var(--accent-pickle));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-badge:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px var(--shadow-strong);
+      border-color: var(--accent-pickle);
+    }
+
+    .feature-badge:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-icon {
       font-size: 2rem;
-      margin: 0 0 0.5rem;
+      margin-bottom: 8px;
+    }
+
+    .feature-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.9375rem;
+    }
+
+    /* Section Styles */
+    .section {
+      margin-bottom: 80px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     h2 {
-      font-size: 1.35rem;
-      margin-top: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.35rem;
+      font-size: clamp(2.25rem, 5vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 32px;
+      color: var(--text-primary);
+      position: relative;
+      padding-left: 24px;
+    }
+
+    h2::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: linear-gradient(180deg, var(--accent-pickle), var(--accent-sage));
+      border-radius: 3px;
     }
 
     h3 {
-      font-size: 1.1rem;
-      margin-top: 1.2rem;
+      font-size: clamp(1.5rem, 3vw, 1.875rem);
+      font-weight: 600;
+      margin: 48px 0 20px;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 24px 0 12px;
+      color: var(--accent-forest);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.875rem;
     }
 
     p {
-      margin: 0.35rem 0 0.6rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-size: 1.0625rem;
     }
 
-    ul {
-      padding-left: 1.25rem;
-      margin: 0.25rem 0 0.6rem;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
+    /* Code Blocks */
     pre {
-      background: var(--code-bg);
-      color: var(--code-fg);
-      padding: 0.9rem 1rem;
-      border-radius: 8px;
-      overflow: auto;
+      margin: 24px 0;
+      padding: 28px;
+      background: linear-gradient(135deg, #2d2a2e 0%, #1f1d21 100%);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      overflow-x: auto;
+      position: relative;
+      box-shadow: 0 8px 24px var(--shadow-strong);
+      transition: all 0.3s ease;
+    }
+
+    pre:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px var(--shadow-strong);
+    }
+
+    pre::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-forest), var(--accent-pickle), var(--accent-lime));
+    }
+
+    pre code {
+      font-family: var(--mono);
       font-size: 0.9rem;
-      margin: 0.6rem 0 1rem;
+      line-height: 1.8;
+      color: #e8e6e3;
     }
 
     code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      background: #f3f4f6;
-      padding: 0.1em 0.35em;
-      border-radius: 4px;
-      font-size: 0.92em;
+      font-family: var(--mono);
+      font-size: 0.9em;
+      background: var(--bg-secondary);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: var(--accent-forest);
+      border: 1px solid var(--border);
+      font-weight: 500;
     }
 
     pre code {
       background: transparent;
       padding: 0;
+      border: none;
     }
 
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin: 0.75rem 0 1rem;
-      font-size: 0.95rem;
+    /* Syntax highlighting for code */
+    .comment { color: #75715e; }
+    .keyword { color: #ff6b9d; font-weight: 600; }
+    .string { color: #a9dc76; }
+    .function { color: #78dce8; }
+    .number { color: #ab9df2; }
+
+    /* Lists */
+    ul, ol {
+      margin: 20px 0 20px 32px;
+      color: var(--text-secondary);
+    }
+
+    li {
+      margin-bottom: 12px;
+      padding-left: 8px;
+      line-height: 1.8;
+    }
+
+    li::marker {
+      color: var(--accent-pickle);
+      font-weight: 700;
+    }
+
+    /* Cards */
+    .card {
       background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 40px 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    th, td {
-      border: 1px solid var(--border);
-      padding: 0.45rem 0.6rem;
-      text-align: left;
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-forest), var(--accent-pickle), var(--accent-lime));
     }
 
-    thead {
-      background: #f3f4f6;
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px var(--shadow-strong);
+    }
+
+    /* Install Banner */
+    .install-banner {
+      background: linear-gradient(135deg, var(--accent-pickle), var(--accent-lime));
+      color: white;
+      border-radius: 20px;
+      padding: 48px;
+      margin: 56px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(95, 196, 95, 0.3);
+    }
+
+    .install-banner::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .install-banner h3 {
+      margin: 0 0 24px;
+      font-size: 2rem;
+      color: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    .install-banner pre {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      display: inline-block;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    .install-banner pre code {
+      color: white;
       font-weight: 600;
     }
 
-    tbody tr:nth-child(even) {
-      background: #f9fafb;
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 32px 0;
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px var(--shadow);
+      border: 2px solid var(--border);
     }
 
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      align-items: center;
-      margin-bottom: 1.25rem;
+    thead {
+      background: linear-gradient(135deg, var(--accent-pickle), var(--accent-lime));
+      color: white;
     }
 
-    .muted {
-      color: var(--muted);
-      font-size: 0.9rem;
+    th {
+      padding: 16px 20px;
+      text-align: left;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 0.875rem;
     }
 
-    .note {
-      font-size: 0.9rem;
-      color: var(--muted);
-      border-left: 3px solid var(--border);
-      padding-left: 0.75rem;
-      margin: 0.3rem 0 0.7rem;
+    td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
     }
 
-    .pill-note {
-      display: inline-block;
-      font-size: 0.9rem;
-      padding: 0.3rem 0.7rem;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-      margin: 0.35rem 0 0.75rem;
+    tbody tr:last-child td {
+      border-bottom: none;
     }
 
-    .section-intro {
-      margin-bottom: 0.4rem;
+    tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: var(--bg-secondary);
+    }
+
+    td code {
+      font-size: 0.875rem;
+    }
+
+    /* Callout Boxes */
+    .callout {
+      background: var(--bg-secondary);
+      border-left: 6px solid var(--accent-mint);
+      border-radius: 0 12px 12px 0;
+      padding: 24px 28px;
+      margin: 32px 0;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .callout-warning {
+      border-left-color: var(--accent-lime);
+      background: #fefce8;
+    }
+
+    .callout-success {
+      border-left-color: var(--accent-pickle);
+      background: #f0fdf4;
+    }
+
+    .callout p {
+      margin: 0;
+      color: var(--text-primary);
+    }
+
+    .callout strong {
+      color: var(--accent-mint);
+      font-weight: 700;
+    }
+
+    .callout-warning strong {
+      color: #84a617;
+    }
+
+    .callout-success strong {
+      color: var(--accent-forest);
+    }
+
+    /* Performance Table Highlight */
+    .perf-table {
+      border: 3px solid var(--accent-pickle);
+    }
+
+    .perf-table thead {
+      background: linear-gradient(135deg, var(--accent-pickle), var(--accent-lime));
+    }
+
+    /* Quote */
+    .quote-block {
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--text-muted);
+      text-align: center;
+      margin: 64px 0;
+      padding: 40px;
+      position: relative;
+    }
+
+    .quote-block::before {
+      content: '"';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 6rem;
+      color: var(--accent-lime);
+      opacity: 0.3;
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+
+    /* Links */
+    a {
+      color: var(--accent-forest);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-pickle);
+      transition: width 0.2s ease;
+    }
+
+    a:hover::after {
+      width: 100%;
+    }
+
+    /* Context Manager Showcase */
+    .context-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 32px;
+      margin: 40px 0;
+    }
+
+    .context-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: all 0.3s ease;
+    }
+
+    .context-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px var(--shadow-strong);
+    }
+
+    .context-card h4 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-transform: none;
+      letter-spacing: -0.01em;
+    }
+
+    /* When Not To Use Section */
+    .warning-list {
+      background: #fefce8;
+      border: 2px solid var(--accent-lime);
+      border-radius: 16px;
+      padding: 32px;
+      margin: 32px 0;
+    }
+
+    .warning-list h3 {
+      margin-top: 0;
+      color: #84a617;
+    }
+
+    .warning-list ul {
+      margin-bottom: 0;
+    }
+
+    .warning-list li {
+      color: #4d5a0f;
+    }
+
+    /* Footer */
+    .footer-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      margin-top: 80px;
+      padding-top: 40px;
+      border-top: 2px solid var(--border);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .page {
+        padding: 0 16px 80px;
+      }
+
+      header {
+        padding: 40px 0 60px;
+      }
+
+      h2 {
+        padding-left: 16px;
+      }
+
+      h2::before {
+        width: 4px;
+      }
+
+      .context-showcase {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .install-banner {
+        padding: 32px 24px;
+      }
+
+      .quote-block::before {
+        font-size: 4rem;
+      }
+    }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--accent-pickle);
+      color: white;
+    }
+
+    /* Fade-in utility */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Intersection Observer for scroll animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      document.querySelectorAll('.section, .fade-in').forEach(el => observer.observe(el));
+    });
+  </script>
 </head>
 <body>
 
-  <div class="badges">
-    <a href="https://patx.github.io/pickledb">
-      <img src="https://patx.github.io/pickledb/logo.png" alt="pickleDB Logo">
-    </a>
-    <a href="https://pepy.tech/projects/pickledb">
-      <img src="https://static.pepy.tech/badge/pickledb" alt="PyPI Downloads">
-    </a>
-    <a href="https://github.com/patx/pickledb">
-      <img src="https://img.shields.io/github/stars/patx/pickledb?style=flat&logo=github" alt="GitHub Stars">
-    </a>
-  </div>
+  <div class="page">
+    <header>
+      <div class="badges">
+        <a href="https://pepy.tech/projects/pickledb">
+          <img src="https://static.pepy.tech/badge/pickledb" alt="PyPI Downloads">
+        </a>
+        <a href="https://github.com/patx/pickledb">
+          <img src="https://img.shields.io/github/stars/patx/pickledb?style=flat&logo=github" alt="GitHub Stars">
+        </a>
+      </div>
 
-  <h1>pickleDB</h1>
-  <p class="section-intro">
-    <code>pickleDB</code> is a lightweight, JSON-backed key-value store for Python, designed for
-    <strong>simple APIs</strong>, <strong>fast in-memory operations</strong>, and a
-    <strong>unified sync/async interface</strong>. BSD 3-Clause License · © Harrison Erd.
-  </p>
+      <h1><img src="https://patx.github.io/pickledb/logo.png" alt="pickleDB"></h1>
+      <p class="tagline">
+        JSON-backed key-value store with <strong>simple APIs</strong>, <strong>fast in-memory operations</strong>, and a <strong>unified sync/async interface</strong>
+      </p>
+      <p class="license-note">BSD 3-Clause License · © Harrison Erd</p>
 
-  <h2>Quick Start</h2>
+      <div class="feature-grid">
+        <div class="feature-badge">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-label">Lightning Fast</div>
+        </div>
+        <div class="feature-badge">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-label">Simple API</div>
+        </div>
+        <div class="feature-badge">
+          <div class="feature-icon">🔄</div>
+          <div class="feature-label">Sync & Async</div>
+        </div>
+        <div class="feature-badge">
+          <div class="feature-icon">💾</div>
+          <div class="feature-label">JSON Native</div>
+        </div>
+      </div>
+    </header>
 
-  <h3>Install</h3>
-  <pre><code class="language-bash">pip install pickledb
-</code></pre>
+    <section class="section">
+      <div class="install-banner">
+        <h3>Get Started in Seconds</h3>
+        <pre><code>pip install pickledb</code></pre>
+      </div>
+    </section>
 
-  <h3>Sync Example</h3>
-  <pre><code class="language-python">from pickledb import PickleDB
+    <section class="section fade-in">
+      <h2>Quick Start</h2>
 
-# Bind to a JSON file; no I/O yet
-db = PickleDB("data.json").load()  # load from disk into memory (if file exists)
+      <div class="context-showcase">
+        <div class="context-card">
+          <h4>Synchronous Example</h4>
+          <pre><code><span class="keyword">from</span> pickledb <span class="keyword">import</span> PickleDB
 
-db.set("username", "alice")
-db.set("theme", {"color": "blue", "font": "sans-serif"})
+<span class="comment"># Bind to a JSON file; no I/O yet</span>
+db = PickleDB(<span class="string">"data.json"</span>).load()
 
-print(db.get("username"))  # → "alice"
+db.set(<span class="string">"username"</span>, <span class="string">"alice"</span>)
+db.set(<span class="string">"theme"</span>, {
+    <span class="string">"color"</span>: <span class="string">"blue"</span>,
+    <span class="string">"font"</span>: <span class="string">"sans-serif"</span>
+})
 
-db.save()  # atomically write in-memory DB back to data.json
-</code></pre>
+<span class="function">print</span>(db.get(<span class="string">"username"</span>))  <span class="comment"># → "alice"</span>
 
-  <h3>Async Example</h3>
-  <pre><code class="language-python">import asyncio
-from pickledb import PickleDB
+db.save()  <span class="comment"># atomically write to disk</span></code></pre>
+        </div>
 
-async def main():
-    db = await PickleDB("data.json").load()
+        <div class="context-card">
+          <h4>Asynchronous Example</h4>
+          <pre><code><span class="keyword">import</span> asyncio
+<span class="keyword">from</span> pickledb <span class="keyword">import</span> PickleDB
 
-    await db.set("score", 42)
-    value = await db.get("score")
-    print(value)  # → 42
+<span class="keyword">async def</span> <span class="function">main</span>():
+    db = <span class="keyword">await</span> PickleDB(<span class="string">"data.json"</span>).load()
 
-    await db.save()
+    <span class="keyword">await</span> db.set(<span class="string">"score"</span>, <span class="number">42</span>)
+    value = <span class="keyword">await</span> db.get(<span class="string">"score"</span>)
+    <span class="function">print</span>(value)  <span class="comment"># → 42</span>
 
-asyncio.run(main())
-</code></pre>
+    <span class="keyword">await</span> db.save()
 
-  <div class="note">
-    <strong>Explicit I/O:</strong> the constructor <code>PickleDB("data.json")</code> never touches disk.
-    <code>load()</code> and <code>save()</code> are explicit (or handled by context managers).
-  </div>
+asyncio.run(main())</code></pre>
+        </div>
+      </div>
 
-  <h2>Design & Behavior</h2>
-  <ul>
-    <li><strong>In-memory first:</strong> all data lives in memory while you work; JSON is used only for persistence.</li>
-    <li><strong>Method-only API:</strong> no dict syntax. Use <code>set()</code>, <code>get()</code>, <code>remove()</code>, etc.</li>
-    <li><strong>Unified sync/async:</strong> every core method works in both worlds via the same name.</li>
-    <li><strong>Atomic disk writes:</strong> uses a temp file and <code>os.replace</code> to avoid partial writes.</li>
-    <li><strong>No hidden autosave:</strong> nothing is written to disk unless you call <code>save()</code> or exit a context manager cleanly.</li>
-    <li><strong>Single file simplicity:</strong> because the database is saved to a single file pickleDB is not thread safe or process safe. If you need this and you want to use the same/similar API check out <a href="https://github.com/patx/mkvdb">mkvDB</a>.</li>
-  </ul>
+      <div class="callout">
+        <p><strong>Explicit I/O:</strong> The constructor <code>PickleDB("data.json")</code> never touches disk. <code>load()</code> and <code>save()</code> are explicit (or handled by context managers).</p>
+      </div>
+    </section>
 
-  <h2>Context Managers</h2>
+    <section class="section fade-in">
+      <h2>Design Philosophy</h2>
 
-  <h3>Synchronous</h3>
-  <pre><code class="language-python">from pickledb import PickleDB
+      <div class="card">
+        <ul>
+          <li><strong>In-memory first:</strong> All data lives in memory while you work; JSON is used only for persistence</li>
+          <li><strong>Method-only API:</strong> No dict syntax. Use <code>set()</code>, <code>get()</code>, <code>remove()</code>, etc.</li>
+          <li><strong>Unified sync/async:</strong> Every core method works in both worlds via the same name</li>
+          <li><strong>Atomic disk writes:</strong> Uses a temp file and <code>os.replace</code> to avoid partial writes</li>
+          <li><strong>No hidden autosave:</strong> Nothing is written to disk unless you call <code>save()</code> or exit a context manager cleanly</li>
+          <li><strong>Single file simplicity:</strong> Because the database is saved to a single file, pickleDB is not thread-safe or process-safe. If you need this, check out <a href="https://github.com/patx/mongokv">mongoKV</a></li>
+        </ul>
+      </div>
+    </section>
 
-with PickleDB("data.json") as db:
-    # On enter: db.load()
-    db.set("foo", "bar")
-    db.set("hello", "world")
-    # On successful exit: db.save()
-</code></pre>
+    <section class="section fade-in">
+      <h2>Context Managers</h2>
+      <p>Automatically load and save your database with context managers:</p>
 
-  <h3>Asynchronous</h3>
-  <pre><code class="language-python">import asyncio
-from pickledb import PickleDB
+      <div class="context-showcase">
+        <div class="context-card">
+          <h4>Synchronous Context</h4>
+          <pre><code><span class="keyword">from</span> pickledb <span class="keyword">import</span> PickleDB
 
-async def main():
-    async with PickleDB("data.json") as db:
-        # On enter: await db.load()
-        await db.set("foo", "bar")
-        await db.set("hello", "world")
-        # On successful exit: await db.save()
+<span class="keyword">with</span> PickleDB(<span class="string">"data.json"</span>) <span class="keyword">as</span> db:
+    <span class="comment"># On enter: db.load()</span>
+    db.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>)
+    db.set(<span class="string">"hello"</span>, <span class="string">"world"</span>)
+    <span class="comment"># On exit: db.save()</span></code></pre>
+        </div>
 
-asyncio.run(main())
-</code></pre>
+        <div class="context-card">
+          <h4>Asynchronous Context</h4>
+          <pre><code><span class="keyword">import</span> asyncio
+<span class="keyword">from</span> pickledb <span class="keyword">import</span> PickleDB
 
-  <h2>Core Methods</h2>
+<span class="keyword">async def</span> <span class="function">main</span>():
+    <span class="keyword">async with</span> PickleDB(<span class="string">"data.json"</span>) <span class="keyword">as</span> db:
+        <span class="comment"># On enter: await db.load()</span>
+        <span class="keyword">await</span> db.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>)
+        <span class="keyword">await</span> db.set(<span class="string">"hello"</span>, <span class="string">"world"</span>)
+        <span class="comment"># On exit: await db.save()</span>
 
-  <p class="section-intro">
-    These are the only methods you really need to know. Every method works the same in sync and async code;
-    just add <code>await</code> when you’re in an async function. All of these methods are part of the <code>PickleDB</code> class.
-  </p>
+asyncio.run(main())</code></pre>
+        </div>
+      </div>
+    </section>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Method</th>
-        <th>Sync usage</th>
-        <th>Async usage</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><code>load()</code></td>
-        <td><code>db.load()</code></td>
-        <td><code>await db.load()</code></td>
-        <td>Load (or reload) the JSON file into memory. Returns the same <code>PickleDB</code> instance for chaining.</td>
-      </tr>
-      <tr>
-        <td><code>save()</code></td>
-        <td><code>db.save()</code></td>
-        <td><code>await db.save()</code></td>
-        <td>Atomically save the in-memory database back to disk.</td>
-      </tr>
-      <tr>
-        <td><code>set(key, value)</code></td>
-        <td><code>db.set(k, v)</code></td>
-        <td><code>await db.set(k, v)</code></td>
-        <td>Store a value under <code>key</code>. Keys are coerced to <code>str</code>; values must be JSON-serializable.</td>
-      </tr>
-      <tr>
-        <td><code>get(key, default=None)</code></td>
-        <td><code>db.get(k, d)</code></td>
-        <td><code>await db.get(k, d)</code></td>
-        <td>Retrieve the stored value, or <code>default</code> if the key doesn’t exist.</td>
-      </tr>
-      <tr>
-        <td><code>remove(key)</code></td>
-        <td><code>db.remove(k)</code></td>
-        <td><code>await db.remove(k)</code></td>
-        <td>Delete a key. Returns <code>True</code> if it existed and was removed.</td>
-      </tr>
-      <tr>
-        <td><code>all()</code></td>
-        <td><code>db.all()</code></td>
-        <td><code>await db.all()</code></td>
-        <td>Return a list of all keys in the in-memory database.</td>
-      </tr>
-      <tr>
-        <td><code>purge()</code></td>
-        <td><code>db.purge()</code></td>
-        <td><code>await db.purge()</code></td>
-        <td>Clear the in-memory database. Returns <code>True</code>.</td>
-      </tr>
-    </tbody>
-  </table>
+    <section class="section fade-in">
+      <h2>Core Methods</h2>
+      <p>These are the only methods you need to know. Every method works the same in sync and async code — just add <code>await</code> when you're in an async function.</p>
 
-  <p class="note">
-    pickleDB is intentionally <strong>method-based only</strong>. Dict-style access like
-    <code>db["key"]</code> or <code>db["key"] = value</code> is not supported.
-  </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Sync Usage</th>
+            <th>Async Usage</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>load()</code></td>
+            <td><code>db.load()</code></td>
+            <td><code>await db.load()</code></td>
+            <td>Load (or reload) the JSON file into memory. Returns the same instance for chaining.</td>
+          </tr>
+          <tr>
+            <td><code>save()</code></td>
+            <td><code>db.save()</code></td>
+            <td><code>await db.save()</code></td>
+            <td>Atomically save the in-memory database back to disk.</td>
+          </tr>
+          <tr>
+            <td><code>set(key, value)</code></td>
+            <td><code>db.set(k, v)</code></td>
+            <td><code>await db.set(k, v)</code></td>
+            <td>Store a value under <code>key</code>. Keys are coerced to <code>str</code>; values must be JSON-serializable.</td>
+          </tr>
+          <tr>
+            <td><code>get(key, default=None)</code></td>
+            <td><code>db.get(k, d)</code></td>
+            <td><code>await db.get(k, d)</code></td>
+            <td>Retrieve the stored value, or <code>default</code> if the key doesn't exist.</td>
+          </tr>
+          <tr>
+            <td><code>remove(key)</code></td>
+            <td><code>db.remove(k)</code></td>
+            <td><code>await db.remove(k)</code></td>
+            <td>Delete a key. Returns <code>True</code> if it existed and was removed.</td>
+          </tr>
+          <tr>
+            <td><code>all()</code></td>
+            <td><code>db.all()</code></td>
+            <td><code>await db.all()</code></td>
+            <td>Return a list of all keys in the in-memory database.</td>
+          </tr>
+          <tr>
+            <td><code>purge()</code></td>
+            <td><code>db.purge()</code></td>
+            <td><code>await db.purge()</code></td>
+            <td>Clear the in-memory database. Returns <code>True</code>.</td>
+          </tr>
+        </tbody>
+      </table>
 
-  <h2>Common Patterns</h2>
+      <div class="callout-warning callout">
+        <p><strong>Important:</strong> pickleDB is intentionally <strong>method-based only</strong>. Dict-style access like <code>db["key"]</code> or <code>db["key"] = value</code> is not supported.</p>
+      </div>
+    </section>
 
-  <h3>Storing Complex Data</h3>
-  <pre><code class="language-python"># Store a dictionary
-db.set("user", {"name": "Alice", "age": 30})
+    <section class="section fade-in">
+      <h2>Common Patterns</h2>
 
-# Update it
-user = db.get("user")
-user["age"] += 1
-db.set("user", user)
+      <h3>Storing Complex Data</h3>
+      <pre><code><span class="comment"># Store a dictionary</span>
+db.set(<span class="string">"user"</span>, {<span class="string">"name"</span>: <span class="string">"Alice"</span>, <span class="string">"age"</span>: <span class="number">30</span>})
 
-print(db.get("user"))
-# {'name': 'Alice', 'age': 31}
-</code></pre>
+<span class="comment"># Update it</span>
+user = db.get(<span class="string">"user"</span>)
+user[<span class="string">"age"</span>] += <span class="number">1</span>
+db.set(<span class="string">"user"</span>, user)
 
-  <h3>Lists / Simple Queues</h3>
-  <pre><code class="language-python">db.set("tasks", ["write", "test", "deploy"])
+<span class="function">print</span>(db.get(<span class="string">"user"</span>))
+<span class="comment"># {'name': 'Alice', 'age': 31}</span></code></pre>
 
-tasks = db.get("tasks", [])
-tasks.append("celebrate")
-db.set("tasks", tasks)
+      <h3>Lists / Simple Queues</h3>
+      <pre><code>db.set(<span class="string">"tasks"</span>, [<span class="string">"write"</span>, <span class="string">"test"</span>, <span class="string">"deploy"</span>])
 
-print(db.get("tasks"))
-# ['write', 'test', 'deploy', 'celebrate']
-</code></pre>
+tasks = db.get(<span class="string">"tasks"</span>, [])
+tasks.append(<span class="string">"celebrate"</span>)
+db.set(<span class="string">"tasks"</span>, tasks)
 
-  <h3>Namespace Keys</h3>
-  <pre><code class="language-python">db.set("user:1", {"name": "Alice"})
-db.set("user:2", {"name": "Bob"})
+<span class="function">print</span>(db.get(<span class="string">"tasks"</span>))
+<span class="comment"># ['write', 'test', 'deploy', 'celebrate']</span></code></pre>
 
-def keys_with_prefix(db, prefix):
-    return [k for k in db.all() if k.startswith(prefix)]
+      <h3>Namespace Keys</h3>
+      <pre><code>db.set(<span class="string">"user:1"</span>, {<span class="string">"name"</span>: <span class="string">"Alice"</span>})
+db.set(<span class="string">"user:2"</span>, {<span class="string">"name"</span>: <span class="string">"Bob"</span>})
 
-print(keys_with_prefix(db, "user:"))
-# ['user:1', 'user:2']
-</code></pre>
+<span class="keyword">def</span> <span class="function">keys_with_prefix</span>(db, prefix):
+    <span class="keyword">return</span> [k <span class="keyword">for</span> k <span class="keyword">in</span> db.all() <span class="keyword">if</span> k.startswith(prefix)]
 
-  <h3>Basic TTL Pattern (App-Level)</h3>
-  <pre><code class="language-python">import time
+<span class="function">print</span>(keys_with_prefix(db, <span class="string">"user:"</span>))
+<span class="comment"># ['user:1', 'user:2']</span></code></pre>
 
-def set_with_ttl(db, key, value, ttl_seconds):
+      <h3>Basic TTL Pattern</h3>
+      <pre><code><span class="keyword">import</span> time
+
+<span class="keyword">def</span> <span class="function">set_with_ttl</span>(db, key, value, ttl_seconds):
     db.set(key, {
-        "value": value,
-        "expires_at": time.time() + ttl_seconds,
+        <span class="string">"value"</span>: value,
+        <span class="string">"expires_at"</span>: time.time() + ttl_seconds,
     })
 
-def get_if_fresh(db, key):
+<span class="keyword">def</span> <span class="function">get_if_fresh</span>(db, key):
     data = db.get(key)
-    if not data:
-        return None
-    if time.time() &lt; data.get("expires_at", 0):
-        return data["value"]
+    <span class="keyword">if not</span> data:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    <span class="keyword">if</span> time.time() < data.get(<span class="string">"expires_at"</span>, <span class="number">0</span>):
+        <span class="keyword">return</span> data[<span class="string">"value"</span>]
     db.remove(key)
-    return None
+    <span class="keyword">return</span> <span class="keyword">None</span>
 
-set_with_ttl(db, "session", "active", ttl_seconds=5)
-time.sleep(3)
-print(get_if_fresh(db, "session"))  # 'active'
-time.sleep(3)
-print(get_if_fresh(db, "session"))  # None
-</code></pre>
+set_with_ttl(db, <span class="string">"session"</span>, <span class="string">"active"</span>, ttl_seconds=<span class="number">5</span>)
+time.sleep(<span class="number">3</span>)
+<span class="function">print</span>(get_if_fresh(db, <span class="string">"session"</span>))  <span class="comment"># 'active'</span>
+time.sleep(<span class="number">3</span>)
+<span class="function">print</span>(get_if_fresh(db, <span class="string">"session"</span>))  <span class="comment"># None</span></code></pre>
+    </section>
 
-  <h2>Performance Snapshot</h2>
+    <section class="section fade-in">
+      <h2>Performance Snapshot</h2>
+      <p>Example timings loading, reading, and saving large JSON payloads using async mode on a Dell XPS 9350, Ubuntu 24.04:</p>
 
-  <p class="section-intro">
-    Example timings loading, reading, and saving large JSON payloads using async mode on a Dell XPS 9350, Ubuntu 24.04:
-  </p>
+      <table class="perf-table">
+        <thead>
+          <tr>
+            <th>Entries</th>
+            <th>Load (into memory)</th>
+            <th>Bulk Read</th>
+            <th>Save (to disk)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1M</strong></td>
+            <td>0.68 s</td>
+            <td>0.64 s</td>
+            <td>0.03 s</td>
+          </tr>
+          <tr>
+            <td><strong>10M</strong></td>
+            <td>7.48 s</td>
+            <td>7.27 s</td>
+            <td>0.22 s</td>
+          </tr>
+          <tr>
+            <td><strong>50M</strong></td>
+            <td>43.36 s</td>
+            <td>36.53 s</td>
+            <td>1.09 s</td>
+          </tr>
+        </tbody>
+      </table>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Entries</th>
-        <th>Load (into memory)</th>
-        <th>Bulk read</th>
-        <th>Save (to disk)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>1M</strong></td>
-        <td>0.68 s</td>
-        <td>0.64 s</td>
-        <td>0.03 s</td>
-      </tr>
-      <tr>
-        <td><strong>10M</strong></td>
-        <td>7.48 s</td>
-        <td>7.27 s</td>
-        <td>0.22 s</td>
-      </tr>
-      <tr>
-        <td><strong>50M</strong></td>
-        <td>43.36 s</td>
-        <td>36.53 s</td>
-        <td>1.09 s</td>
-      </tr>
-    </tbody>
-  </table>
+      <div class="callout-success callout">
+        <p><strong>Benchmark Details:</strong> Full benchmark script available at <a href="https://gist.github.com/patx/025ed3a10482459f35c738228ebd0721">this GitHub Gist</a>.</p>
+      </div>
+    </section>
 
-  <p class="muted">
-    Full benchmark script: <a href="https://gist.github.com/patx/025ed3a10482459f35c738228ebd0721">available here</a>.
-  </p>
+    <section class="section fade-in">
+      <div class="warning-list">
+        <h3>When Not to Use pickleDB</h3>
+        <ul>
+          <li>You need multi-process or multi-host concurrency</li>
+          <li>ASGI web servers or frameworks <small>(unless you're using a single worker)</small></li>
+          <li>Your dataset is too large to comfortably fit in memory</li>
+          <li>You need rich querying, indexing, or joins</li>
+        </ul>
+        <p style="color: var(--text-secondary); margin-top: 24px;">
+          In those cases, consider Redis, SQLite, PostgreSQL, MongoDB, or <a href="https://github.com/patx/mongokv">mongoKV</a>.
+        </p>
+      </div>
+    </section>
 
-  <h2>When Not to Use pickleDB</h2>
-  <ul>
-    <li>You need multi-process or multi-host concurrency.</li>
-    <li>ASGI web servers or frameworks. <small>unless your using a single worker ;)</small></li>
-    <li>Your dataset is too large to comfortably fit in memory.</li>
-    <li>You need rich querying, indexing, or joins.</li>
-  </ul>
-  <p class="muted">
-    In those cases, consider Redis, SQLite, PostgreSQL, MongoDB, or <a href="https://github.com/patx/mkvdb">mkvDB</a>.
-  </p>
-
-  <p class="muted">
-    Issues, questions, or ideas? Open an issue on
-    <a href="https://github.com/patx/pickledb/issues">GitHub</a>.
-  </p>
-
-    <div class="github-banner">
-        <a href="https://github.com/patx/pickledb">
-            <img style="position: fixed; top: 0; right: 0; border: 0;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_green_007200.png" alt="Fork me on GitHub">
-        </a>
+    <div class="footer-note">
+      <p>Issues, questions, or ideas? Open an issue on <a href="https://github.com/patx/pickledb/issues">GitHub</a>.</p>
+      <p style="margin-top: 16px;">Made with 🍺 by <a href="https://harrisonerd.com/">Harrison Erd</a></p>
     </div>
-    
+  </div>
+
 </body>
 </html>
-
