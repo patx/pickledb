@@ -2,12 +2,11 @@
 import os
 import json
 import asyncio
-import tempfile
 from pathlib import Path
 
 import pytest
 
-from pickledb import PickleDB  # adjust this import if your module name is different
+from pickledb import PickleDB, PickleDBSQLite  # adjust this import if your module name is different
 
 
 # ---------------------------------------------------------------------------
@@ -20,7 +19,7 @@ def make_tmp_path(tmp_path, name="db.json") -> Path:
 
 
 # ---------------------------------------------------------------------------
-# Basic sync usage
+# Basic sync usage (PickleDB)
 # ---------------------------------------------------------------------------
 
 def test_sync_set_get_save_and_reload(tmp_path):
@@ -95,7 +94,7 @@ def test_sync_purge_clears_database(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Basic async usage
+# Basic async usage (PickleDB)
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
@@ -151,7 +150,7 @@ async def test_async_remove_all_purge(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Context managers
+# Context managers (PickleDB)
 # ---------------------------------------------------------------------------
 
 def test_sync_context_manager_saves_on_success(tmp_path):
@@ -216,7 +215,7 @@ async def test_async_context_manager_does_not_save_on_exception(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Edge cases: missing file, empty file, atomic save
+# Edge cases: missing file, empty file, atomic save (PickleDB)
 # ---------------------------------------------------------------------------
 
 def test_load_on_missing_file_returns_empty_db(tmp_path):
@@ -240,7 +239,7 @@ def test_load_on_empty_file_returns_empty_db(tmp_path):
     db_path.write_text("")  # existing but empty file
 
     db = PickleDB(str(db_path))
-    # Your load() treats 0-byte file as empty db
+    # load() treats 0-byte file as empty db
     db.load()
     assert db.all() == []
 
@@ -256,14 +255,14 @@ def test_save_uses_temp_file_and_is_atomic(tmp_path):
     # temp file should not be left behind
     assert not os.path.exists(tmp_name)
 
-    # file should be valid JSON
+    # file should be valid JSON (orjson output is still standard JSON)
     raw = db_path.read_bytes()
     data = json.loads(raw.decode("utf-8"))
     assert data == {"a": 1}
 
 
 # ---------------------------------------------------------------------------
-# Concurrency tests
+# Concurrency tests (PickleDB)
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
@@ -313,10 +312,11 @@ async def test_async_concurrent_gets_and_sets(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Stress test: 1,000,000 key-value pairs
+# Stress test: 1,000,000 key-value pairs (PickleDB)
 # ---------------------------------------------------------------------------
 
 @pytest.mark.asyncio
+@pytest.mark.stress
 async def test_stress_one_million_entries(tmp_path):
     """
     Stress test inserting and retrieving 1,000,000 key-value pairs.
@@ -340,4 +340,51 @@ async def test_stress_one_million_entries(tmp_path):
 
     await db.save()
     assert db_path.exists()
+
+
+# ---------------------------------------------------------------------------
+# Basic tests for PickleDBSQLite
+# ---------------------------------------------------------------------------
+
+def test_sqlite_sync_set_get_and_all(tmp_path):
+    sqlite_path = tmp_path / "kv.sqlite3"
+    kv = PickleDBSQLite(str(sqlite_path))
+
+    key1 = kv.set(None, {"foo": "bar"})
+    key2 = kv.set("explicit", [1, 2, 3])
+
+    assert isinstance(key1, str)
+    assert key2 == "explicit"
+
+    assert kv.get(key1) == {"foo": "bar"}
+    assert kv.get("explicit") == [1, 2, 3]
+
+    keys = set(kv.all())
+    assert key1 in keys
+    assert "explicit" in keys
+
+    kv.close()
+
+
+@pytest.mark.asyncio
+async def test_sqlite_async_set_get_and_purge(tmp_path):
+    sqlite_path = tmp_path / "kv_async.sqlite3"
+    kv = PickleDBSQLite(str(sqlite_path))
+
+    key = await kv.set(None, {"async": True})
+    assert await kv.get(key) == {"async": True}
+
+    await kv.set("x", 1)
+    await kv.set("y", 2)
+    keys = set(await kv.all())
+    assert key in keys
+    assert {"x", "y"} <= keys
+
+    assert await kv.remove("x") is True
+    assert await kv.remove("x") is False
+
+    assert await kv.purge() is True
+    assert await kv.all() == []
+
+    await kv.close()
 

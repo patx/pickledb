@@ -605,6 +605,100 @@
       letter-spacing: -0.01em;
     }
 
+    /* API Reference */
+    .api-section {
+      margin: 32px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .api-class {
+      background: var(--bg-card);
+      border-radius: 18px;
+      border: 2px solid var(--border);
+      padding: 28px 30px;
+      box-shadow: 0 4px 16px var(--shadow);
+    }
+
+    .api-class-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .api-class-name {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent-forest);
+    }
+
+    .api-class-note {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .api-method {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .api-signature {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .api-signature code {
+      background: rgba(255,255,255,0.8);
+      border-radius: 8px;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .api-tags {
+      display: inline-flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .api-tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(255,255,255,0.7);
+      color: var(--text-muted);
+    }
+
+    .api-desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .api-usage {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 6px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .api-usage li {
+      margin-bottom: 4px;
+    }
+
     /* When Not To Use Section */
     .warning-list {
       background: #fefce8;
@@ -669,6 +763,10 @@
 
       .quote-block::before {
         font-size: 4rem;
+      }
+
+      .api-class {
+        padding: 22px 20px;
       }
     }
 
@@ -738,6 +836,10 @@
       <div class="install-banner">
         <h3>Get Started in Seconds</h3>
         <pre><code>pip install pickledb</code></pre>
+        <p class="license-note" style="margin-top: 16px; position: relative; z-index: 1;">
+          Need the SQLite backend? Install the extra:
+          <code>pip install "pickledb[sqlite]"</code>
+        </p>
       </div>
     </section>
 
@@ -750,7 +852,8 @@
           <pre><code><span class="keyword">from</span> pickledb <span class="keyword">import</span> PickleDB
 
 <span class="comment"># Bind to a JSON file; no I/O yet</span>
-db = PickleDB(<span class="string">"data.json"</span>).load()
+db = PickleDB(<span class="string">"data.json"</span>)
+db.load()
 
 db.set(<span class="string">"username"</span>, <span class="string">"alice"</span>)
 db.set(<span class="string">"theme"</span>, {
@@ -769,7 +872,8 @@ db.save()  <span class="comment"># atomically write to disk</span></code></pre>
 <span class="keyword">from</span> pickledb <span class="keyword">import</span> PickleDB
 
 <span class="keyword">async def</span> <span class="function">main</span>():
-    db = <span class="keyword">await</span> PickleDB(<span class="string">"data.json"</span>).load()
+    db = PickleDB(<span class="string">"data.json"</span>)
+    <span class="keyword">await</span> db.load()
 
     <span class="keyword">await</span> db.set(<span class="string">"score"</span>, <span class="number">42</span>)
     value = <span class="keyword">await</span> db.get(<span class="string">"score"</span>)
@@ -796,7 +900,12 @@ asyncio.run(main())</code></pre>
           <li><strong>Unified sync/async:</strong> Every core method works in both worlds via the same name</li>
           <li><strong>Atomic disk writes:</strong> Uses a temp file and <code>os.replace</code> to avoid partial writes</li>
           <li><strong>No hidden autosave:</strong> Nothing is written to disk unless you call <code>save()</code> or exit a context manager cleanly</li>
-          <li><strong>Single file simplicity:</strong> Because the database is saved to a single file, pickleDB is not thread-safe or process-safe. If you need this, check out <a href="https://github.com/patx/mongokv">mongoKV</a></li>
+          <li>
+            <strong>Single file simplicity:</strong> Because the JSON database is a single file, <code>PickleDB</code> is 
+            <strong>not</strong> thread-safe or process-safe. For safer multi-thread/multi-process access on a single host,
+            use <code>PickleDBSQLite</code> (SQLite handles locking and ACID transactions). For networked or multi-host workloads,
+            consider <a href="https://github.com/patx/mongokv">mongoKV</a>.
+          </li>
         </ul>
       </div>
     </section>
@@ -835,63 +944,275 @@ asyncio.run(main())</code></pre>
     </section>
 
     <section class="section fade-in">
-      <h2>Core Methods</h2>
-      <p>These are the only methods you need to know. Every method works the same in sync and async code — just add <code>await</code> when you're in an async function.</p>
+      <h2>API Reference</h2>
+      <p>pickleDB exposes two primary classes: <code>PickleDB</code> for JSON-on-disk, and <code>PickleDBSQLite</code> for an optional SQLite backend. All core methods share the same names in synchronous and asynchronous code — just add <code>await</code> when you’re inside an <code>async</code> function.</p>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Method</th>
-            <th>Sync Usage</th>
-            <th>Async Usage</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>load()</code></td>
-            <td><code>db.load()</code></td>
-            <td><code>await db.load()</code></td>
-            <td>Load (or reload) the JSON file into memory. Returns the same instance for chaining.</td>
-          </tr>
-          <tr>
-            <td><code>save()</code></td>
-            <td><code>db.save()</code></td>
-            <td><code>await db.save()</code></td>
-            <td>Atomically save the in-memory database back to disk.</td>
-          </tr>
-          <tr>
-            <td><code>set(key, value)</code></td>
-            <td><code>db.set(k, v)</code></td>
-            <td><code>await db.set(k, v)</code></td>
-            <td>Store a value under <code>key</code>. Keys are coerced to <code>str</code>; values must be JSON-serializable.</td>
-          </tr>
-          <tr>
-            <td><code>get(key, default=None)</code></td>
-            <td><code>db.get(k, d)</code></td>
-            <td><code>await db.get(k, d)</code></td>
-            <td>Retrieve the stored value, or <code>default</code> if the key doesn't exist.</td>
-          </tr>
-          <tr>
-            <td><code>remove(key)</code></td>
-            <td><code>db.remove(k)</code></td>
-            <td><code>await db.remove(k)</code></td>
-            <td>Delete a key. Returns <code>True</code> if it existed and was removed.</td>
-          </tr>
-          <tr>
-            <td><code>all()</code></td>
-            <td><code>db.all()</code></td>
-            <td><code>await db.all()</code></td>
-            <td>Return a list of all keys in the in-memory database.</td>
-          </tr>
-          <tr>
-            <td><code>purge()</code></td>
-            <td><code>db.purge()</code></td>
-            <td><code>await db.purge()</code></td>
-            <td>Clear the in-memory database. Returns <code>True</code>.</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="api-section">
+        <div class="api-class">
+          <div class="api-class-header">
+            <div class="api-class-name">class PickleDB(location: str)</div>
+            <div class="api-class-note">In-memory JSON database backed by a single file on disk.</div>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>load() -&gt; bool</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Load (or reload) the JSON file at <code>location</code> into memory. If the file is missing or empty, the in-memory database becomes an empty dict.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>db.load()</code></li>
+              <li><strong>Async:</strong> <code>await db.load()</code></li>
+              <li>Returns <code>True</code> on success.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>save() -&gt; bool</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Atomically write the in-memory database to disk at <code>location</code> using a temporary file + <code>os.replace()</code>.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>db.save()</code></li>
+              <li><strong>Async:</strong> <code>await db.save()</code></li>
+              <li>Returns <code>True</code> on success.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>set(key: Any, value: Any) -&gt; bool</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Store <code>value</code> under <code>key</code> in the in-memory database. Keys are coerced to <code>str</code>, and values must be JSON-serializable (via <code>orjson</code>).
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>db.set("name", "alice")</code></li>
+              <li><strong>Async:</strong> <code>await db.set("name", "alice")</code></li>
+              <li>Returns <code>True</code> after updating the in-memory store (does not write to disk until <code>save()</code>).</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>get(key: Any, default: Any | None = None) -&gt; Any | None</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Retrieve the value stored under <code>key</code>, or <code>default</code> if it doesn’t exist.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>db.get("name")</code> or <code>db.get("name", default="guest")</code></li>
+              <li><strong>Async:</strong> <code>await db.get("name")</code></li>
+              <li>Returns the stored value, or <code>default</code> (default is <code>None</code>).</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>remove(key: Any) -&gt; bool</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Remove <code>key</code> from the in-memory database.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>db.remove("name")</code></li>
+              <li><strong>Async:</strong> <code>await db.remove("name")</code></li>
+              <li>Returns <code>True</code> if the key existed and was removed, <code>False</code> otherwise.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>all() -&gt; list[str]</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Return a list of all keys currently stored in memory.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>db.all()</code></li>
+              <li><strong>Async:</strong> <code>await db.all()</code></li>
+              <li>Returns a list of <code>str</code> keys. Order is not guaranteed.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>purge() -&gt; bool</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Clear the in-memory database (equivalent to <code>db.all()</code> becoming an empty list). Does not touch disk until you call <code>save()</code>.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>db.purge()</code></li>
+              <li><strong>Async:</strong> <code>await db.purge()</code></li>
+              <li>Returns <code>True</code>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="api-class">
+          <div class="api-class-header">
+            <div class="api-class-name">
+              class PickleDBSQLite(sqlite_path: str = "pickledb.sqlite3", table_name: str = "kv")
+            </div>
+            <div class="api-class-note">
+              Optional SQLite-backed key-value store using the same sync/async method names.
+            </div>
+          </div>
+
+          <p class="api-class-note" style="margin-top: 4px;">
+            <strong>Installation:</strong>
+            <code>PickleDBSQLite</code> lives behind an optional dependency. Install
+            <code>aiosqlite</code> yourself or use:
+            <code>pip install "pickledb[sqlite]"</code>.
+          </p>
+          <p class="api-class-note" style="margin-top: 4px;">
+            <strong>Why use it?</strong> SQLite adds file-level locking and ACID transactions, so concurrent readers and
+            serialized writers across multiple threads/processes on the <em>same machine</em> are handled for you. It’s still
+            not a distributed database, but it’s much safer than multiple processes writing to a plain JSON file.
+          </p>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>set(key: str | None, value: Any) -&gt; str</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Store <code>value</code> in a SQLite table as an orjson-encoded BLOB. If <code>key</code> is
+              <code>None</code>, a new UUID key is generated and returned.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>key = kv.set(None, {"foo": "bar"})</code></li>
+              <li><strong>Async:</strong> <code>key = await kv.set(None, {"foo": "bar"})</code></li>
+              <li>Returns the key used (either the provided string or the generated UUID).</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>get(key: str, default: Any = MISSING) -&gt; Any</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Look up a key in SQLite and deserialize it from orjson. If the key does not exist and no <code>default</code> is
+              provided, a <code>KeyError</code> is raised.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>kv.get(key)</code> or <code>kv.get("missing", default=None)</code></li>
+              <li><strong>Async:</strong> <code>await kv.get(key)</code></li>
+              <li>Returns the stored value, <code>default</code>, or raises <code>KeyError</code>.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>remove(key: str) -&gt; bool</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Delete <code>key</code> from the SQLite table.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>kv.remove("key")</code></li>
+              <li><strong>Async:</strong> <code>await kv.remove("key")</code></li>
+              <li>Returns <code>True</code> if a row was deleted, <code>False</code> otherwise.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>all() -&gt; list[str]</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Return a list of all keys stored in the SQLite table.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>kv.all()</code></li>
+              <li><strong>Async:</strong> <code>await kv.all()</code></li>
+              <li>Returns a list of key strings sorted by key.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>purge() -&gt; bool</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Remove all rows from the SQLite table.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>kv.purge()</code></li>
+              <li><strong>Async:</strong> <code>await kv.purge()</code></li>
+              <li>Returns <code>True</code>.</li>
+            </ul>
+          </div>
+
+          <div class="api-method">
+            <div class="api-signature">
+              <code>close() -&gt; None</code>
+              <div class="api-tags">
+                <span class="api-tag">sync</span>
+                <span class="api-tag">async</span>
+              </div>
+            </div>
+            <p class="api-desc">
+              Close the underlying synchronous SQLite connection. In async code, returns a coroutine you should <code>await</code>.
+            </p>
+            <ul class="api-usage">
+              <li><strong>Sync:</strong> <code>kv.close()</code></li>
+              <li><strong>Async:</strong> <code>await kv.close()</code></li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
       <div class="callout-warning callout">
         <p><strong>Important:</strong> pickleDB is intentionally <strong>method-based only</strong>. Dict-style access like <code>db["key"]</code> or <code>db["key"] = value</code> is not supported.</p>
@@ -946,7 +1267,7 @@ db.set(<span class="string">"user:2"</span>, {<span class="string">"name"</span>
     data = db.get(key)
     <span class="keyword">if not</span> data:
         <span class="keyword">return</span> <span class="keyword">None</span>
-    <span class="keyword">if</span> time.time() < data.get(<span class="string">"expires_at"</span>, <span class="number">0</span>):
+    <span class="keyword">if</span> time.time() &lt; data.get(<span class="string">"expires_at"</span>, <span class="number">0</span>):
         <span class="keyword">return</span> data[<span class="string">"value"</span>]
     db.remove(key)
     <span class="keyword">return</span> <span class="keyword">None</span>
@@ -1003,7 +1324,7 @@ time.sleep(<span class="number">3</span>)
         <h3>When Not to Use pickleDB</h3>
         <ul>
           <li>You need multi-process or multi-host concurrency</li>
-          <li>ASGI web servers or frameworks <small>(unless you're using a single worker)</small></li>
+          <li>ASGI web servers or frameworks <small>(unless you're using a single worker or SQLite backend carefully)</small></li>
           <li>Your dataset is too large to comfortably fit in memory</li>
           <li>You need rich querying, indexing, or joins</li>
         </ul>
@@ -1021,3 +1342,4 @@ time.sleep(<span class="number">3</span>)
 
 </body>
 </html>
+

@@ -4,13 +4,13 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "pickledb"
-version = "1.4.1.1"
+version = "1.5"
 description = "An in-memory key-value store using orjson."
-keywords = ["pickle", "database", "json", "redis", "asyncio"]
+keywords = ["pickle", "database", "json", "redis", "asyncio", "sqlite"]
 readme = "README.md"
 authors = [{ name = "Harrison Erd", email = "harrisonerd@gmail.com" }]
 license = {file = "LICENSE"}
-dependencies = ["orjson>=3.11.5", "aiofiles>=25.1.0"]
+dependencies = ["orjson", "aiofiles"]
 requires-python = ">=3.10"
 classifiers = [
     "Framework :: AsyncIO",
@@ -21,6 +21,9 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Database" 
 ]
+
+[project.optional-dependencies]
+sqlite = ["aiosqlite"]
 
 [project.urls]
 Homepage = "https://patx.github.io/pickledb"
