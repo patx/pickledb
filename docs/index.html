@@ -1220,6 +1220,70 @@ asyncio.run(main())</code></pre>
       </div>
     </section>
 
+<section class="section fade-in">
+  <h2>Why Two Different Classes?</h2>
+
+  <p>
+    <code>PickleDB</code> and <code>PickleDBSQLite</code> are separate classes because
+    they represent <strong>different storage models</strong>, not interchangeable
+    backends.
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>PickleDB</th>
+        <th>PickleDBSQLite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Data model</td>
+        <td>In-memory dict</td>
+        <td>SQLite table</td>
+      </tr>
+      <tr>
+        <td>In-memory cache</td>
+        <td>Yes (entire DB)</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>Persistence</td>
+        <td>Explicit <code>load()</code> / <code>save()</code></td>
+        <td>Immediate</td>
+      </tr>
+      <tr>
+        <td>Read/write cost</td>
+        <td>Memory</td>
+        <td>Disk + SQL</td>
+      </tr>
+      <tr>
+        <td>Concurrency</td>
+        <td>Single process only</td>
+        <td>Multi-process safe</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p>
+      <strong>Design choice:</strong>
+      pickleDB avoids “pluggable backends”.
+      Different behavior gets a different class so performance and guarantees
+      stay obvious.
+    </p>
+  </div>
+
+  <div class="callout-warning callout">
+    <p>
+      <strong>Important:</strong>
+      <code>PickleDBSQLite</code> does <em>not</em> store data in memory.
+      Every operation reads from or writes to SQLite directly.
+    </p>
+  </div>
+</section>
+
     <section class="section fade-in">
       <h2>Common Patterns</h2>
 
