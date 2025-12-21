@@ -906,6 +906,7 @@ asyncio.run(main())</code></pre>
             use <code>PickleDBSQLite</code> (SQLite handles locking and ACID transactions). For networked or multi-host workloads,
             consider <a href="https://github.com/patx/mongokv">mongoKV</a>.
           </li>
+          <li><strong>The optional SQLite backend is not in-memory:</strong> <code>PickleDBSQLite</code> does <em>not</em> load data into RAM. Every operation executes directly against SQLite.</li>
         </ul>
       </div>
     </section>
@@ -1087,7 +1088,7 @@ asyncio.run(main())</code></pre>
               class PickleDBSQLite(sqlite_path: str = "pickledb.sqlite3", table_name: str = "kv")
             </div>
             <div class="api-class-note">
-              Optional SQLite-backed key-value store using the same sync/async method names.
+              Optional SQLite-backed key-value store using the same sync/async method names. <strong>No in-memory cache</strong>; all operations hit the database directly.
             </div>
           </div>
 
