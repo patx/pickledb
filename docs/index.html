@@ -21,6 +21,8 @@
       --accent-forest: #3a9943;
       --accent-sage: #6b9b6e;
       --accent-mint: #4ecdc4;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
       --border: #dfe8e0;
       --border-dark: #c5d4c7;
       --shadow: rgba(26, 31, 27, 0.08);
@@ -490,8 +492,13 @@
     }
 
     .callout-warning {
-      border-left-color: var(--accent-lime);
-      background: #fefce8;
+      border-left-color: var(--accent-warning);
+      background: #fef3c7;
+    }
+
+    .callout-danger {
+      border-left-color: var(--accent-danger);
+      background: #fee2e2;
     }
 
     .callout-success {
@@ -504,13 +511,21 @@
       color: var(--text-primary);
     }
 
+    .callout p + p {
+      margin-top: 12px;
+    }
+
     .callout strong {
       color: var(--accent-mint);
       font-weight: 700;
     }
 
     .callout-warning strong {
-      color: #84a617;
+      color: #d97706;
+    }
+
+    .callout-danger strong {
+      color: #dc2626;
     }
 
     .callout-success strong {
@@ -721,6 +736,29 @@
       color: #4d5a0f;
     }
 
+    /* Comparison Table */
+    .comparison-table {
+      background: var(--bg-card);
+      border: 3px solid var(--accent-warning);
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 40px 0;
+      box-shadow: 0 8px 24px var(--shadow-strong);
+    }
+
+    .comparison-table thead {
+      background: linear-gradient(135deg, var(--accent-warning), var(--accent-lime));
+    }
+
+    .comparison-table tbody tr:hover {
+      background: #fef3c7;
+    }
+
+    .comparison-table td:first-child {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
     /* Footer */
     .footer-note {
       text-align: center;
@@ -900,14 +938,76 @@ asyncio.run(main())</code></pre>
           <li><strong>Unified sync/async:</strong> Every core method works in both worlds via the same name</li>
           <li><strong>Atomic disk writes:</strong> Uses a temp file and <code>os.replace</code> to avoid partial writes</li>
           <li><strong>No hidden autosave:</strong> Nothing is written to disk unless you call <code>save()</code> or exit a context manager cleanly</li>
-          <li>
-            <strong>Single file simplicity:</strong> Because the JSON database is a single file, <code>PickleDB</code> is 
-            <strong>not</strong> thread-safe or process-safe. For safer multi-thread/multi-process access on a single host,
-            use <code>PickleDBSQLite</code> (SQLite handles locking and ACID transactions). For networked or multi-host workloads,
-            consider <a href="https://github.com/patx/mongokv">mongoKV</a>.
-          </li>
-          <li><strong>The optional SQLite backend is not in-memory:</strong> <code>PickleDBSQLite</code> does <em>not</em> load data into RAM. Every operation executes directly against SQLite.</li>
         </ul>
+      </div>
+
+      <div class="callout-danger callout">
+        <p><strong>⚠️ Thread & Process Safety:</strong> <code>PickleDB</code> (the default JSON-backed class) is <strong>not thread-safe or process-safe</strong>. Multiple threads or processes writing to the same JSON file <strong>will cause data corruption</strong>.</p>
+        <p><strong>When you need concurrency on a single machine:</strong> Use <code>PickleDBSQLite</code> instead. SQLite provides file-level locking and ACID transactions, making it safe for concurrent access across threads and processes on the same host.</p>
+        <p><strong>⚡ Performance trade-off:</strong> <code>PickleDBSQLite</code> is <strong>significantly slower</strong> than <code>PickleDB</code> because it reads/writes to disk on every operation instead of keeping everything in memory. Use it <em>only when you need the safety guarantees</em>.</p>
+        <p><strong>For networked or multi-host workloads:</strong> Neither class is suitable. Consider Redis, PostgreSQL, MongoDB, or <a href="https://github.com/patx/mongokv">mongoKV</a>.</p>
+      </div>
+    </section>
+
+    <section class="section fade-in">
+      <h2>Choosing the Right Backend</h2>
+      
+      <p>pickleDB offers two storage backends, each optimized for different use cases:</p>
+
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>PickleDB (orJSON)</th>
+            <th>PickleDBSQLite</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Storage Model</strong></td>
+            <td>In-memory with JSON persistence</td>
+            <td>Disk-based SQLite with orjson encoding</td>
+          </tr>
+          <tr>
+            <td><strong>Performance</strong></td>
+            <td>Very fast (all operations in RAM)</td>
+            <td>Slower (disk I/O on every operation)</td>
+          </tr>
+          <tr>
+            <td><strong>Thread Safety</strong></td>
+            <td>❌ Not safe</td>
+            <td>✅ Safe (SQLite locking)</td>
+          </tr>
+          <tr>
+            <td><strong>Process Safety</strong></td>
+            <td>❌ Not safe (data corruption risk)</td>
+            <td>✅ Safe (file-level locking)</td>
+          </tr>
+          <tr>
+            <td><strong>ACID Transactions</strong></td>
+            <td>❌ No</td>
+            <td>✅ Yes</td>
+          </tr>
+          <tr>
+            <td><strong>Memory Usage</strong></td>
+            <td>High (entire DB in RAM)</td>
+            <td>Low (only active queries in RAM)</td>
+          </tr>
+          <tr>
+            <td><strong>Best For</strong></td>
+            <td>Single-threaded apps, scripts, fast prototypes</td>
+            <td>Multi-threaded/process apps, ASGI servers</td>
+          </tr>
+          <tr>
+            <td><strong>Dependencies</strong></td>
+            <td>None (built-in)</td>
+            <td><code>aiosqlite</code> (optional extra)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout-warning callout">
+        <p><strong>Rule of thumb:</strong> Use <code>PickleDB</code> (JSON) by default for maximum performance. Only switch to <code>PickleDBSQLite</code> when you need thread/process safety or ACID guarantees, and can accept the performance penalty.</p>
       </div>
     </section>
 
@@ -946,7 +1046,7 @@ asyncio.run(main())</code></pre>
 
     <section class="section fade-in">
       <h2>API Reference</h2>
-      <p>pickleDB exposes two primary classes: <code>PickleDB</code> for JSON-on-disk, and <code>PickleDBSQLite</code> for an optional SQLite backend. All core methods share the same names in synchronous and asynchronous code — just add <code>await</code> when you’re inside an <code>async</code> function.</p>
+      <p>pickleDB exposes two primary classes: <code>PickleDB</code> for JSON-on-disk, and <code>PickleDBSQLite</code> for an optional SQLite backend. All core methods share the same names in synchronous and asynchronous code — just add <code>await</code> when you're inside an <code>async</code> function.</p>
 
       <div class="api-section">
         <div class="api-class">
@@ -1018,7 +1118,7 @@ asyncio.run(main())</code></pre>
               </div>
             </div>
             <p class="api-desc">
-              Retrieve the value stored under <code>key</code>, or <code>default</code> if it doesn’t exist.
+              Retrieve the value stored under <code>key</code>, or <code>default</code> if it doesn't exist.
             </p>
             <ul class="api-usage">
               <li><strong>Sync:</strong> <code>db.get("name")</code> or <code>db.get("name", default="guest")</code></li>
@@ -1088,7 +1188,7 @@ asyncio.run(main())</code></pre>
               class PickleDBSQLite(sqlite_path: str = "pickledb.sqlite3", table_name: str = "kv")
             </div>
             <div class="api-class-note">
-              Optional SQLite-backed key-value store using the same sync/async method names. <strong>No in-memory cache</strong>; all operations hit the database directly.
+              Optional SQLite-backed key-value store using the same sync/async method names.
             </div>
           </div>
 
@@ -1100,8 +1200,11 @@ asyncio.run(main())</code></pre>
           </p>
           <p class="api-class-note" style="margin-top: 4px;">
             <strong>Why use it?</strong> SQLite adds file-level locking and ACID transactions, so concurrent readers and
-            serialized writers across multiple threads/processes on the <em>same machine</em> are handled for you. It’s still
-            not a distributed database, but it’s much safer than multiple processes writing to a plain JSON file.
+            serialized writers across multiple threads/processes on the <em>same machine</em> are handled for you. It's still
+            not a distributed database, but it's much safer than multiple processes writing to a plain JSON file.
+          </p>
+          <p class="api-class-note" style="margin-top: 4px; color: var(--accent-danger); font-weight: 600;">
+            <strong>⚠️ Performance warning:</strong> Unlike <code>PickleDB</code>, this class does <strong>NOT</strong> store data in memory. Every read and write hits the disk, making it significantly slower. Only use <code>PickleDBSQLite</code> when thread/process safety is essential.
           </p>
 
           <div class="api-method">
@@ -1220,70 +1323,6 @@ asyncio.run(main())</code></pre>
       </div>
     </section>
 
-<section class="section fade-in">
-  <h2>Why Two Different Classes?</h2>
-
-  <p>
-    <code>PickleDB</code> and <code>PickleDBSQLite</code> are separate classes because
-    they represent <strong>different storage models</strong>, not interchangeable
-    backends.
-  </p>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Feature</th>
-        <th>PickleDB</th>
-        <th>PickleDBSQLite</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Data model</td>
-        <td>In-memory dict</td>
-        <td>SQLite table</td>
-      </tr>
-      <tr>
-        <td>In-memory cache</td>
-        <td>Yes (entire DB)</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>Persistence</td>
-        <td>Explicit <code>load()</code> / <code>save()</code></td>
-        <td>Immediate</td>
-      </tr>
-      <tr>
-        <td>Read/write cost</td>
-        <td>Memory</td>
-        <td>Disk + SQL</td>
-      </tr>
-      <tr>
-        <td>Concurrency</td>
-        <td>Single process only</td>
-        <td>Multi-process safe</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="callout">
-    <p>
-      <strong>Design choice:</strong>
-      pickleDB avoids “pluggable backends”.
-      Different behavior gets a different class so performance and guarantees
-      stay obvious.
-    </p>
-  </div>
-
-  <div class="callout-warning callout">
-    <p>
-      <strong>Important:</strong>
-      <code>PickleDBSQLite</code> does <em>not</em> store data in memory.
-      Every operation reads from or writes to SQLite directly.
-    </p>
-  </div>
-</section>
-
     <section class="section fade-in">
       <h2>Common Patterns</h2>
 
@@ -1346,7 +1385,7 @@ time.sleep(<span class="number">3</span>)
 
     <section class="section fade-in">
       <h2>Performance Snapshot</h2>
-      <p>Example timings loading, reading, and saving large JSON payloads using async mode on a Dell XPS 9350, Ubuntu 24.04:</p>
+      <p>Example timings loading, reading, and saving large JSON payloads using <code>PickleDB</code> (JSON) in async mode on a Dell XPS 9350, Ubuntu 24.04:</p>
 
       <table class="perf-table">
         <thead>
@@ -1382,19 +1421,24 @@ time.sleep(<span class="number">3</span>)
       <div class="callout-success callout">
         <p><strong>Benchmark Details:</strong> Full benchmark script available at <a href="https://gist.github.com/patx/025ed3a10482459f35c738228ebd0721">this GitHub Gist</a>.</p>
       </div>
+
+      <div class="callout-danger callout">
+        <p><strong>PickleDBSQLite Performance:</strong> The SQLite backend is <strong>orders of magnitude slower</strong> than these numbers because it performs disk I/O on every operation. Use it only when you need thread/process safety.</p>
+      </div>
     </section>
 
     <section class="section fade-in">
       <div class="warning-list">
         <h3>When Not to Use pickleDB</h3>
         <ul>
-          <li>You need multi-process or multi-host concurrency</li>
-          <li>ASGI web servers or frameworks <small>(unless you're using a single worker or SQLite backend carefully)</small></li>
-          <li>Your dataset is too large to comfortably fit in memory</li>
-          <li>You need rich querying, indexing, or joins</li>
+          <li><strong>PickleDB (JSON):</strong> Multi-threaded or multi-process applications (use <code>PickleDBSQLite</code> instead)</li>
+          <li><strong>Both classes:</strong> ASGI web servers with multiple workers</li>
+          <li><strong>Both classes:</strong> Your dataset is too large to comfortably fit in memory (JSON) or requires high-performance disk access (SQLite)</li>
+          <li><strong>Both classes:</strong> You need distributed/multi-host concurrency</li>
+          <li><strong>Both classes:</strong> You need rich querying, indexing, or joins</li>
         </ul>
         <p style="color: var(--text-secondary); margin-top: 24px;">
-          In those cases, consider Redis, SQLite, PostgreSQL, MongoDB, or <a href="https://github.com/patx/mongokv">mongoKV</a>.
+          In those cases, consider Redis, PostgreSQL, MongoDB, or <a href="https://github.com/patx/mongokv">mongoKV</a>.
         </p>
       </div>
     </section>
@@ -1407,4 +1451,3 @@ time.sleep(<span class="number">3</span>)
 
 </body>
 </html>
-
