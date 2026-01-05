@@ -9,7 +9,9 @@ instructions, API docs, advanced examples, benchmarks, and more.
 ```python
 from pickledb import PickleDB
 
-db = PickleDB("example.json").load()
+db = PickleDB("example.json")
+db.load()
+
 db.set("key", "value")
 
 db.get("key")  # return "value"
