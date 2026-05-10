@@ -6,6 +6,7 @@ Licensed - BSD 3 Clause (see LICENSE)
 
 import asyncio
 import os
+import re
 from typing import Any
 import uuid
 
@@ -20,6 +21,7 @@ except ImportError:
 
 
 MISSING = object()
+_SQLITE_TABLE_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
 def in_async() -> bool:
@@ -161,6 +163,15 @@ if sqlite_enable:
             sqlite_path: str = "pickledb.sqlite3",
             table_name: str = "kv",
         ) -> None:
+            if (
+                not isinstance(table_name, str)
+                or not _SQLITE_TABLE_NAME_RE.fullmatch(table_name)
+            ):
+                raise ValueError(
+                    "Invalid table name. Use only ASCII letters, numbers, and "
+                    "underscores, and start with a letter or underscore."
+                )
+
             self.sqlite_path = sqlite_path
             self.table_name = table_name
 
@@ -387,4 +398,3 @@ else:
                 "PickleDBSQLite requires `aiosqlite`. "
                 "Install it via `pip install \"pickledb[sqlite]\"`."
             )
-

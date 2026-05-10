@@ -366,6 +366,26 @@ def test_sqlite_sync_set_get_and_all(tmp_path):
     kv.close()
 
 
+def test_sqlite_custom_table_name(tmp_path):
+    sqlite_path = tmp_path / "custom.sqlite3"
+    kv = PickleDBSQLite(str(sqlite_path), table_name="kv_custom_1")
+
+    assert kv.set("explicit", {"ok": True}) == "explicit"
+    assert kv.get("explicit") == {"ok": True}
+
+    kv.close()
+
+
+def test_sqlite_rejects_invalid_table_name(tmp_path):
+    sqlite_path = tmp_path / "invalid.sqlite3"
+
+    with pytest.raises(ValueError, match="Invalid table name"):
+        PickleDBSQLite(
+            str(sqlite_path),
+            table_name="kv (key TEXT); DROP TABLE kv; --",
+        )
+
+
 @pytest.mark.asyncio
 async def test_sqlite_async_set_get_and_purge(tmp_path):
     sqlite_path = tmp_path / "kv_async.sqlite3"
@@ -387,4 +407,3 @@ async def test_sqlite_async_set_get_and_purge(tmp_path):
     assert await kv.all() == []
 
     await kv.close()
-
